@@ -1,0 +1,66 @@
+$flex-box-row-center-wrap: row, center, center, wrap;
+$flex-box-row-center-nowrap: row, center, center, nowrap;
+$flex-box-row-between-wrap: row, space-between, center, wrap;
+$flex-box-row-between-nowrap: row, space-between, center, nowrap;
+$flex-box-row-left-wrap: row, flex-start, center, wrap;
+$flex-box-row-left-nowrap: row, flex-start, center, nowrap;
+$flex-box-row-right-wrap: row, flex-end, center, wrap;
+$flex-box-row-right-nowrap: row, flex-end, center, nowrap;
+$flex-box-row-top-wrap: row, center, flex-start, wrap;
+$flex-box-row-top-nowrap: row, center, flex-start, nowrap;
+$flex-box-col-left-wrap: column, center, flex-start;
+$flex-box-col-right-wrap: column, center, flex-end;
+$flex-box-col-top-wrap: column, flex-start, center;
+$flex-box-col-center-wrap: column, center, center;
+
+///MIXIN
+
+@mixin flex-box ($flow, $justify, $align, $wrap:wrap) {
+  display: flex;
+  flex-flow: $flow $wrap;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+@mixin transition($property: all, $time: 0.15s) {
+  transition: $property $time ease-in-out;
+}
+
+@mixin init-font ($font-size, $font-weight) {
+  font: {
+    size: $font-size;
+    weight: $font-weight;
+  }
+}
+
+@mixin text-shadow($dim, $shadow, $color:rgba(0,0,0,0.8)) {
+  text-shadow: $dim $dim $shadow $color;
+}
+
+@mixin box-shadow($dim, $shadow, $color:rgba(0,0,0,0.8)) {
+  box-shadow: $dim $dim $shadow $color;
+}
+
+@mixin scroll-init($width, $thumbColor, $trackColor) {
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+
+  /* width */
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  /* Handle */
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: $thumbColor;
+  }
+
+  /* Track */
+  &:hover::-webkit-scrollbar-track {
+    background-color: $trackColor;
+  }
+}
+
+
+

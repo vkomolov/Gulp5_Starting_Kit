@@ -1,0 +1,54 @@
+@import './_variables.scss';
+@import './_mixins.scss';
+
+/*@media screen and (max-width: 1920px) {
+}
+@media screen and (max-width: 1680px) {
+}
+@media screen and (max-width: 1440px) {
+}
+@media screen and (max-width: 1366px) {
+}
+@media screen and (max-width: 1280px) {
+}*/
+
+@media screen and (max-width: 1024px) {
+  #root {
+    font-size: 0.9rem !important;
+  }
+}
+
+/*@media screen and (max-width: 992px) {
+
+}*/
+
+/*@media screen and (max-width: 800px) {
+
+}
+
+@media screen and (max-width: 782px) {
+
+}*/
+
+@media screen and (max-width: 768px) {
+  #root {
+    font-size: 0.75rem !important;
+  }
+}
+
+/*@media screen and (max-width: 600px) {
+}*/
+
+/*@media screen and (max-width: 568px) {
+}*/
+
+/*@media screen and (max-width: 425px) {
+
+}*/
+
+/*
+@media screen and (max-width: 375px) {
+}
+
+@media screen and (max-width: 320px) {
+}*/

@@ -1,0 +1,82 @@
+@import "./global_styles/reset";
+@import "./global_styles/variables";
+@import "./global_styles/mixins";
+@import "./global_styles/fonts";
+@import "./global_styles/animations";
+@import "./global_styles/media";
+
+@import "./partials/modal";
+
+/////// STYLES ///////
+
+body {
+  font-family: "EuroFontC", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $greyLight;
+
+  /**** user-select: none; *****/
+  @include transition();
+}
+/*************TOP BORDER BODY****************/
+body:before {
+  content: "";
+  position: fixed;
+  top: -10px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  z-index: 100;
+  @include box-shadow(0, 10px);
+}
+/*****************END TOP BORDER BODY************/
+
+#root-layer {
+  font-size: 0.9rem;
+  position: relative; //for the alert block in absolute position
+  max-width: $maxWidth;
+  min-width: $minWidth;
+  margin: 0 auto;
+  padding: 1.5em 0.5em;
+
+  border: 1px solid red;
+
+  .header-wrapper {
+    width: 100%;
+    border: 1px solid blue;
+
+    @include flex-box($flex-box-row-center-wrap...);
+
+
+    .img-wrapper {
+      max-width: 15em;
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+
+  .footer-wrapper {
+    width: 100%;
+    border: 1px dotted blue;
+
+    @include flex-box($flex-box-row-center-wrap...);
+  }
+}
+
+#barrier-wrapper {
+  width: 100%;
+
+  @include flex-box($flex-box-row-center-wrap...);
+
+  .main-container {
+
+  }
+
+  .pointer-container {
+
+  }
+}

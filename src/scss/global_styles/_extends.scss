@@ -1,0 +1,42 @@
+@import "mixins";
+@import "variables";
+
+///////EXTENDS///////
+
+%button {
+  position: relative;
+  outline: none;
+  min-width: 5em;
+  min-height: 2.5em;
+  border: 0.15em solid $white;
+  border-radius: 0.5em;
+  color: $white;
+  background-color: $greyNorm;
+  letter-spacing: 0.03em;
+  transition: all .08s ease-in-out;
+
+  @include init-font(1em, 500);
+  @include text-shadow(0.03em, 0.1em);
+  @include box-shadow(0.12em, 0.2em);
+
+  &:hover {
+    transform: scale(1.03);
+    @include box-shadow(0.13em, 0.22em);
+  }
+
+  &:active {
+    background-color: $foxy;
+    box-shadow: none;
+  }
+}
+
+%icon {
+  @include text-shadow(0.03em, 0.1em);
+  @include transition();
+
+  &:hover {
+    cursor: pointer;
+    @include text-shadow(0.05em, 0.15em);
+  }
+}
+
