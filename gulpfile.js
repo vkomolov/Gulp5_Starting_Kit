@@ -1,19 +1,23 @@
 import gulp from "gulp";
+import plumber from "gulp-plumber";
 import fileInclude from "gulp-file-include";
-import * as sassAux from "sass";
+import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
 import sassGlob from "gulp-sass-glob";
-import sync from "browser-sync";
+import clean from "gulp-clean";
+import fs from "fs";
 
+import LocalServer from "./src/modules/localServer.js";
 
-const browserSync = sync.create();
-const sass = gulpSass(sassAux);
+/////////////// END OF IMPORTS /////////////////////////
 
 const { src, dest } = gulp;
-
 const srcPath = "src/";
-const distPath = "dist/"
-
+const distPath = "dist/";
+const fileIncludeSettings = {
+    prefix: "@@",
+    basepath: "@file"
+};
 const pathData = {
     build: {
         html: distPath,
@@ -40,4 +44,38 @@ const pathData = {
     clean: `./${ distPath }`
 };
 
+const sass = gulpSass(dartSass);
+const localServer = new LocalServer(pathData.build.html);
+
+function includeHtml() {
+    return src(pathData.src.html)
+        .pipe(fileInclude(fileIncludeSettings))
+        .pipe(dest(pathData.build.html))
+}
+
+function handleStyles() {
+    return src(pathData.src.styles)
+        .pipe(sass({}, () => {}))
+        .pipe(dest(pathData.build.styles));
+}
+
+function handleImages() {
+    return src(pathData.src.img)
+        .pipe(dest(pathData.build.img));
+}
+
+export function cleanDist() {
+    return src(
+        pathData.clean,
+        {
+            allowEmpty: true,
+            read: false,
+        }
+    )
+        .pipe(clean({ force: true }));
+}
+
+export const testStream = gulp.series(handleStyles, localServer.stream);
+
+export const testReload = gulp.series(includeHtml, localServer.reload);
 
