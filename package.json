@@ -5,7 +5,9 @@
   "description": "gulp version 5 Node 22.2.0 starting kit",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "gulp runDev",
+    "build": "gulp runBuild",
+    "clean": "gulp cleanDist"
   },
   "author": "",
   "license": "ISC",
