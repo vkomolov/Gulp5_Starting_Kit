@@ -51,20 +51,22 @@ function handleHtml() {
         .pipe(fileInclude(fileIncludeSettings))
         .pipe(dest(pathData.build.html))
 }
+//TODO sourcemaps not working
 function handleStyles() {
-    return src(pathData.src.styles)
+    return src(pathData.src.styles, { sourcemaps: true })
+        //.pipe(sass({ outputStyle: "compressed" }, () => {}))
         .pipe(sass({}, () => {}))
-        .pipe(dest(pathData.build.styles));
+        .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
 }
 function handleImages() {
     return src(pathData.src.img)
         .pipe(dest(pathData.build.img));
 }
 function watchFiles() {
-    gulp.watch(pathData.watch.html, handleHtml);
-    gulp.watch(pathData.watch.styles, handleStyles);
+    gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
+    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.stream));
     //gulp.watch(pathData.watch.js, handleJs);
-    gulp.watch(pathData.watch.img, handleImages);
+    gulp.watch(pathData.watch.img, gulp.series(handleImages, localServer.reload));
     //gulp.watch(pathData.watch.fonts, handleFonts);
 }
 
