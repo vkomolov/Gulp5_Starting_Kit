@@ -7,6 +7,7 @@ import sassGlob from "gulp-sass-glob";
 import clean from "gulp-clean";
 
 import LocalServer from "./src/modules/localServer.js";
+import GroupAllCSSMediaQueries from "./src/modules/gulpNew-group-css-media-queries.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -56,6 +57,7 @@ function handleStyles() {
     return src(pathData.src.styles, { sourcemaps: true })
         //.pipe(sass({ outputStyle: "compressed" }, () => {}))
         .pipe(sass({}, () => {}))
+        .pipe(GroupAllCSSMediaQueries())
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
 }
 function handleImages() {

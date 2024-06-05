@@ -3,7 +3,7 @@
 @import "./global_styles/mixins";
 @import "./global_styles/fonts";
 @import "./global_styles/animations";
-@import "./global_styles/media";
+//@import "./global_styles/media";
 
 @import "./partials/modal";
 
@@ -31,7 +31,7 @@ body:before {
 }
 /*****************END TOP BORDER BODY************/
 
-#root-layer {
+.total-wrapper {
   font-size: 0.9rem;
   position: relative; //for the alert block in absolute position
   max-width: $maxWidth;
@@ -40,31 +40,40 @@ body:before {
   padding: 1.5em 0.5em;
 
   border: 1px solid red;
+}
 
-  .header-wrapper {
-    width: 100%;
-    border: 1px solid blue;
+//TODO: to test group-css-media-queries with header-wrapper and footer-wrapper inside root-layer
 
-    @include flex-box($flex-box-row-center-wrap...);
+.header-wrapper {
+  width: 100%;
+  border: 1px solid blue;
 
+  @include flex-box($flex-box-row-center-wrap...);
 
-    .img-wrapper {
-      max-width: 15em;
+  @media screen and (max-width: 1024px) {
+    border: 5px solid blue !important;
+  }
 
-      img {
-        width: 100%;
-        height: auto;
-      }
+  .img-wrapper {
+    max-width: 15em;
+
+    img {
+      width: 100%;
+      height: auto;
     }
   }
+}
 
 
-  .footer-wrapper {
-    width: 100%;
-    border: 1px dotted blue;
+.footer-wrapper {
+  width: 100%;
+  border: 1px dotted blue;
 
-    @include flex-box($flex-box-row-center-wrap...);
+  @media screen and (max-width: 1024px) {
+    border: 5px solid blue !important;
   }
+
+  @include flex-box($flex-box-row-center-wrap...);
 }
 
 #barrier-wrapper {
@@ -73,10 +82,10 @@ body:before {
   @include flex-box($flex-box-row-center-wrap...);
 
   .main-container {
-
+    color: red;
   }
 
   .pointer-container {
-
+    color: green;
   }
 }
