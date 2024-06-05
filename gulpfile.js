@@ -5,9 +5,10 @@ import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
 import sassGlob from "gulp-sass-glob";
 import clean from "gulp-clean";
+import postcss from "gulp-postcss";
+import sortMediaQueries from "postcss-sort-media-queries";
 
 import LocalServer from "./src/modules/localServer.js";
-import GroupAllCSSMediaQueries from "./src/modules/gulpNew-group-css-media-queries.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -46,29 +47,42 @@ const pathData = {
 
 const sass = gulpSass(dartSass);
 const localServer = new LocalServer(pathData.build.html);
+const postCssPlugins = [
+    sortMediaQueries({
+        sort: "mobile-first"
+    })
+];
 
 function handleHtml() {
     return src(pathData.src.html)
         .pipe(fileInclude(fileIncludeSettings))
-        .pipe(dest(pathData.build.html))
+        .pipe(dest(pathData.build.html));
 }
-//TODO sourcemaps not working
+
 function handleStyles() {
     return src(pathData.src.styles, { sourcemaps: true })
         //.pipe(sass({ outputStyle: "compressed" }, () => {}))
         .pipe(sass({}, () => {}))
-        .pipe(GroupAllCSSMediaQueries())
+        .pipe(postcss(postCssPlugins))
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
 }
+
 function handleImages() {
     return src(pathData.src.img)
         .pipe(dest(pathData.build.img));
 }
+
 function watchFiles() {
     gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
-    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.stream));
+
+    //optional: browserSync.stream()
+    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.stream)
+    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.reload));
+
     //gulp.watch(pathData.watch.js, handleJs);
+
     gulp.watch(pathData.watch.img, gulp.series(handleImages, localServer.reload));
+
     //gulp.watch(pathData.watch.fonts, handleFonts);
 }
 
@@ -93,6 +107,7 @@ export function runBuild(cb) {
         )
     )(cb);
 }
+
 export function runDev(cb) {
     gulp.series(
         runBuild,

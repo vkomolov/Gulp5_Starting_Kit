@@ -3,7 +3,6 @@
 @import "./global_styles/mixins";
 @import "./global_styles/fonts";
 @import "./global_styles/animations";
-//@import "./global_styles/media";
 
 @import "./partials/modal";
 
@@ -32,14 +31,21 @@ body:before {
 /*****************END TOP BORDER BODY************/
 
 .total-wrapper {
-  font-size: 0.9rem;
+  font-size: 1rem;
   position: relative; //for the alert block in absolute position
   max-width: $maxWidth;
   min-width: $minWidth;
   margin: 0 auto;
   padding: 1.5em 0.5em;
 
-  border: 1px solid red;
+  border: 1px dotted red;
+
+  @media screen and (max-width: 1024px) {
+    font-size: 0.9rem;
+  }
+  @media screen and (max-width: 768px) {
+    font-size: 0.75rem;
+  }
 }
 
 //TODO: to test group-css-media-queries with header-wrapper and footer-wrapper inside root-layer
