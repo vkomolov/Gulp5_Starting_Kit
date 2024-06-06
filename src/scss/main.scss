@@ -9,7 +9,7 @@
 /////// STYLES ///////
 
 body {
-  font-family: "EuroFontC", sans-serif;
+  font-family: "Open Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: $greyLight;
@@ -30,6 +30,8 @@ body:before {
 }
 /*****************END TOP BORDER BODY************/
 
+
+
 .total-wrapper {
   font-size: 1rem;
   position: relative; //for the alert block in absolute position
@@ -39,6 +41,10 @@ body:before {
   padding: 1.5em 0.5em;
 
   border: 1px dotted red;
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Ubuntu", sans-serif;
+  }
 
   @media screen and (max-width: 1024px) {
     font-size: 0.9rem;

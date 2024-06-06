@@ -82,11 +82,19 @@ function handleStyles() {
 }
 
 function handleImages() {
-    return src(pathData.src.img)
+    return src(pathData.src.img, { encoding: false })
         .pipe(plumber({
             errorHandler: handleError("Error at handleImages...")
         }))
         .pipe(dest(pathData.build.img));
+}
+
+function handleFonts() {
+    return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
+        .pipe(plumber({
+            errorHandler: handleError("Error at handleFonts...")
+        }))
+        .pipe(dest(pathData.build.fonts));
 }
 
 function watchFiles() {
@@ -100,7 +108,7 @@ function watchFiles() {
 
     gulp.watch(pathData.watch.img, gulp.series(handleImages, localServer.reload));
 
-    //gulp.watch(pathData.watch.fonts, handleFonts);
+    gulp.watch(pathData.watch.fonts, gulp.series(handleFonts, localServer.reload));
 }
 
 export function cleanDist() {
@@ -121,6 +129,7 @@ export function runBuild(cb) {
             handleHtml,
             handleStyles,
             handleImages,
+            handleFonts
         )
     )(cb);
 }
