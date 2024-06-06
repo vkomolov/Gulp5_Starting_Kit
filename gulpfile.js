@@ -53,14 +53,28 @@ const postCssPlugins = [
     })
 ];
 
+function handleError(taskTypeError) {
+    return (err) => {
+        console.error(taskTypeError, err.message);
+        //console.error(err);
+        this.emit('end'); // halt the pipe
+    }
+}
+
 function handleHtml() {
     return src(pathData.src.html)
+        .pipe(plumber({
+            errorHandler: handleError("Error at handleHtml...")
+        }))
         .pipe(fileInclude(fileIncludeSettings))
         .pipe(dest(pathData.build.html));
 }
 
 function handleStyles() {
     return src(pathData.src.styles, { sourcemaps: true })
+        .pipe(plumber({
+            errorHandler: handleError("Error at handleStyles...")
+        }))
         //.pipe(sass({ outputStyle: "compressed" }, () => {}))
         .pipe(sass({}, () => {}))
         .pipe(postcss(postCssPlugins))
@@ -69,6 +83,9 @@ function handleStyles() {
 
 function handleImages() {
     return src(pathData.src.img)
+        .pipe(plumber({
+            errorHandler: handleError("Error at handleImages...")
+        }))
         .pipe(dest(pathData.build.img));
 }
 
