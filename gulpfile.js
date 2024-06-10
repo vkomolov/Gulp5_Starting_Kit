@@ -1,14 +1,36 @@
 import gulp from "gulp";
+
+//error handling plugins
 import plumber from "gulp-plumber";
-import fileInclude from "gulp-file-include";
+
+//styles plugins
 import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
-import sassGlob from "gulp-sass-glob";
-import clean from "gulp-clean";
-import postcss from "gulp-postcss";
+import dependents from "gulp-dependents";
+import autoprefixer from "autoprefixer";
 import sortMediaQueries from "postcss-sort-media-queries";
+import prettier from "@bdchauvette/gulp-prettier";
+//postcss environment
+import postcss from "gulp-postcss";
+import cssnano from "cssnano";
+import postCssPresetEnv from "postcss-preset-env";
 
+//change control plugins
+import newer from "gulp-newer";
+import cached from "gulp-cached";
+import changed from "gulp-changed";
+
+//fonts plugins
+import ttf2woff2 from "gulp-ttf2woff2";
+
+//other plugins
+import fileInclude from "gulp-file-include";
+import clean from "gulp-clean";
+import rename from "gulp-rename";
+
+//custom modules
 import LocalServer from "./src/modules/localServer.js";
+
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -47,17 +69,20 @@ const pathData = {
 
 const sass = gulpSass(dartSass);
 const localServer = new LocalServer(pathData.build.html);
-const postCssPlugins = [
+const processors = [
     sortMediaQueries({
         sort: "mobile-first"
-    })
+    }),
+    autoprefixer(),
+    postCssPresetEnv(),
+    //cssnano({ preset: 'default' })
 ];
 
 function handleError(taskTypeError) {
     return (err) => {
         console.error(taskTypeError, err.message);
         //console.error(err);
-        this.emit('end'); // halt the pipe
+        //this.emit('end'); // halt the pipe
     }
 }
 
@@ -75,9 +100,9 @@ function handleStyles() {
         .pipe(plumber({
             errorHandler: handleError("Error at handleStyles...")
         }))
-        //.pipe(sass({ outputStyle: "compressed" }, () => {}))
+        .pipe(dependents())
         .pipe(sass({}, () => {}))
-        .pipe(postcss(postCssPlugins))
+        .pipe(postcss(processors))
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
 }
 
@@ -86,6 +111,7 @@ function handleImages() {
         .pipe(plumber({
             errorHandler: handleError("Error at handleImages...")
         }))
+        .pipe(newer(pathData.build.img))
         .pipe(dest(pathData.build.img));
 }
 
@@ -94,6 +120,7 @@ function handleFonts() {
         .pipe(plumber({
             errorHandler: handleError("Error at handleFonts...")
         }))
+        .pipe(newer(pathData.build.fonts))
         .pipe(dest(pathData.build.fonts));
 }
 
