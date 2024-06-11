@@ -45,6 +45,7 @@ const pathData = {
     build: {
         html: distPath,
         styles: `${ distPath }css/`,
+        stylesAux: `${ distPath }css/*.css`,
         js: `${ distPath }js/`,
         img: `${ distPath }assets/img/`,
         fonts: `${ distPath }assets/fonts/`,
@@ -95,7 +96,7 @@ function handleHtml() {
         .pipe(dest(pathData.build.html));
 }
 
-function handleStyles() {
+function handleSass() {
     return src(pathData.src.styles, { sourcemaps: true })
         .pipe(plumber({
             errorHandler: handleError("Error at handleStyles...")
@@ -104,6 +105,20 @@ function handleStyles() {
         .pipe(sass({}, () => {}))
         .pipe(postcss(processors))
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
+}
+
+function minifyCss() {
+    return src(pathData.build.stylesAux)
+        .pipe(postcss([cssnano()]))
+        .pipe(rename({ suffix: '.min' }))
+        .pipe(dest(pathData.build.styles));
+}
+
+function handleStyles(cb) {
+    gulp.series(
+        handleSass,
+        minifyCss
+    )(cb)
 }
 
 function handleImages() {
