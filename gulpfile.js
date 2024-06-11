@@ -16,11 +16,16 @@ import dependents from "gulp-dependents";
 import autoprefixer from "autoprefixer";
 import sortMediaQueries from "postcss-sort-media-queries";
 import webImagesCSS from "gulp-web-images-css";
+import purgecss from "@fullhuman/postcss-purgecss";
+import discardUnused from "postcss-discard-unused";
+import cleanCss from "gulp-clean-css";
 
 //postcss environment
 import postcss from "gulp-postcss";
-import cssnano from "cssnano";  //? in favor to clean-css
+import cssnano from "cssnano";
+import cssnanoLite from 'cssnano-preset-lite';
 import postCssPresetEnv from "postcss-preset-env";
+
 
 
 //js plugins
@@ -39,7 +44,6 @@ import ttf2woff2 from "gulp-ttf2woff2";
 //other plugins
 import fileInclude from "gulp-file-include";
 import clean from "gulp-clean";
-import path from "path";
 import rename from "gulp-rename";   //deprecations with fs.stats. Favor to CustomRenameFile
 
 //custom modules
@@ -60,7 +64,7 @@ const pathData = {
     build: {
         html: distPath,
         styles: `${ distPath }css/`,
-        stylesAux: `${ distPath }css/*.css`,
+        stylesAux: [`${ distPath }css/*.css`, `!${ distPath }css/*.min.css`],
         js: `${ distPath }js/`,
         img: `${ distPath }assets/img/`,
         fonts: `${ distPath }assets/fonts/`,
@@ -85,13 +89,29 @@ const pathData = {
 
 const sass = gulpSass(dartSass);
 const localServer = new LocalServer(pathData.build.html);
-const processors = [
+const optimizing = [
     sortMediaQueries({
         sort: "mobile-first"
     }),
-    autoprefixer(),
-    postCssPresetEnv(),
-    //cssnano({ preset: 'default' })
+    cssnano({
+        preset: [
+            "default",
+            {
+                autoprefixer: true,
+                discardUnused: true,
+                normalizeWhitespace: false, //avoiding compressing css file
+            }
+            ]
+    }),
+];
+const compressing = [
+    cssnano({
+        //only compressing css file...
+        preset: cssnanoLite({
+            discardComments: false, // already removed
+            discardEmpty: false,    // already removed
+        })
+    }),
 ];
 
 function handleError(taskTypeError) {
@@ -118,13 +138,13 @@ function handleSass() {
         }))
         .pipe(dependents())
         .pipe(sass({}, () => {}))
-        .pipe(postcss(processors))
+        .pipe(postcss(optimizing))
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
 }
 
 function minifyCss() {
     return src(pathData.build.stylesAux)
-        .pipe(postcss([cssnano()]))
+        .pipe(postcss(compressing))
         .pipe(new CustomRenameFile(null, 'min'))
         .pipe(dest(pathData.build.styles));
 }

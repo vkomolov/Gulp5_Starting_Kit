@@ -54,11 +54,10 @@ body:before {
   }
 }
 
-//TODO: to test group-css-media-queries with header-wrapper and footer-wrapper inside root-layer
 
 .header-wrapper {
   width: 100%;
-  border: 1px solid blue;
+  border: 1px solid $blue;
 
   @include flex-box($flex-box-row-center-wrap...);
 
@@ -67,7 +66,7 @@ body:before {
   }
 
   .img-wrapper {
-    max-width: 15em;
+    max-width: 14em;
 
     img {
       width: 100%;
@@ -79,10 +78,10 @@ body:before {
 
 .footer-wrapper {
   width: 100%;
-  border: 1px dotted blue;
+  border: 2px dotted $foxy;
 
   @media screen and (max-width: 1024px) {
-    border: 5px solid blue !important;
+    border: 5px solid $blueDark;
   }
 
   @include flex-box($flex-box-row-center-wrap...);
