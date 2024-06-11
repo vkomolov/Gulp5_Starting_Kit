@@ -3,17 +3,30 @@ import gulp from "gulp";
 //error handling plugins
 import plumber from "gulp-plumber";
 
+//html plugins
+import typograf from "gulp-typograf";
+import webpHtml from "gulp-webp-retina-html";
+import htmlclean from "gulp-htmlclean";
+
+
 //styles plugins
 import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
 import dependents from "gulp-dependents";
 import autoprefixer from "autoprefixer";
 import sortMediaQueries from "postcss-sort-media-queries";
-import prettier from "@bdchauvette/gulp-prettier";
+import webImagesCSS from "gulp-web-images-css";
+
 //postcss environment
 import postcss from "gulp-postcss";
-import cssnano from "cssnano";
+import cssnano from "cssnano";  //? in favor to clean-css
 import postCssPresetEnv from "postcss-preset-env";
+
+
+//js plugins
+import babel from "gulp-babel";
+import prettier from "@bdchauvette/gulp-prettier";
+import uglify from "gulp-uglify";
 
 //change control plugins
 import newer from "gulp-newer";
@@ -27,7 +40,7 @@ import ttf2woff2 from "gulp-ttf2woff2";
 import fileInclude from "gulp-file-include";
 import clean from "gulp-clean";
 import path from "path";
-import rename from "gulp-rename";
+import rename from "gulp-rename";   //deprecations with fs.stats. Favor to CustomRenameFile
 
 //custom modules
 import LocalServer from "./src/modules/localServer.js";
