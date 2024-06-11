@@ -26,10 +26,12 @@ import ttf2woff2 from "gulp-ttf2woff2";
 //other plugins
 import fileInclude from "gulp-file-include";
 import clean from "gulp-clean";
+import path from "path";
 import rename from "gulp-rename";
 
 //custom modules
 import LocalServer from "./src/modules/localServer.js";
+import CustomRenameFile from "./src/modules/CustomRenameFile.js";
 
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -110,7 +112,7 @@ function handleSass() {
 function minifyCss() {
     return src(pathData.build.stylesAux)
         .pipe(postcss([cssnano()]))
-        .pipe(rename({ suffix: '.min' }))
+        .pipe(new CustomRenameFile(null, 'min'))
         .pipe(dest(pathData.build.styles));
 }
 
