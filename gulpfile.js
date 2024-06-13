@@ -15,18 +15,14 @@ import gulpSass from "gulp-sass";
 import dependents from "gulp-dependents";
 import autoprefixer from "autoprefixer";
 import sortMediaQueries from "postcss-sort-media-queries";
+import discardUnused from "postcss-discard-unused";
 import webImagesCSS from "gulp-web-images-css";
 import purgecss from "@fullhuman/postcss-purgecss";
-import discardUnused from "postcss-discard-unused";
-import cleanCss from "gulp-clean-css";
 
 //postcss environment
 import postcss from "gulp-postcss";
 import cssnano from "cssnano";
-import cssnanoLite from 'cssnano-preset-lite';
-import postCssPresetEnv from "postcss-preset-env";
-
-
+import normalizeWhitespace from 'postcss-normalize-whitespace';
 
 //js plugins
 import babel from "gulp-babel";
@@ -44,11 +40,11 @@ import ttf2woff2 from "gulp-ttf2woff2";
 //other plugins
 import fileInclude from "gulp-file-include";
 import clean from "gulp-clean";
-import rename from "gulp-rename";   //deprecations with fs.stats. Favor to CustomRenameFile
 
 //custom modules
 import LocalServer from "./src/modules/localServer.js";
 import CustomRenameFile from "./src/modules/CustomRenameFile.js";
+import { combinePaths } from "./src/modules/utilFuncs.js";
 
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -77,12 +73,12 @@ const pathData = {
         fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
     },
     watch: {
-        html: `${ srcPath }**/*.html`,
+        html: [`${ srcPath }*.html`, `${ srcPath }html/**/*.html`],
         styles: `${ srcPath }scss/**/*.scss`,
-        js: `${ srcPath }js/**/*.js ${srcPath}modules/**/*.js`,
+        js: [`${ srcPath }js/**/*.js`, `${ srcPath }modules/**/*.js`],
         img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
         fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
-        data: `${ srcPath }assets/data/**/*.json`,  //is necessary only for watching: data will not be in "dist"
+        data: `${ srcPath }assets/data/**/*.{json}`,
     },
     clean: `./${ distPath }`
 };
@@ -93,25 +89,23 @@ const optimizing = [
     sortMediaQueries({
         sort: "mobile-first"
     }),
+    autoprefixer(),
+    discardUnused({}),
+    purgecss({
+        content: combinePaths(pathData.watch.html, pathData.src.js), //it receives a path or|and array of paths
+//        safelist: ['safelist-selector'], // classes, which must not be removed...
+    }),
     cssnano({
         preset: [
             "default",
             {
-                autoprefixer: true,
-                discardUnused: true,
-                normalizeWhitespace: false, //avoiding compressing css file
+                normalizeWhitespace: false //avoiding compressing css file
             }
-            ]
-    }),
+        ]
+    })
 ];
 const compressing = [
-    cssnano({
-        //only compressing css file...
-        preset: cssnanoLite({
-            discardComments: false, // already removed
-            discardEmpty: false,    // already removed
-        })
-    }),
+    normalizeWhitespace(),
 ];
 
 function handleError(taskTypeError) {

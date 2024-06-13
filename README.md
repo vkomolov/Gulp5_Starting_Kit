@@ -5,6 +5,10 @@
 Task: to compile the npm plugins in production with HTML, CSS, JS, PHP and IMAGES files.
 
 ## Feature:
+- "gulp-rename";   //deprecations with fs.stats. Favor to CustomRenameFile
+- "postcss-preset-env" is included in cssnano
+- "autoprefixer"  is included in cssnano
+- "through2" is redundant in favor to Simplified Stream Construction: https://nodejs.org/api/stream.html#stream_simplified_construction
 
 
 
