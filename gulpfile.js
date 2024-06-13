@@ -29,10 +29,12 @@ import babel from "gulp-babel";
 import prettier from "@bdchauvette/gulp-prettier";
 import uglify from "gulp-uglify";
 
-//change control plugins
+//control plugins
 import newer from "gulp-newer";
-import cached from "gulp-cached";
-import changed from "gulp-changed";
+import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
+import changed from "gulp-changed"; //
+import debug from "gulp-debug";
+import size from 'gulp-size';
 
 //fonts plugins
 import ttf2woff2 from "gulp-ttf2woff2";
@@ -64,6 +66,7 @@ const pathData = {
         js: `${ distPath }js/`,
         img: `${ distPath }assets/img/`,
         fonts: `${ distPath }assets/fonts/`,
+        data: `${ distPath }assets/data/`,
     },
     src: {
         html: `${ srcPath }*.html`,
@@ -71,6 +74,7 @@ const pathData = {
         js: `${ srcPath }js/**/*.js`,
         img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
         fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
+        data: `${ srcPath }assets/data/**/*.{json, pdf, xml}`,
     },
     watch: {
         html: [`${ srcPath }*.html`, `${ srcPath }html/**/*.html`],
@@ -78,7 +82,7 @@ const pathData = {
         js: [`${ srcPath }js/**/*.js`, `${ srcPath }modules/**/*.js`],
         img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
         fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
-        data: `${ srcPath }assets/data/**/*.{json}`,
+        data: `${ srcPath }assets/data/**/*.{json, pdf, xml}`,
     },
     clean: `./${ distPath }`
 };
@@ -127,19 +131,27 @@ function handleHtml() {
 
 function handleSass() {
     return src(pathData.src.styles, { sourcemaps: true })
+        .pipe(debug({title: "handleSass in: "}))
+        .pipe(size())
         .pipe(plumber({
             errorHandler: handleError("Error at handleStyles...")
         }))
         .pipe(dependents())
         .pipe(sass({}, () => {}))
+        .pipe(debug({title: "css optimize in: "}))
+        .pipe(size())
         .pipe(postcss(optimizing))
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
 }
 
 function minifyCss() {
     return src(pathData.build.stylesAux)
+        .pipe(debug({title: "css compress in: "}))
+        .pipe(size())
         .pipe(postcss(compressing))
         .pipe(new CustomRenameFile(null, 'min'))
+        .pipe(debug({title: "css compress out: "}))
+        .pipe(size())
         .pipe(dest(pathData.build.styles));
 }
 
@@ -168,6 +180,15 @@ function handleFonts() {
         .pipe(dest(pathData.build.fonts));
 }
 
+function handleData() {
+    return src(pathData.src.data, { encoding: false })
+        .pipe(plumber({
+            errorHandler: handleError("Error at handleData...")
+        }))
+        .pipe(newer(pathData.build.data))
+        .pipe(dest(pathData.build.data));
+}
+
 function watchFiles() {
     gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
 
@@ -180,6 +201,7 @@ function watchFiles() {
     gulp.watch(pathData.watch.img, gulp.series(handleImages, localServer.reload));
 
     gulp.watch(pathData.watch.fonts, gulp.series(handleFonts, localServer.reload));
+    gulp.watch(pathData.watch.data, gulp.series(handleData, localServer.reload));
 }
 
 export function cleanDist() {
@@ -200,7 +222,8 @@ export function runBuild(cb) {
             handleHtml,
             handleStyles,
             handleImages,
-            handleFonts
+            handleFonts,
+            handleData
         )
     )(cb);
 }
