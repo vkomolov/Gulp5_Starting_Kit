@@ -28,15 +28,10 @@ export default class CustomRenameFile extends Transform {
             const newFileName = this.suffix
                 ? `${basename}.${this.suffix}${ext}`
                 : `${basename}${ext}`;
-            file.path = path.join(path.dirname(file.path), newFileName);
+            file.path = path.resolve(path.dirname(file.path), newFileName);
             callback(null, file);
         } catch (err) {
             callback(new PluginError(PLUGIN_NAME, err, { fileName: file.path }));
         }
     }
 }
-
-
-/*export default function customRenameFile() {
-    return new CustomRenameFile();
-}*/

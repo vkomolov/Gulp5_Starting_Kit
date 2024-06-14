@@ -1,13 +1,24 @@
+@import "../global_styles/reset";
 @import "../global_styles/variables";
 @import "../global_styles/mixins";
+@import "../global_styles/fonts";
 @import "../global_styles/animations";
 
+/////// STYLES ///////
+
 .modal-wrapper {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
-  width: 100em;
+  width: 10em;
+  height: 10em;
   background: $redLight;
+  color: $blueDark;
+  padding: 5em;
+  border: 1px solid $red;
+  border-radius: 2em;
+  animation: popupBackgroundFoxy  0.5s forwards ease-in-out;
+  animation-delay: 1s;
 }
 
 .testWrapper {

@@ -1,0 +1,29 @@
+@import "global_styles/reset";
+@import "./global_styles/variables";
+@import "./global_styles/mixins";
+@import "./global_styles/fonts";
+@import "./global_styles/animations";
+
+@import "./partials/modal";
+@import "./partials/initialBody";
+@import "./partials/header";
+@import "./partials/footer";
+
+/////// STYLES ///////
+
+.about-wrapper {
+  width: 100%;
+  border: 2px dotted $greenDarker;
+
+  @media screen and (max-width: 1024px) {
+    border: 5px solid $blueDark;
+  }
+
+  @include flex-box($flex-box-row-center-wrap...);
+}
+
+.about-wrapper__heading {
+  color: $foxy;
+  @include init-font(2em, 700);
+  @include text-shadow(0.05em, 0.05em);
+}

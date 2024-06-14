@@ -1,0 +1,49 @@
+@import "../global_styles/reset";
+@import "../global_styles/variables";
+@import "../global_styles/mixins";
+@import "../global_styles/fonts";
+@import "../global_styles/animations";
+
+@import "../partials/modal";
+@import "../partials/initialBody";
+
+/////// STYLES ///////
+
+.header-wrapper {
+  width: 100%;
+  border: 1px solid $blue;
+
+  @include flex-box($flex-box-row-center-wrap...);
+
+  @media screen and (max-width: 1024px) {
+    border: 5px solid blue !important;
+  }
+
+  .img-wrapper {
+    max-width: 14em;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
+}
+
+.header__nav {
+  @include flex-box($flex-box-row-center-wrap...);
+  gap: 0.5em;
+}
+
+.nav-link {
+  font-family: "Ubuntu-Regular", sans-serif;
+  color: $blue;
+  @include init-font(1.05em, 600);
+  @include text-shadow(0.05em, 0.05em);
+  @include transition();
+
+  &:hover {
+    color: $foxy;
+    transform: scale(1.03) translateY(-0.05em);
+  }
+}
+

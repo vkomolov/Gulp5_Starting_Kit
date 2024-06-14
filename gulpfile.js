@@ -5,9 +5,7 @@ import plumber from "gulp-plumber";
 
 //html plugins
 import typograf from "gulp-typograf";
-import webpHtml from "gulp-webp-retina-html";
 import htmlclean from "gulp-htmlclean";
-
 
 //styles plugins
 import * as dartSass from "sass";
@@ -16,8 +14,7 @@ import dependents from "gulp-dependents";
 import autoprefixer from "autoprefixer";
 import sortMediaQueries from "postcss-sort-media-queries";
 import discardUnused from "postcss-discard-unused";
-import webImagesCSS from "gulp-web-images-css";
-import purgecss from "@fullhuman/postcss-purgecss";
+import purgecss from "@fullhuman/postcss-purgecss"; //TODO: redundant???
 
 //postcss environment
 import postcss from "gulp-postcss";
@@ -46,7 +43,8 @@ import clean from "gulp-clean";
 //custom modules
 import LocalServer from "./src/modules/localServer.js";
 import CustomRenameFile from "./src/modules/CustomRenameFile.js";
-import { combinePaths } from "./src/modules/utilFuncs.js";
+import CustomPurgeCss from "./src/modules/CustomPurgeCss.js";
+import { combinePaths } from "./src/modules/utilFuncs.js";  //TODO: redundant???
 
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -61,9 +59,11 @@ const fileIncludeSettings = {
 const pathData = {
     build: {
         html: distPath,
+        htmlAux: `${ distPath }*.html`, //redundant?
         styles: `${ distPath }css/`,
-        stylesAux: [`${ distPath }css/*.css`, `!${ distPath }css/*.min.css`],
+        stylesAux: `${ distPath }css/*.css`,
         js: `${ distPath }js/`,
+        jsAux: `${ distPath }js/*.js`,
         img: `${ distPath }assets/img/`,
         fonts: `${ distPath }assets/fonts/`,
         data: `${ distPath }assets/data/`,
@@ -89,16 +89,12 @@ const pathData = {
 
 const sass = gulpSass(dartSass);
 const localServer = new LocalServer(pathData.build.html);
-const optimizing = [
+const optimizeScss = [
     sortMediaQueries({
         sort: "mobile-first"
     }),
     autoprefixer(),
     discardUnused({}),
-    purgecss({
-        content: combinePaths(pathData.watch.html, pathData.src.js), //it receives a path or|and array of paths
-//        safelist: ['safelist-selector'], // classes, which must not be removed...
-    }),
     cssnano({
         preset: [
             "default",
@@ -108,7 +104,7 @@ const optimizing = [
         ]
     })
 ];
-const compressing = [
+const optimizeCss = [
     normalizeWhitespace(),
 ];
 
@@ -131,35 +127,32 @@ function handleHtml() {
 
 function handleSass() {
     return src(pathData.src.styles, { sourcemaps: true })
-        .pipe(debug({title: "handleSass in: "}))
+        .pipe(debug({title: "Sass run...: "}))
         .pipe(size())
         .pipe(plumber({
             errorHandler: handleError("Error at handleStyles...")
         }))
         .pipe(dependents())
         .pipe(sass({}, () => {}))
-        .pipe(debug({title: "css optimize in: "}))
+        .pipe(debug({title: "Sass optimized...: "}))
         .pipe(size())
-        .pipe(postcss(optimizing))
+        .pipe(postcss(optimizeScss))
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
 }
 
-function minifyCss() {
+function handleCss() {
     return src(pathData.build.stylesAux)
-        .pipe(debug({title: "css compress in: "}))
+        .pipe(debug({title: "PurgeCss run... "}))
         .pipe(size())
-        .pipe(postcss(compressing))
+        .pipe(new CustomPurgeCss(pathData.build.html))
+        .pipe(debug({title: "PurgeCss optimized... "}))
+        .pipe(size())
+        .pipe(debug({title: "compressing css... "}))
+        .pipe(postcss(optimizeCss))
+        .pipe(debug({title: "css compressed... "}))
+        .pipe(size())
         .pipe(new CustomRenameFile(null, 'min'))
-        .pipe(debug({title: "css compress out: "}))
-        .pipe(size())
         .pipe(dest(pathData.build.styles));
-}
-
-function handleStyles(cb) {
-    gulp.series(
-        handleSass,
-        minifyCss
-    )(cb)
 }
 
 function handleImages() {
@@ -220,11 +213,12 @@ export function runBuild(cb) {
         cleanDist,
         gulp.parallel(
             handleHtml,
-            handleStyles,
+            handleSass,
             handleImages,
             handleFonts,
             handleData
-        )
+        ),
+        handleCss
     )(cb);
 }
 
