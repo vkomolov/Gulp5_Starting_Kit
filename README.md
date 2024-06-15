@@ -2,9 +2,14 @@
 ### Gulp version: "^5.0.0" !
 ### Node version: "v22.2.0" !
 
-Task: to compile the npm plugins in production with HTML, CSS, JS, PHP and IMAGES files.
+Task: to compile the npm plugins for production with HTML, CSS, JS, and IMAGES files.
+This starting gulp pack has 0 vulnerabilities and deprecations on current time...
+Some popular plugins which had vulnerabilities and deprecations were replaced with the custom ones using
+Simplified Stream Constructions: https://nodejs.org/api/stream.html#stream_simplified_construction
 
 ## Feature:
+- !!! The root html files and scss files, linked to them, must have the same basename: it is necessary 
+for "purgecss" plugin for removing the unused style selectors which are not found in the attached html files...
 - "gulp-rename";   //deprecations with fs.stats. Favor to CustomRenameFile
 - "postcss-preset-env" is included in cssnano
 - "autoprefixer"  is included in cssnano

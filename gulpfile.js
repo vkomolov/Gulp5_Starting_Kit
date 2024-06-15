@@ -14,7 +14,6 @@ import dependents from "gulp-dependents";
 import autoprefixer from "autoprefixer";
 import sortMediaQueries from "postcss-sort-media-queries";
 import discardUnused from "postcss-discard-unused";
-import purgecss from "@fullhuman/postcss-purgecss"; //TODO: redundant???
 
 //postcss environment
 import postcss from "gulp-postcss";
@@ -44,7 +43,8 @@ import clean from "gulp-clean";
 import LocalServer from "./src/modules/localServer.js";
 import CustomRenameFile from "./src/modules/CustomRenameFile.js";
 import CustomPurgeCss from "./src/modules/CustomPurgeCss.js";
-import { combinePaths } from "./src/modules/utilFuncs.js";  //TODO: redundant???
+import { combinePaths } from "./src/modules/utilFuncs.js";
+import gulpChanged from "gulp-changed";  //TODO: redundant???
 
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -118,6 +118,7 @@ function handleError(taskTypeError) {
 
 function handleHtml() {
     return src(pathData.src.html)
+        .pipe(newer(pathData.build.html))
         .pipe(plumber({
             errorHandler: handleError("Error at handleHtml...")
         }))
@@ -127,6 +128,7 @@ function handleHtml() {
 
 function handleSass() {
     return src(pathData.src.styles, { sourcemaps: true })
+        .pipe(newer({ dest: pathData.build.styles, ext: '.css' }))
         .pipe(debug({title: "Sass run...: "}))
         .pipe(size())
         .pipe(plumber({
@@ -142,11 +144,14 @@ function handleSass() {
 
 function handleCss() {
     return src(pathData.build.stylesAux)
+        //.pipe(changed(pathData.build.styles, { extension: '.css' }))
+        //.pipe(newer({ dest: pathData.build.styles, ext: '.css' }))
         .pipe(debug({title: "PurgeCss run... "}))
         .pipe(size())
         .pipe(new CustomPurgeCss(pathData.build.html))
         .pipe(debug({title: "PurgeCss optimized... "}))
         .pipe(size())
+        .pipe(dest(pathData.build.styles)) //updating *.css in dist
         .pipe(debug({title: "compressing css... "}))
         .pipe(postcss(optimizeCss))
         .pipe(debug({title: "css compressed... "}))
@@ -186,8 +191,8 @@ function watchFiles() {
     gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
 
     //optional: browserSync.stream()
-    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.stream)
-    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.reload));
+    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, handleCss, localServer.stream)
+    gulp.watch(pathData.watch.styles, gulp.series(handleSass, handleCss, localServer.reload));
 
     //gulp.watch(pathData.watch.js, handleJs);
 
