@@ -28,7 +28,7 @@ import uglify from "gulp-uglify";
 //control plugins
 import newer from "gulp-newer";
 import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
-import changed from "gulp-changed"; //
+import changed from "gulp-changed"; //TODO can be removed
 import debug from "gulp-debug";
 import size from 'gulp-size';
 
@@ -43,8 +43,8 @@ import clean from "gulp-clean";
 import LocalServer from "./src/modules/localServer.js";
 import CustomRenameFile from "./src/modules/CustomRenameFile.js";
 import CustomPurgeCss from "./src/modules/CustomPurgeCss.js";
+import CustomIf from "./src/modules/CustomIf.js";
 import { combinePaths } from "./src/modules/utilFuncs.js";
-import gulpChanged from "gulp-changed";  //TODO: redundant???
 
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -89,7 +89,7 @@ const pathData = {
 
 const sass = gulpSass(dartSass);
 const localServer = new LocalServer(pathData.build.html);
-const optimizeScss = [
+const optimizeCss = [
     sortMediaQueries({
         sort: "mobile-first"
     }),
@@ -104,7 +104,7 @@ const optimizeScss = [
         ]
     })
 ];
-const optimizeCss = [
+const minifyCss = [
     normalizeWhitespace(),
 ];
 
@@ -126,7 +126,7 @@ function handleHtml() {
         .pipe(dest(pathData.build.html));
 }
 
-function handleSass() {
+/*function handleSass() {
     return src(pathData.src.styles, { sourcemaps: true })
         .pipe(newer({ dest: pathData.build.styles, ext: '.css' }))
         .pipe(debug({title: "Sass run...: "}))
@@ -140,21 +140,28 @@ function handleSass() {
         .pipe(size())
         .pipe(postcss(optimizeScss))
         .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
-}
+}*/
 
-function handleCss() {
-    return src(pathData.build.stylesAux)
-        //.pipe(changed(pathData.build.styles, { extension: '.css' }))
-        //.pipe(newer({ dest: pathData.build.styles, ext: '.css' }))
-        .pipe(debug({title: "PurgeCss run... "}))
+function handleStyles() {
+    return src(pathData.src.styles, { sourcemaps: true })
+        .pipe(plumber({
+            errorHandler: handleError("Error at handleStyles...")
+        }))
+        .pipe(newer({ dest: pathData.build.styles, ext: '.css' }))
+        .pipe(size())
+        .pipe(dependents())
+        .pipe(sass({}, () => {}))
+        .pipe(debug({title: "Sass out: "}))
         .pipe(size())
         .pipe(new CustomPurgeCss(pathData.build.html))
-        .pipe(debug({title: "PurgeCss optimized... "}))
+        .pipe(debug({title: "PurgeCss out: "}))
         .pipe(size())
-        .pipe(dest(pathData.build.styles)) //updating *.css in dist
-        .pipe(debug({title: "compressing css... "}))
         .pipe(postcss(optimizeCss))
-        .pipe(debug({title: "css compressed... "}))
+        .pipe(debug({title: "css optimized: "}))
+        .pipe(size())
+        .pipe(dest(pathData.build.styles))
+        .pipe(postcss(minifyCss))
+        .pipe(debug({title: "css compressed: "}))
         .pipe(size())
         .pipe(new CustomRenameFile(null, 'min'))
         .pipe(dest(pathData.build.styles));
@@ -191,8 +198,8 @@ function watchFiles() {
     gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
 
     //optional: browserSync.stream()
-    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, handleCss, localServer.stream)
-    gulp.watch(pathData.watch.styles, gulp.series(handleSass, handleCss, localServer.reload));
+    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.stream));
+    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.reload));
 
     //gulp.watch(pathData.watch.js, handleJs);
 
@@ -216,14 +223,13 @@ export function cleanDist() {
 export function runBuild(cb) {
     gulp.series(
         cleanDist,
+        handleHtml, //handling html beforehand for purgeCss in handleSass
         gulp.parallel(
-            handleHtml,
-            handleSass,
+            handleStyles,
             handleImages,
             handleFonts,
             handleData
         ),
-        handleCss
     )(cb);
 }
 
