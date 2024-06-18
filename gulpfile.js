@@ -26,25 +26,26 @@ import prettier from "@bdchauvette/gulp-prettier";
 import uglify from "gulp-uglify";
 
 //control plugins
-import newer from "gulp-newer";
+//import newer from "gulp-newer";
 import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
 import changed from "gulp-changed"; //TODO can be removed
 import debug from "gulp-debug";
 import size from 'gulp-size';
 
 //fonts plugins
-import ttf2woff2 from "gulp-ttf2woff2";
+//import ttf2woff2 from "gulp-ttf2woff2";
 
 //other plugins
 import fileInclude from "gulp-file-include";
-import clean from "gulp-clean";
+
 
 //custom modules
-import LocalServer from "./src/modules/localServer.js";
+//import LocalServer from "./src/modules/localServer.js";
 import CustomRenameFile from "./src/modules/CustomRenameFile.js";
 import CustomPurgeCss from "./src/modules/CustomPurgeCss.js";
 import CustomIf from "./src/modules/CustomIf.js";
-import { combinePaths } from "./src/modules/utilFuncs.js";
+import CustomNewer from "./src/modules/CustomNewer.js";
+import { combinePaths, cleanDist } from "./src/modules/utilFuncs.js";
 
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -70,7 +71,7 @@ const pathData = {
     },
     src: {
         html: `${ srcPath }*.html`,
-        styles: `${ srcPath }scss/*.scss`,
+        styles: `${ srcPath }scss/**/*.scss`,
         js: `${ srcPath }js/**/*.js`,
         img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
         fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
@@ -88,7 +89,7 @@ const pathData = {
 };
 
 const sass = gulpSass(dartSass);
-const localServer = new LocalServer(pathData.build.html);
+//const localServer = new LocalServer(pathData.dist.html);
 const optimizeCss = [
     sortMediaQueries({
         sort: "mobile-first"
@@ -118,7 +119,7 @@ function handleError(taskTypeError) {
 
 function handleHtml() {
     return src(pathData.src.html)
-        .pipe(newer(pathData.build.html))
+        .pipe(new CustomNewer())
         .pipe(plumber({
             errorHandler: handleError("Error at handleHtml...")
         }))
@@ -126,30 +127,15 @@ function handleHtml() {
         .pipe(dest(pathData.build.html));
 }
 
-/*function handleSass() {
-    return src(pathData.src.styles, { sourcemaps: true })
-        .pipe(newer({ dest: pathData.build.styles, ext: '.css' }))
-        .pipe(debug({title: "Sass run...: "}))
-        .pipe(size())
-        .pipe(plumber({
-            errorHandler: handleError("Error at handleStyles...")
-        }))
-        .pipe(dependents())
-        .pipe(sass({}, () => {}))
-        .pipe(debug({title: "Sass optimized...: "}))
-        .pipe(size())
-        .pipe(postcss(optimizeScss))
-        .pipe(dest(pathData.build.styles, { sourcemaps: '.' }));
-}*/
-
 function handleStyles() {
     return src(pathData.src.styles, { sourcemaps: true })
         .pipe(plumber({
             errorHandler: handleError("Error at handleStyles...")
         }))
-        .pipe(newer({ dest: pathData.build.styles, ext: '.css' }))
-        .pipe(size())
-        .pipe(dependents())
+        .pipe(new CustomNewer())    //it caches and filters files by the modified time
+        .pipe(dependents()) //it collects the files which are dependant to the updated file
+        .pipe(debug({title: "dependants: "}))
+        .pipe(new CustomIf(/^[^\\]*\.scss$/))   //it filters the dependant root scss files
         .pipe(sass({}, () => {}))
         .pipe(debug({title: "Sass out: "}))
         .pipe(size())
@@ -172,7 +158,7 @@ function handleImages() {
         .pipe(plumber({
             errorHandler: handleError("Error at handleImages...")
         }))
-        .pipe(newer(pathData.build.img))
+        .pipe(new CustomNewer())
         .pipe(dest(pathData.build.img));
 }
 
@@ -181,7 +167,7 @@ function handleFonts() {
         .pipe(plumber({
             errorHandler: handleError("Error at handleFonts...")
         }))
-        .pipe(newer(pathData.build.fonts))
+        .pipe(new CustomNewer())
         .pipe(dest(pathData.build.fonts));
 }
 
@@ -190,45 +176,43 @@ function handleData() {
         .pipe(plumber({
             errorHandler: handleError("Error at handleData...")
         }))
-        .pipe(newer(pathData.build.data))
+        .pipe(new CustomNewer())
         .pipe(dest(pathData.build.data));
 }
 
-function watchFiles() {
-    gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
+export function watchFiles() {
+    gulp.watch(pathData.watch.html, gulp.series(handleHtml));
+    //gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
 
     //optional: browserSync.stream()
     //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.stream));
-    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.reload));
+    gulp.watch(pathData.watch.styles, gulp.series(handleStyles));
+    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.reload));
 
     //gulp.watch(pathData.watch.js, handleJs);
 
-    gulp.watch(pathData.watch.img, gulp.series(handleImages, localServer.reload));
+    gulp.watch(pathData.watch.img, gulp.series(handleImages));
+    //gulp.watch(pathData.watch.img, gulp.series(handleImages, localServer.reload));
 
-    gulp.watch(pathData.watch.fonts, gulp.series(handleFonts, localServer.reload));
-    gulp.watch(pathData.watch.data, gulp.series(handleData, localServer.reload));
+    gulp.watch(pathData.watch.fonts, gulp.series(handleFonts));
+    //gulp.watch(pathData.watch.fonts, gulp.series(handleFonts, localServer.reload));
+    gulp.watch(pathData.watch.data, gulp.series(handleData));
+    //gulp.watch(pathData.watch.data, gulp.series(handleData, localServer.reload));
 }
 
-export function cleanDist() {
-    return src(
-        pathData.clean,
-        {
-            allowEmpty: true,
-            read: false,
-        }
-    )
-        .pipe(clean({ force: true }));
+async function cleanBuild() {
+    await cleanDist(pathData.clean);
 }
 
 export function runBuild(cb) {
     gulp.series(
-        cleanDist,
+        cleanBuild,
         handleHtml, //handling html beforehand for purgeCss in handleSass
         gulp.parallel(
             handleStyles,
-            handleImages,
+/*            handleImages,
             handleFonts,
-            handleData
+            handleData*/
         ),
     )(cb);
 }
@@ -236,7 +220,7 @@ export function runBuild(cb) {
 export function runDev(cb) {
     gulp.series(
         runBuild,
-        localServer.reload,
+        //localServer.reload,
         watchFiles
     )(cb);
 }

@@ -15,6 +15,49 @@ for "purgecss" plugin for removing the unused style selectors which are not foun
 - "autoprefixer"  is included in cssnano
 - "through2" is redundant in favor to Simplified Stream Construction: https://nodejs.org/api/stream.html#stream_simplified_construction
 
+- browser-sync has 8 high vulnerabilities connected to ws (web-sockets). I`ll not wait for fixes from the developers and
+will change for the alternatives.
+
+- gulp-clean has deprecations in dependencies:
+  1. deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+  2. deprecated rimraf@2.7.1: Rimraf versions prior to v4 are no longer supported
+  3. deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+  SOLUTION: "rimraf": "^5.0.7" with the custom async function cleanDist avoiding stream and cleaning the path directly.
+  Advantages: •	Проверка существования директории: Мы напрямую проверяем, существует ли директория, и только если она существует, выполняем её удаление.
+•	Нет создания потока: Мы не создаём поток файлов и не передаём его через цепочку плагинов, что экономит ресурсы и время.
+•	Производительность: Быстрее, так как выполняется только проверка и удаление без дополнительной обработки файлов.
+
+- gulp-newer has deprecations:
+  1. deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+  2. deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+  SOLUTION: inflight is replaced with lru-cache: https://www.npmjs.com/package/lru-cache
+     Преимущества кастомного решения
+     Контроль и Настройка:
+     Полный контроль над зависимостями и логикой, что позволяет избежать устаревших и уязвимых пакетов.
+     Гибкость в настройке и модификации кода для специфических требований вашего проекта.
+     Производительность:
+     LRU Cache: Эффективное управление асинхронными операциями и уменьшение количества обращений к файловой системе.
+     Simplified Stream Construction: Читаемый и поддерживаемый код, упрощающий потоковую обработку данных.
+     Современные технологии:
+     Использование современных возможностей Node.js, таких как stream.Transform, делает код более идиоматическим и понятным.
+     Сравнение с gulp-newer
+     gulp-newer удобно использовать для стандартных задач, но оно может ограничивать возможности обновления и модификации из-за устаревших зависимостей.
+     Кастомное решение позволяет:
+     Использовать актуальные и поддерживаемые пакеты.
+     Точно контролировать логику обработки файлов и кеширования.
+
+- gulp-ttf2woff2 has a mass of deprecations:
+  1. deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+  2. deprecated @npmcli/move-file@2.0.1: This functionality has been moved to @npmcli/fs
+  3. deprecated npmlog@6.0.2: This package is no longer supported.
+  4. deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+  5. deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+  6. deprecated glob@8.1.0: Glob versions prior to v9 are no longer supported
+  7. deprecated are-we-there-yet@3.0.1: This package is no longer supported.
+  8. deprecated gauge@4.0.4: This package is no longer supported.
+
+
+
 
 
 

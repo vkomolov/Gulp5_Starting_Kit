@@ -25,8 +25,7 @@ export default class CustomPurgeCss extends Transform {
      */
     async _transform(file, encoding, callback) {
         if (file.isNull()) {
-            callback(null, file);
-            return; // No need to return here, just to exit the function
+            return callback(null, file);
         }
 
         if (file.isStream()) {
