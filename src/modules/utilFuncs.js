@@ -1,5 +1,37 @@
 "use strict";
 
+import fs, { constants } from 'fs';
+import { rimraf } from 'rimraf';
+
+
+/**
+ * Checks availability and access mode of the given path
+ * @param {string} path - given the path of the directory or the file
+ * @param {number} [mode = constants.F_OK] - the mode of the access
+ * @returns {Promise<boolean>}
+ */
+export async function checkAccess(path, mode = constants.F_OK) {
+    try {
+        await fs.promises.access(path, mode); // async access
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+/**
+ * If the path exists, it returns the Promise of the path to be deleted; else it returns an empty Promise
+ * @param {string} path - path to delete
+ * @returns {Promise<void>}
+ */
+export async function cleanDist(path) {
+    const pathExists = await checkAccess(path);
+
+    if (pathExists) {
+        await rimraf(path);
+    }
+}
+
 /**
  * Combine paths into a single array of strings.
  * @param {(string | string[])} paths - Strings or arrays of strings to combine.

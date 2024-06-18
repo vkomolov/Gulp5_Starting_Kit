@@ -1,18 +1,19 @@
+/*
 "use strict";
 
 import sync from "browser-sync";
 
-/**
+/!**
  * @class
  * @classdesc local server, with methods to reload the page or to stream the changes to the page with no reload
- */
+ *!/
 export default class LocalServer {
-    /**
+    /!**
      * @param { string } [baseDir = "dist/"]
      * @param { boolean } [open = true]
      * @param { boolean } [notify = true]
      * @param { boolean } [noCacheHeaders = true]
-     */
+     *!/
     constructor(
         baseDir = "dist/",
         open = true,
@@ -84,4 +85,4 @@ export default class LocalServer {
 ///////////////// dev
 function log(it, comments='value: ') {
     console.log(comments, it);
-}
+}*/
