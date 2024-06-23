@@ -4,7 +4,8 @@ import { PurgeCSS } from 'purgecss';
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
-import fs from 'fs';
+import { checkAccess } from "./utilFuncs.js";
+
 
 const PLUGIN_NAME = 'customPurgeCss';
 /**
@@ -41,11 +42,12 @@ export default class CustomPurgeCss extends Transform {
             }
 
             const fullName = path.basename(file.path, ext);
-            const basename = fullName.split(".")[0];    //for *.min.css and *.css
+            const basename = fullName.split(".")[0];
             const targetHtml = path.resolve(this.srcDir, `${basename}.html`);
 
-            // Checking for targetHtml to exist
-            if (!fs.existsSync(targetHtml)) {
+            // Checking for targetHtml to exist using checkFileExistence function
+            const exists = await checkAccess(targetHtml);
+            if (!exists) {
                 return callback(
                     new PluginError(PLUGIN_NAME,
                         `HTML file ${targetHtml} not found... please, make it first `));
@@ -67,7 +69,9 @@ export default class CustomPurgeCss extends Transform {
             } else {
                 callback(new PluginError(PLUGIN_NAME, 'PurgeCSS returned no results'));
             }
-        } catch (err) {
+
+        }
+        catch (err) {
             callback(new PluginError(PLUGIN_NAME, err, { fileName: file.path }));
         }
     }

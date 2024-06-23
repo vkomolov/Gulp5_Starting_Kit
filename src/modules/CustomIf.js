@@ -35,15 +35,15 @@ export default class CustomIf extends Transform {
         try {
             if (this.filterBy instanceof RegExp) {
 
-                log("file.relative: ", file.relative);
+                //log("file.relative: ", file.relative);
 
                 const res = this.filterBy.test(file.relative);
 
-                log(` RegExp ${file.relative}: `, res);
+                //log(` RegExp ${file.relative}: `, res);
                 return res ? callback(null, file) : callback();
             }
             else if (typeof this.filterBy  === "string") {
-                log("filterBy is string...");
+                //log("filterBy is string...");
 
                 const fileName = path.basename(file.path);  //full name of the file with the extension
                 const res = this.isTale ? fileName.endsWith(this.filterBy) : fileName.includes(this.filterBy);

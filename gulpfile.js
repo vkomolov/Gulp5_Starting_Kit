@@ -26,7 +26,6 @@ import prettier from "@bdchauvette/gulp-prettier";
 import uglify from "gulp-uglify";
 
 //control plugins
-//import newer from "gulp-newer";
 import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
 import changed from "gulp-changed"; //TODO can be removed
 import debug from "gulp-debug";
@@ -38,9 +37,8 @@ import size from 'gulp-size';
 //other plugins
 import fileInclude from "gulp-file-include";
 
-
 //custom modules
-//import LocalServer from "./src/modules/localServer.js";
+import BrowserSync from "./src/modules/BrowserSync.js";
 import CustomRenameFile from "./src/modules/CustomRenameFile.js";
 import CustomPurgeCss from "./src/modules/CustomPurgeCss.js";
 import CustomIf from "./src/modules/CustomIf.js";
@@ -89,7 +87,6 @@ const pathData = {
 };
 
 const sass = gulpSass(dartSass);
-//const localServer = new LocalServer(pathData.dist.html);
 const optimizeCss = [
     sortMediaQueries({
         sort: "mobile-first"
@@ -108,6 +105,13 @@ const optimizeCss = [
 const minifyCss = [
     normalizeWhitespace(),
 ];
+const browserSync = new BrowserSync({
+    baseDir: distPath,
+    index: "main.html",
+    open: true,
+    notify: true,
+    noCacheHeaders: true
+});
 
 function handleError(taskTypeError) {
     return (err) => {
@@ -119,10 +123,10 @@ function handleError(taskTypeError) {
 
 function handleHtml() {
     return src(pathData.src.html)
-        .pipe(new CustomNewer())
         .pipe(plumber({
             errorHandler: handleError("Error at handleHtml...")
         }))
+        .pipe(debug({title: "dependants: "}))
         .pipe(fileInclude(fileIncludeSettings))
         .pipe(dest(pathData.build.html));
 }
@@ -181,23 +185,24 @@ function handleData() {
 }
 
 export function watchFiles() {
-    gulp.watch(pathData.watch.html, gulp.series(handleHtml));
-    //gulp.watch(pathData.watch.html, gulp.series(handleHtml, localServer.reload));
+    //gulp.watch(pathData.watch.html, gulp.series(handleHtml));
+    gulp.watch(pathData.watch.html, gulp.series(handleHtml, browserSync.reload));
 
     //optional: browserSync.stream()
-    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.stream));
-    gulp.watch(pathData.watch.styles, gulp.series(handleStyles));
-    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, localServer.reload));
+    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, browserSync.stream));
+    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles));
+    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, browserSync.reload));
 
     //gulp.watch(pathData.watch.js, handleJs);
 
-    gulp.watch(pathData.watch.img, gulp.series(handleImages));
-    //gulp.watch(pathData.watch.img, gulp.series(handleImages, localServer.reload));
+    //gulp.watch(pathData.watch.img, gulp.series(handleImages));
+    gulp.watch(pathData.watch.img, gulp.series(handleImages, browserSync.reload));
 
-    gulp.watch(pathData.watch.fonts, gulp.series(handleFonts));
-    //gulp.watch(pathData.watch.fonts, gulp.series(handleFonts, localServer.reload));
-    gulp.watch(pathData.watch.data, gulp.series(handleData));
-    //gulp.watch(pathData.watch.data, gulp.series(handleData, localServer.reload));
+    //gulp.watch(pathData.watch.fonts, gulp.series(handleFonts));
+    gulp.watch(pathData.watch.fonts, gulp.series(handleFonts, browserSync.reload));
+
+    //gulp.watch(pathData.watch.data, gulp.series(handleData));
+    gulp.watch(pathData.watch.data, gulp.series(handleData, browserSync.reload));
 }
 
 async function cleanBuild() {
@@ -210,9 +215,9 @@ export function runBuild(cb) {
         handleHtml, //handling html beforehand for purgeCss in handleSass
         gulp.parallel(
             handleStyles,
-/*            handleImages,
+            handleImages,
             handleFonts,
-            handleData*/
+            handleData
         ),
     )(cb);
 }
@@ -220,7 +225,7 @@ export function runBuild(cb) {
 export function runDev(cb) {
     gulp.series(
         runBuild,
-        //localServer.reload,
+        browserSync.reload,
         watchFiles
     )(cb);
 }

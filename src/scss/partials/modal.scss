@@ -13,7 +13,7 @@
   width: 10em;
   height: 10em;
   background: $blueDark;
-  color: $blueDark;
+  color: $foxy;
   padding: 5em;
   border: 1px solid $red;
   border-radius: 1em;
@@ -32,7 +32,7 @@
 
 .testWrapper__heading {
   font-size: 1.5em;
-  color: $blue;
+  color: $foxy;
 
   @media screen and (max-width: 1024px) {
     font-size: 1em;
