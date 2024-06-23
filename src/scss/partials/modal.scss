@@ -1,8 +1,8 @@
-@import "../global_styles/reset";
+//@import "../global_styles/reset";
 @import "../global_styles/variables";
 @import "../global_styles/mixins";
-@import "../global_styles/fonts";
-@import "../global_styles/animations";
+//@import "../global_styles/fonts";
+//@import "../global_styles/animations";
 
 /////// STYLES ///////
 
@@ -12,11 +12,11 @@
   left: 0;
   width: 10em;
   height: 10em;
-  background: $redLight;
-  color: $blueDark;
+  background: $blueDark;
+  color: $foxy;
   padding: 5em;
   border: 1px solid $red;
-  border-radius: 2em;
+  border-radius: 1em;
   animation: popupBackgroundFoxy  0.5s forwards ease-in-out;
   animation-delay: 1s;
 }
@@ -32,7 +32,7 @@
 
 .testWrapper__heading {
   font-size: 1.5em;
-  color: $blue;
+  color: $foxy;
 
   @media screen and (max-width: 1024px) {
     font-size: 1em;

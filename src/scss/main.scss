@@ -21,7 +21,7 @@
   margin: 0 auto;
   padding: 1.5em 0.5em;
 
-  border: 1px dotted $blueDark;
+  border: 2px dotted $foxy;
 
   h1, h2, h3, h4, h5, h6 {
     font-family: "Ubuntu", sans-serif;
@@ -41,7 +41,7 @@
   @include flex-box($flex-box-row-center-wrap...);
 
   .main-container {
-    color: red;
+    color: $blueDark;
   }
 
   .pointer-container {

@@ -16,7 +16,7 @@
   border: 2px dotted $greenDarker;
 
   @media screen and (max-width: 1024px) {
-    border: 5px solid $blueDark;
+    border: 1px solid $blueDark;
   }
 
   @include flex-box($flex-box-row-center-wrap...);
