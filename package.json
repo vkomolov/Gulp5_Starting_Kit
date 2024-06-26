@@ -41,7 +41,6 @@
     "gulp-sass": "^5.1.0",
     "gulp-size": "^5.0.0",
     "gulp-typograf": "^4.1.0",
-    "gulp-uglify": "^3.0.2",
     "lru-cache": "^10.2.2",
     "plugin-error": "^2.0.1",
     "postcss": "^8.4.38",

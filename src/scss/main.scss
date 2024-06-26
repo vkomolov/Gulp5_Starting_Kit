@@ -12,29 +12,6 @@
 
 /////// STYLES ///////
 
-
-.total-wrapper {
-  font-size: 1rem;
-  position: relative; //for the alert block in absolute position
-  max-width: $maxWidth;
-  min-width: $minWidth;
-  margin: 0 auto;
-  padding: 1.5em 0.5em;
-
-  border: 2px dotted $foxy;
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "Ubuntu", sans-serif;
-  }
-
-  @media screen and (max-width: 1024px) {
-    font-size: 0.9rem;
-  }
-  @media screen and (max-width: 768px) {
-    font-size: 0.75rem;
-  }
-}
-
 #barrier-wrapper {
   width: 100%;
 

@@ -6,7 +6,6 @@ import PluginError from 'plugin-error';
 import path from 'path';
 import { checkAccess } from "./utilFuncs.js";
 
-
 const PLUGIN_NAME = 'customPurgeCss';
 /**
  * CustomPurgeCss transform stream for purging unused CSS based on HTML file content.
