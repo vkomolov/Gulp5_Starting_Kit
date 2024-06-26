@@ -23,7 +23,6 @@ import normalizeWhitespace from 'postcss-normalize-whitespace';
 //js plugins
 import babel from "gulp-babel";
 import prettier from "@bdchauvette/gulp-prettier";
-import uglify from "gulp-uglify";
 
 //control plugins
 import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
@@ -49,8 +48,8 @@ import { combinePaths, cleanDist } from "./src/modules/utilFuncs.js";
 /////////////// END OF IMPORTS /////////////////////////
 
 const { src, dest } = gulp;
-const srcPath = "src/";
-const distPath = "dist/";
+const srcPath = "./src/";
+const distPath = "./dist/";
 const fileIncludeSettings = {
     prefix: "@@",
     basepath: "@file"
@@ -58,18 +57,18 @@ const fileIncludeSettings = {
 const pathData = {
     build: {
         html: distPath,
-        htmlAux: `${ distPath }*.html`, //redundant?
+        //htmlAux: `${ distPath }*.html`, //redundant?
         styles: `${ distPath }css/`,
-        stylesAux: `${ distPath }css/*.css`,
+        //stylesAux: `${ distPath }css/*.css`,
         js: `${ distPath }js/`,
-        jsAux: `${ distPath }js/*.js`,
+        //jsAux: `${ distPath }js/*.js`,
         img: `${ distPath }assets/img/`,
         fonts: `${ distPath }assets/fonts/`,
         data: `${ distPath }assets/data/`,
     },
     src: {
         html: `${ srcPath }*.html`,
-        styles: `${ srcPath }scss/**/*.scss`,
+        styles: `${ srcPath }scss/**/*.scss`,   //only changed files will be processed
         js: `${ srcPath }js/**/*.js`,
         img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
         fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
@@ -121,6 +120,10 @@ function handleError(taskTypeError) {
     }
 }
 
+/**
+ *
+ * @returns {*}
+ */
 function handleHtml() {
     return src(pathData.src.html)
         .pipe(plumber({
@@ -131,30 +134,44 @@ function handleHtml() {
         .pipe(dest(pathData.build.html));
 }
 
+/**
+ *  It takes all scss files:
+ *  - at the initial cycle with runDev/runBuild it caches all *.scss files, including nested to the folders at .src/scss
+ *  - at the following watch cycles it filters only the changed *.scss in all the folders at .src/scss/
+ *  Then it filters the root *.scss files, which linked to html and dependant to the changed *.scss, imported to them
+ *  Then it pipes the dependant root *.scss to Sass, which compiles them with all imported *.scss, nested in the folders
+ *  Then it removes the css selectors from ${baseName}.css, which are not used in the following ${baseName}.html
+ *  Then it optimizes the css files with no compression for the following writing to .dist/
+ *  Then it compresses the css files and renames them with .min suffix for the following writing to .dist/
+ * TODO: to the find solution with the correct sourcemaps...
+ * TODO: CustomPurgeCss and postCss([normalizeWhitespace()]) break the sourcemap
+ * TODO: https://www.npmjs.com/package/gulp-sourcemaps have 3 moderate vulnerabilities and was removed...
+ * TODO: src(srcPath, { sourcemaps: true })/gulp.dest(distPath, { sourcemaps: '.' }) are also broken by the upper modules
+ */
 function handleStyles() {
-    return src(pathData.src.styles, { sourcemaps: true })
+    return src(pathData.src.styles)
         .pipe(plumber({
             errorHandler: handleError("Error at handleStyles...")
         }))
         .pipe(new CustomNewer())    //it caches and filters files by the modified time
         .pipe(dependents()) //it collects the files which are dependant to the updated file
         .pipe(debug({title: "dependants: "}))
-        .pipe(new CustomIf(/^[^\\]*\.scss$/))   //it filters the dependant root scss files
+        .pipe(new CustomIf(/^[^\\]*\.scss$/))   //it filters the dependant root scss files not nested in /**/
         .pipe(sass({}, () => {}))
-        .pipe(debug({title: "Sass out: "}))
+        .pipe(debug({title: "Sass: "}))
         .pipe(size())
-        .pipe(new CustomPurgeCss(pathData.build.html))
-        .pipe(debug({title: "PurgeCss out: "}))
+        .pipe(new CustomPurgeCss(pathData.build.html))  //to filter ${basename}.css selectors not used in ${basename}.html
+        .pipe(debug({title: "PurgeCss: "}))
         .pipe(size())
-        .pipe(postcss(optimizeCss))
+        .pipe(postcss(optimizeCss)) //to optimize *.css
         .pipe(debug({title: "css optimized: "}))
         .pipe(size())
-        .pipe(dest(pathData.build.styles))
-        .pipe(postcss(minifyCss))
+        .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
+        .pipe(postcss(minifyCss))   //to compress *.ss
         .pipe(debug({title: "css compressed: "}))
         .pipe(size())
-        .pipe(new CustomRenameFile(null, 'min'))
-        .pipe(dest(pathData.build.styles));
+        .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
+        .pipe(dest(pathData.build.styles)); //to paste compressed *.css to dist/
 }
 
 function handleImages() {
