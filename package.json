@@ -11,17 +11,14 @@
   },
   "author": "",
   "license": "ISC",
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ]
-  },
   "browserslist": [
     "last 2 versions",
     "not dead"
   ],
   "devDependencies": {
     "@babel/core": "^7.24.7",
+    "@babel/plugin-transform-classes": "^7.24.7",
+    "@babel/plugin-transform-runtime": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
     "@bdchauvette/gulp-prettier": "^2.0.0",
     "autoprefixer": "^10.4.19",
@@ -49,6 +46,10 @@
     "postcss-sort-media-queries": "^5.2.0",
     "purgecss": "^6.0.0",
     "rimraf": "^5.0.7",
-    "sass": "^1.77.6"
+    "sass": "^1.77.6",
+    "terser": "^5.31.1"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.24.7"
   }
 }

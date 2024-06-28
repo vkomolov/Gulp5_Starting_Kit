@@ -22,6 +22,7 @@ import normalizeWhitespace from 'postcss-normalize-whitespace';
 
 //js plugins
 import babel from "gulp-babel";
+import TerserMinifier from "./src/modules/TerserMinifier.js";
 import prettier from "@bdchauvette/gulp-prettier";
 
 //control plugins
@@ -47,7 +48,7 @@ import { combinePaths, cleanDist } from "./src/modules/utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
-const { src, dest } = gulp;
+const { src, dest, series, parallel, watch } = gulp;
 const srcPath = "./src/";
 const distPath = "./dist/";
 const fileIncludeSettings = {
@@ -122,7 +123,7 @@ function handleError(taskTypeError) {
 
 /**
  *
- * @returns {*}
+ *
  */
 function handleHtml() {
     return src(pathData.src.html)
@@ -174,6 +175,19 @@ function handleStyles() {
         .pipe(dest(pathData.build.styles)); //to paste compressed *.css to dist/
 }
 
+function handleJs() {
+    return src(pathData.src.js, { sourcemaps: true })
+        .pipe(babel())
+        .pipe(dest(pathData.build.js))
+        .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.js
+        .pipe(new TerserMinifier({
+            format: {
+                "quote_style": 2
+            }
+        }))
+        .pipe(dest(pathData.build.js, { sourcemaps: "." }));
+}
+
 function handleImages() {
     return src(pathData.src.img, { encoding: false })
         .pipe(plumber({
@@ -202,24 +216,19 @@ function handleData() {
 }
 
 export function watchFiles() {
-    //gulp.watch(pathData.watch.html, gulp.series(handleHtml));
-    gulp.watch(pathData.watch.html, gulp.series(handleHtml, browserSync.reload));
+    watch(pathData.watch.html, series(handleHtml, browserSync.reload));
 
     //optional: browserSync.stream()
-    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles, browserSync.stream));
-    //gulp.watch(pathData.watch.styles, gulp.series(handleStyles));
-    gulp.watch(pathData.watch.styles, gulp.series(handleStyles, browserSync.reload));
+    //watch(pathData.watch.styles, series(handleStyles, browserSync.stream));
+    watch(pathData.watch.styles, series(handleStyles, browserSync.reload));
 
-    //gulp.watch(pathData.watch.js, handleJs);
+    watch(pathData.watch.js, series(handleJs, browserSync.reload));
 
-    //gulp.watch(pathData.watch.img, gulp.series(handleImages));
-    gulp.watch(pathData.watch.img, gulp.series(handleImages, browserSync.reload));
+    watch(pathData.watch.img, series(handleImages, browserSync.reload));
 
-    //gulp.watch(pathData.watch.fonts, gulp.series(handleFonts));
-    gulp.watch(pathData.watch.fonts, gulp.series(handleFonts, browserSync.reload));
+    watch(pathData.watch.fonts, series(handleFonts, browserSync.reload));
 
-    //gulp.watch(pathData.watch.data, gulp.series(handleData));
-    gulp.watch(pathData.watch.data, gulp.series(handleData, browserSync.reload));
+    watch(pathData.watch.data, series(handleData, browserSync.reload));
 }
 
 async function cleanBuild() {
@@ -232,6 +241,7 @@ export function runBuild(cb) {
         handleHtml, //handling html beforehand for purgeCss in handleSass
         gulp.parallel(
             handleStyles,
+            handleJs,
             handleImages,
             handleFonts,
             handleData
