@@ -4,7 +4,7 @@ import { PurgeCSS } from 'purgecss';
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
-import { checkAccess } from "./utilFuncs.js";
+import { checkAccess } from "../gulp/utilFuncs.js";
 
 const PLUGIN_NAME = 'customPurgeCss';
 /**

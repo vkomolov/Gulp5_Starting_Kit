@@ -2,6 +2,7 @@
 
 import fs, { constants } from 'fs';
 import { rimraf } from 'rimraf';
+import { pathData } from "./vars.js";
 
 
 /**
@@ -32,6 +33,14 @@ export async function cleanDist(path) {
     }
 }
 
+export function handleError(taskTypeError) {
+    return (err) => {
+        console.error(taskTypeError, err.message);
+        //console.error(err);
+        //this.emit('end'); // halt the pipe
+    }
+}
+
 /**
  * Combine paths into a single array of strings.
  * @param {(string | string[])} paths - Strings or arrays of strings to combine.
@@ -42,3 +51,4 @@ export const combinePaths = (...paths) => {
         return acc.concat(Array.isArray(path) ? path : [path]);
     }, []);
 }
+

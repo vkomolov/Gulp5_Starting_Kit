@@ -86,7 +86,7 @@ will change for the alternatives.
 
      |-- js
         |-- partial     //partial js files
-        main.js
+        index.js
         main.min.js     //to be linked to *.html
 
      main.html         //minimized html
@@ -99,7 +99,7 @@ will change for the alternatives.
         |-- partial
             funcs.js
             .......
-        main.js                 //*.js will be piped from here
+        index.js                 //*.js will be piped from here
 
     |-- scss
         |-- global_styles
