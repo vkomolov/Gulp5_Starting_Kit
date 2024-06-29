@@ -1,5 +1,8 @@
 "use strict";
 
+import TerserPlugin from "terser-webpack-plugin";
+/////////////// END OF IMPORTS /////////////////////////
+
 export const srcPath = "./src/";
 export const distPath = "./dist/";
 
@@ -12,7 +15,7 @@ export const pathData = {
     src: {
         html: `${ srcPath }*.html`,
         styles: `${ srcPath }scss/**/*.scss`,   //only changed files will be processed
-        js: `${ srcPath }js/**/*.js`,
+        js: `${ srcPath }js/*.js`,
         img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
         fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
         data: `${ srcPath }assets/data/**/*.{json, pdf, xml}`,
@@ -43,5 +46,57 @@ export const entries = {
     js: {
         index: `${ srcPath }js/index.js`,
         about: `${ srcPath }js/about.js`,
+    }
+}
+
+export const webpackConfigJs = {
+    dev: {
+        mode: "development",
+        devtool: 'source-map',
+        entry: {
+            ...entries.js,
+        },
+        output: {
+            filename: "[name].bundle.js",
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.css$/,
+                    use: ["style-loader", "css-loader"],
+                },
+            ],
+        },
+    },
+    build: {
+        mode: "production",
+        entry: {
+            ...entries.js,
+        },
+        output: {
+            filename: "[name].bundle.js",
+        },
+        optimization: {
+            minimize: true,
+            minimizer: [
+                new TerserPlugin({
+                    parallel: true,
+                    terserOptions: {
+                        format: {
+                            comments: false,
+                        },
+                    },
+                    extractComments: false,
+                }),
+            ],
+        },
+        module: {
+            rules: [
+                {
+                    test: /\.css$/,
+                    use: ["style-loader", "css-loader"],
+                },
+            ],
+        },
     }
 }

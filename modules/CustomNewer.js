@@ -3,7 +3,7 @@
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import { LRUCache } from 'lru-cache';
-import { statSync } from 'fs';
+import { promises as fsPromises } from 'fs';
 import path from 'path';
 
 const PLUGIN_NAME = 'custom-newer';
@@ -14,19 +14,17 @@ const cache = new LRUCache({
     ttl: 1000 * 60 * 60, // 1 hour of cache
 });
 
-/**
- * statSync(filePath): Synchronously obtains information about the file at the given path.
- * .mtime: Returns the last modification time of the file as a Date object.
- *
- * @param { string }filePath
- * @returns {object}
- */
-
-function makeCacheKeyValue(filePath) {
+async function makeCacheKeyValue(filePath) {
     const baseName = path.basename(filePath);
-    return {
-        cacheKey: baseName,
-        MTimeValue: statSync(filePath).mtime.getTime().toString(),
+    try {
+        const stats = await fsPromises.stat(filePath);
+        return {
+            cacheKey: baseName,
+            MTimeValue: stats.mtime.getTime().toString(),
+        };
+    } catch (err) {
+        console.error(`Error getting file stats for ${filePath}:`, err);
+        return null;
     }
 }
 
@@ -35,32 +33,34 @@ export default class CustomNewer extends Transform {
         super({ objectMode: true });
     }
 
-    _transform(file, encoding, callback) {
-        const { cacheKey, MTimeValue } = makeCacheKeyValue(file.path);
+    async _transform(file, encoding, callback) {
+        try {
+            const { cacheKey, MTimeValue } = await makeCacheKeyValue(file.path);
 
-        if (file.isNull()) {
-            return callback(null, file);
-        }
-        if (file.isStream()) {
-            callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-            return; // No need to return here, just to exit the function
-        }
-        if (cache.has(cacheKey)) {
-            //getting modify time from cache
-            const cachedMTime = cache.get(cacheKey);
-            if (cachedMTime === MTimeValue) {
-                return callback();
-            }
-            else {
-                console.log("updating cache: ", cacheKey);
-                cache.set(cacheKey, MTimeValue);
+            if (file.isNull()) {
                 return callback(null, file);
             }
-        }
-        else {
-            cache.set(cacheKey, MTimeValue);
-            console.log("updating cache: ", cacheKey);
-            return callback(null, file);
+            if (file.isStream()) {
+                callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
+                return; // No need to return here, just to exit the function
+            }
+            if (cache.has(cacheKey)) {
+                // Getting modify time from cache
+                const cachedMTime = cache.get(cacheKey);
+                if (cachedMTime === MTimeValue) {
+                    return callback();
+                } else {
+                    console.log("Updating cache: ", cacheKey);
+                    cache.set(cacheKey, MTimeValue);
+                    return callback(null, file);
+                }
+            } else {
+                cache.set(cacheKey, MTimeValue);
+                console.log("Updating cache: ", cacheKey);
+                return callback(null, file);
+            }
+        } catch (err) {
+            callback(new PluginError(PLUGIN_NAME, `Error processing file: ${err.message}`));
         }
     }
 }

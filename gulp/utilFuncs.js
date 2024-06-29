@@ -4,7 +4,6 @@ import fs, { constants } from 'fs';
 import { rimraf } from 'rimraf';
 import { pathData } from "./vars.js";
 
-
 /**
  * Checks availability and access mode of the given path
  * @param {string} path - given the path of the directory or the file

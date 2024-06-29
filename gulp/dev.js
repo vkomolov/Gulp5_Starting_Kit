@@ -3,7 +3,7 @@
 import gulp from "gulp";
 
 //variables and settings
-import { fileIncludeSettings, pathData } from "./vars.js";
+import { fileIncludeSettings, pathData, webpackConfigJs } from "./vars.js";
 
 //error handling plugins
 import plumber from "gulp-plumber";
@@ -24,7 +24,6 @@ import discardUnused from "postcss-discard-unused";
 //postcss environment
 import postcss from "gulp-postcss";
 import cssnano from "cssnano";
-import normalizeWhitespace from 'postcss-normalize-whitespace';
 
 //js plugins
 import babel from "gulp-babel";
@@ -43,12 +42,9 @@ import size from 'gulp-size';
 import fileInclude from "gulp-file-include";
 
 //custom modules
-
 import CustomRenameFile from "../modules/CustomRenameFile.js";
-import CustomPurgeCss from "../modules/CustomPurgeCss.js";
 import CustomIf from "../modules/CustomIf.js";
 import CustomNewer from "../modules/CustomNewer.js";
-import TerserMinifier from "../modules/TerserMinifier.js";
 import { combinePaths, handleError } from "./utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -71,9 +67,8 @@ const optimizeCss = [
         ]
     })
 ];
-const minifyCss = [
-    normalizeWhitespace(),
-];
+
+const webpackConfig = webpackConfigJs.dev;
 
 /**
  *
@@ -84,7 +79,6 @@ export function handleHtml() {
         .pipe(plumber({
             errorHandler: handleError("Error at handleHtml...")
         }))
-        .pipe(debug({title: "dependants: "}))
         .pipe(fileInclude(fileIncludeSettings))
         .pipe(dest(pathData.build.html));
 }
@@ -104,7 +98,7 @@ export function handleHtml() {
  * TODO: src(srcPath, { sourcemaps: true })/gulp.dest(distPath, { sourcemaps: '.' }) are also broken by the upper modules
  */
 export function handleStyles() {
-    return src(pathData.src.styles)
+    return src(pathData.src.styles, { sourcemaps: true })
         .pipe(plumber({
             errorHandler: handleError("Error at handleStyles...")
         }))
@@ -115,39 +109,24 @@ export function handleStyles() {
         .pipe(sass({}, () => {}))
         .pipe(debug({title: "Sass: "}))
         .pipe(size())
-        .pipe(new CustomPurgeCss(pathData.build.html))  //to filter ${basename}.css selectors not used in ${basename}.html
-        .pipe(debug({title: "PurgeCss: "}))
-        .pipe(size())
         .pipe(postcss(optimizeCss)) //to optimize *.css
         .pipe(debug({title: "css optimized: "}))
         .pipe(size())
         .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
-        .pipe(postcss(minifyCss))   //to compress *.ss
-        .pipe(debug({title: "css compressed: "}))
-        .pipe(size())
+        //TODO: to omit renaming at dev
         .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
-        .pipe(dest(pathData.build.styles)); //to paste compressed *.css to dist/
+        .pipe(dest(pathData.build.styles, { sourcemaps: "." })); //to paste compressed *.css to dist/
 }
 
-/*function handleJs() {
-    return src(pathData.src.js, { sourcemaps: true })
-        .pipe(babel())
-        .pipe(dest(pathData.build.js))
-        .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.js
-        .pipe(new TerserMinifier({
-            format: {
-                "quote_style": 2
-            }
-        }))
-        .pipe(dest(pathData.build.js, { sourcemaps: "." }));
-}*/
-
-/*
 export function handleJs() {
-    return src(pathData.src.js, { sourcemaps: true })
-        .pipe(webpack())
+    return src(pathData.src.js)
+        .pipe(plumber({
+            errorHandler: handleError("Error at handleJs...")
+        }))
+        .pipe(babel())
+        .pipe(webpack(webpackConfig))
+        .pipe(dest(pathData.build.js))
 }
-*/
 
 export function handleImages() {
     return src(pathData.src.img, { encoding: false })
@@ -183,7 +162,7 @@ export function watchFiles(browserSync) {
     //watch(pathData.watch.styles, series(handleStyles, browserSync.stream));
     watch(pathData.watch.styles, series(handleStyles, browserSync.reload));
 
-//    watch(pathData.watch.js, series(handleJs, browserSync.reload));
+    watch(pathData.watch.js, series(handleJs, browserSync.reload));
 
     watch(pathData.watch.img, series(handleImages, browserSync.reload));
 

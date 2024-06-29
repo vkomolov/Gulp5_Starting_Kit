@@ -1,6 +1,6 @@
 'use strict';
 
-import { test } from "./helpers/funcs.min.js";
+import { test } from "./helpers/funcs.js";
 
 const newFunc = async (str) => {
   return await new Promise((resolve, reject) => {

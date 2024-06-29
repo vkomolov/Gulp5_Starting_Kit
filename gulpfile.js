@@ -2,7 +2,7 @@ import gulp from "gulp";
 import BrowserSync from "./modules/BrowserSync.js";
 
 import * as dev from "./gulp/dev.js";
-//import * as build from "./gulp/build.js";
+import * as build from "./gulp/build.js";
 import { distPath, pathData } from "./gulp/vars.js";
 import { cleanDist } from "./gulp/utilFuncs.js";
 
@@ -25,18 +25,32 @@ export async function distClean() {
     await cleanDist(pathData.clean);
 }
 
-export function runPipesDev(cb) {
+/**
+ * It initiates tasks with account to the mode of tasks to run
+ * @param { string } mode - "dev" or "build"
+ * @param { function } cb - callback
+ */
+function runPipes(mode, cb) {
+    const tasks = mode === "dev" ? dev : build;
     series(
         distClean,
-        dev.handleHtml, //handling html beforehand for purgeCss in handleSass
+        tasks.handleHtml, //handling html beforehand for purgeCss in handleSass
         parallel(
-            dev.handleStyles,
-            //dev.handleJs,
-            dev.handleImages,
-            dev.handleFonts,
-            dev.handleData
+            tasks.handleStyles,
+            tasks.handleJs,
+            tasks.handleImages,
+            tasks.handleFonts,
+            tasks.handleData
         ),
     )(cb);
+}
+
+export function runPipesDev(cb) {
+    runPipes("dev", cb);
+}
+
+export function runPipesBuild(cb) {
+    runPipes("build", cb);
 }
 
 export function runDev(cb) {
@@ -44,5 +58,12 @@ export function runDev(cb) {
         runPipesDev,
         browserSync.reload,
         watchSrc
+    )(cb);
+}
+
+export function runBuild(cb) {
+    series(
+        runPipesBuild,
+        browserSync.reload,
     )(cb);
 }
