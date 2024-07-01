@@ -2,7 +2,6 @@
 
 import fs, { constants } from 'fs';
 import { rimraf } from 'rimraf';
-import { pathData } from "./vars.js";
 
 /**
  * Checks availability and access mode of the given path
@@ -50,4 +49,6 @@ export const combinePaths = (...paths) => {
         return acc.concat(Array.isArray(path) ? path : [path]);
     }, []);
 }
+
+
 

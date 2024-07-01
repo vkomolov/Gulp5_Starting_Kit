@@ -1,11 +1,24 @@
 "use strict";
 
 import TerserPlugin from "terser-webpack-plugin";
+import path from "path";
+
 /////////////// END OF IMPORTS /////////////////////////
-
-export const srcPath = "./src/";
-export const distPath = "./dist/";
-
+/**
+ * As all *.js files are treated as ES modules (package.json contains "type": "module"),
+ * we get the Node current working directory with process.cwd...
+ * Finally, we use path.resolve to construct the absolute path of the src and dist directories
+ * relative to the current working directory process.cwd.
+ * @type {string}
+ */
+//
+const curWD = process.cwd();
+export const modes = {
+    dev: "dev",
+    build: "build"
+}
+export const srcPath = path.resolve(curWD, "src");
+export const distPath = path.resolve(curWD, "dist");
 export const fileIncludeSettings = {
     prefix: "@@",
     basepath: "@file"
@@ -13,39 +26,43 @@ export const fileIncludeSettings = {
 
 export const pathData = {
     src: {
-        html: `${ srcPath }*.html`,
-        styles: `${ srcPath }scss/**/*.scss`,   //only changed files will be processed
-        js: `${ srcPath }js/*.js`,
-        img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
-        fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
-        data: `${ srcPath }assets/data/**/*.{json, pdf, xml}`,
+        html: path.join(srcPath, "*.html"),
+        styles: path.join(srcPath, "scss", "**", "*.scss"),   //only changed files will be processed
+        js: path.join(srcPath, "js", "*.js"),
+        img: path.join(srcPath, "assets", "img", "**", "*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}"),
+        fonts: path.join(srcPath, "assets", "fonts", "**", "*.{eot,woff,woff2,ttf,otf}"),
+        data: path.join(srcPath, "assets", "data", "**", "*.{json, pdf, xml}"),
     },
     build: {
         html: distPath,
-        //htmlAux: `${ distPath }*.html`, //redundant?
-        styles: `${ distPath }css/`,
-        //stylesAux: `${ distPath }css/*.css`,
-        js: `${ distPath }js/`,
-        //jsAux: `${ distPath }js/*.js`,
-        img: `${ distPath }assets/img/`,
-        fonts: `${ distPath }assets/fonts/`,
-        data: `${ distPath }assets/data/`,
+        styles: path.join(distPath, "css"),
+        js: path.join(distPath, "js"),
+        img: path.join(distPath, "assets", "img"),
+        fonts: path.join(distPath, "assets", "fonts"),
+        data: path.join(distPath, "assets", "data"),
     },
     watch: {
-        html: [`${ srcPath }*.html`, `${ srcPath }html/**/*.html`],
-        styles: `${ srcPath }scss/**/*.scss`,
-        js: [`${ srcPath }js/**/*.js`, `${ srcPath }modules/**/*.js`],
-        img: `${ srcPath }assets/img/**/*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}`,
-        fonts: `${ srcPath }assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
-        data: `${ srcPath }assets/data/**/*.{json, pdf, xml}`,
+        html: path.join(srcPath, "html", "**", "*.html"),
+        styles: path.join(srcPath, "scss", "**", "*.scss"),
+        js: [
+            path.join(srcPath, "js", "**", "*.js"),
+            path.join(srcPath, "modules", "**", "*.js"),
+        ],
+        img: path.join(srcPath, "assets", "img", "**", "*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}"),
+        fonts: path.join(srcPath, "assets", "fonts", "**", "*.{eot,woff,woff2,ttf,otf}"),
+        data: path.join(srcPath, "assets", "data", "**", "*.{json, pdf, xml}"),
     },
-    clean: `./${ distPath }`
+    clean: distPath,
 };
 
 export const entries = {
     js: {
-        index: `${ srcPath }js/index.js`,
-        about: `${ srcPath }js/about.js`,
+        index: path.join(srcPath, "js", "index.js"),
+        about: path.join(srcPath, "js", "about.js"),
+    },
+    html: {
+        index: path.join(srcPath, "index.html"),
+        about: path.join(srcPath, "about.html"),
     }
 }
 
@@ -58,12 +75,34 @@ export const webpackConfigJs = {
         },
         output: {
             filename: "[name].bundle.js",
+            path: pathData.build.js,
         },
         module: {
             rules: [
                 {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    use: {
+                        loader: "babel-loader",
+                        options: {
+                            presets: [
+                                ["@babel/preset-env", {
+                                    "modules": false,
+                                }]
+                            ],
+                            plugins: [
+                                "@babel/plugin-transform-runtime",
+                                "@babel/plugin-transform-classes",
+                            ],
+                        },
+                    }
+                },
+                {
                     test: /\.css$/,
-                    use: ["style-loader", "css-loader"],
+                    use: [
+                        "style-loader",
+                        "css-loader"
+                    ],
                 },
             ],
         },
@@ -75,6 +114,7 @@ export const webpackConfigJs = {
         },
         output: {
             filename: "[name].bundle.js",
+            path: pathData.build.js,
         },
         optimization: {
             minimize: true,
@@ -93,8 +133,29 @@ export const webpackConfigJs = {
         module: {
             rules: [
                 {
+                    test: /\.js$/,
+                    exclude: /node_modules/,
+                    use: {
+                        loader: "babel-loader",
+                        options: {
+                            presets: [
+                                ["@babel/preset-env", {
+                                    "modules": false,
+                                }]
+                            ],
+                            plugins: [
+                                "@babel/plugin-transform-runtime",
+                                "@babel/plugin-transform-classes",
+                            ],
+                        },
+                    }
+                },
+                {
                     test: /\.css$/,
-                    use: ["style-loader", "css-loader"],
+                    use: [
+                        "style-loader",
+                        "css-loader"
+                    ],
                 },
             ],
         },

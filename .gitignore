@@ -14,7 +14,7 @@ dist/css/*.map
 
 # production
 /dist
-/dist
+/build
 
 # misc
 .DS_Store

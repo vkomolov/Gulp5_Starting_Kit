@@ -1,14 +1,12 @@
 import gulp from "gulp";
 import BrowserSync from "./modules/BrowserSync.js";
 
-import * as dev from "./gulp/dev.js";
-import * as build from "./gulp/build.js";
-import { distPath, pathData } from "./gulp/vars.js";
+import { distPath, pathData, modes } from "./gulp/vars.js";
 import { cleanDist } from "./gulp/utilFuncs.js";
-
+import tasks from "./gulp/tasks.js";
 
 /////////////// END OF IMPORTS /////////////////////////
-const { series, parallel } = gulp;
+const { series, parallel, watch } = gulp;
 const browserSync = new BrowserSync({
     baseDir: distPath,
     index: "index.html",
@@ -17,12 +15,14 @@ const browserSync = new BrowserSync({
     noCacheHeaders: true
 });
 
-function watchSrc() {
-    dev.watchFiles(browserSync);
-}
-
-export async function distClean() {
-    await cleanDist(pathData.clean);
+function watchFiles() {
+    const pipesDev = tasks[modes.dev];
+    watch(pathData.watch.html, series(pipesDev.pipeHtml, browserSync.reload));
+    watch(pathData.watch.styles, series(pipesDev.pipeStyles, browserSync.reload));
+    watch(pathData.watch.js, series(pipesDev.pipeJs, browserSync.reload));
+    watch(pathData.watch.img, series(pipesDev.pipeImages, browserSync.reload));
+    watch(pathData.watch.fonts, series(pipesDev.pipeFonts, browserSync.reload));
+    watch(pathData.watch.data, series(pipesDev.pipeData, browserSync.reload));
 }
 
 /**
@@ -31,39 +31,48 @@ export async function distClean() {
  * @param { function } cb - callback
  */
 function runPipes(mode, cb) {
-    const tasks = mode === "dev" ? dev : build;
-    series(
-        distClean,
-        tasks.handleHtml, //handling html beforehand for purgeCss in handleSass
-        parallel(
-            tasks.handleStyles,
-            tasks.handleJs,
-            tasks.handleImages,
-            tasks.handleFonts,
-            tasks.handleData
-        ),
-    )(cb);
+    if (mode in modes) {
+        const task = tasks[mode];
+        series(
+            distClean,
+            task.pipeHtml,
+            parallel(
+                task.pipeStyles,
+                task.pipeJs,
+                task.pipeImages,
+                task.pipeFonts,
+                task.pipeData
+            ),
+        )(cb);
+    }
+    else {
+        console.error(`the mode ${ mode } is not correct. Please use "dev" or "build" instead...`);
+    }
 }
 
-export function runPipesDev(cb) {
-    runPipes("dev", cb);
+export async function distClean() {
+    await cleanDist(pathData.clean);
 }
 
-export function runPipesBuild(cb) {
-    runPipes("build", cb);
+export function pipesDev(cb) {
+    runPipes(modes.dev, cb);
+}
+
+export function pipesBuild(cb) {
+    runPipes(modes.build, cb);
 }
 
 export function runDev(cb) {
     series(
-        runPipesDev,
+        pipesDev,
         browserSync.reload,
-        watchSrc
+        watchFiles
     )(cb);
 }
 
 export function runBuild(cb) {
     series(
-        runPipesBuild,
+        pipesBuild,
         browserSync.reload,
     )(cb);
 }
