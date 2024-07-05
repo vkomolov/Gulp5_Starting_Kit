@@ -18,7 +18,7 @@
   <body>
     <div class="total-wrapper">
       @@include("html/layouts/header.html")
-      <h1>About HTML!!!</h1>
+      <h1>About HTML</h1>
       <div class="modal-wrapper">
         <h3>Hello from Modal Wrapper</h3>
       </div>
@@ -29,6 +29,10 @@
       <div class="about-wrapper">
         <h4 class="about-wrapper__heading">Hello from AboutWrapper</h4>
         <p>this is the paragraph in About Wrapper</p>
+        <div class="about-wrapper__calendar-wrapper">
+          <label for="calendar">Calendar</label>
+          <input type="text" id="calendar" autocomplete="off">
+        </div>
       </div>
 
       @@include("html/layouts/footer.html")

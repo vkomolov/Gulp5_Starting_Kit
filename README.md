@@ -8,6 +8,8 @@ Some popular plugins which had vulnerabilities and deprecations were replaced wi
 Simplified Stream Constructions: https://nodejs.org/api/stream.html#stream_simplified_construction
 
 ## Feature:
+- При добавлении страницы необходимо обновлять gulp/vars.js: entries для webpack
+- 
 - !!! The root html files and scss files, linked to them, must have the same basename: it is necessary 
 for "purgecss" plugin for removing the unused style selectors which are not found in the attached html files...
 - "gulp-rename";   //deprecations with fs.stats. Favor to CustomRenameFile
@@ -56,6 +58,16 @@ will change for the alternatives.
   7. deprecated are-we-there-yet@3.0.1: This package is no longer supported.
   8. deprecated gauge@4.0.4: This package is no longer supported.
 
+- gulp-imagemin
+  npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests b
+  y a key value, which is much more comprehensive and powerful.
+  npm warn deprecated stable@0.1.8: Modern JS already guarantees Array#sort() is a stable sort, so this library is deprecated. See the compatibility table on MDN: https://developer.mo
+  zilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#browser_compatibility
+  npm warn deprecated rimraf@2.7.1: Rimraf versions prior to v4 are no longer supported
+  npm warn deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+  npm warn deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https:
+  //v8.dev/blog/math-random for details.
+  17 vulnerabilities (9 moderate, 8 high)
 
 
 

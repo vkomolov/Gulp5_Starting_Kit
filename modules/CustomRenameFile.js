@@ -4,6 +4,8 @@ import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
 
+/////////////// END OF IMPORTS /////////////////////////
+
 /**
  * CustomRenameFile transform stream for renaming files based on specified parameters.
  */

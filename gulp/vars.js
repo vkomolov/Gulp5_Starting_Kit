@@ -29,7 +29,8 @@ export const pathData = {
         html: path.join(srcPath, "*.html"),
         styles: path.join(srcPath, "scss", "**", "*.scss"),   //only changed files will be processed
         js: path.join(srcPath, "js", "*.js"),
-        img: path.join(srcPath, "assets", "img", "**", "*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}"),
+        img: path.join(srcPath, "assets", "img", "**", "*.{jpe?g,png,svg,gif,webp,avif}"),
+        imgBase: path.join(srcPath, "assets", "img"),
         fonts: path.join(srcPath, "assets", "fonts", "**", "*.{eot,woff,woff2,ttf,otf}"),
         data: path.join(srcPath, "assets", "data", "**", "*.{json, pdf, xml}"),
     },
@@ -42,13 +43,16 @@ export const pathData = {
         data: path.join(distPath, "assets", "data"),
     },
     watch: {
-        html: path.join(srcPath, "html", "**", "*.html"),
+        html: [
+            path.join(srcPath, "*.html"),
+            path.join(srcPath, "html", "**", "*.html")
+        ],
         styles: path.join(srcPath, "scss", "**", "*.scss"),
         js: [
             path.join(srcPath, "js", "**", "*.js"),
             path.join(srcPath, "modules", "**", "*.js"),
         ],
-        img: path.join(srcPath, "assets", "img", "**", "*.{jpg,png,svg,gif,ico,webp,xml,json,webmanifest}"),
+        img: path.join(srcPath, "assets", "img", "**", "*.{jpe?g,png,svg,gif,webp,avif}"),
         fonts: path.join(srcPath, "assets", "fonts", "**", "*.{eot,woff,woff2,ttf,otf}"),
         data: path.join(srcPath, "assets", "data", "**", "*.{json, pdf, xml}"),
     },
@@ -66,6 +70,45 @@ export const entries = {
     }
 }
 
+const svgoOptions = {
+    dev: {
+        plugins: [
+            {
+                name: 'preset-default',
+                params: {
+                    overrides: {
+                        // disable a default plugin
+                        cleanupIds: false,
+
+                        // customize the params of a default plugin
+                        inlineStyles: {
+                            onlyMatchedOnce: false,
+                        },
+                    },
+                },
+            },
+        ],
+    },
+    build: {
+        plugins: [
+            {
+                name: 'preset-default',
+                params: {
+                    overrides: {
+                        // disable a default plugin
+                        cleanupIds: false,
+
+                        // customize the params of a default plugin
+                        inlineStyles: {
+                            onlyMatchedOnce: false,
+                        },
+                    },
+                },
+            },
+        ],
+    }
+}
+
 export const webpackConfigJs = {
     dev: {
         mode: "development",
@@ -75,27 +118,30 @@ export const webpackConfigJs = {
         },
         output: {
             filename: "[name].bundle.js",
-            path: pathData.build.js,
+            //path: pathData.build.js,  //will be piped to gulp.dest with the path: pathData.build.js
         },
         module: {
             rules: [
                 {
                     test: /\.js$/,
                     exclude: /node_modules/,
-                    use: {
-                        loader: "babel-loader",
-                        options: {
-                            presets: [
-                                ["@babel/preset-env", {
-                                    "modules": false,
-                                }]
-                            ],
-                            plugins: [
-                                "@babel/plugin-transform-runtime",
-                                "@babel/plugin-transform-classes",
-                            ],
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                presets: [
+                                    [
+                                        "@babel/preset-env",
+                                        { "modules": false, }
+                                    ]
+                                ],
+                                plugins: [
+                                    "@babel/plugin-transform-runtime",
+                                    "@babel/plugin-transform-classes",
+                                ],
+                            },
                         },
-                    }
+                    ]
                 },
                 {
                     test: /\.css$/,
@@ -114,7 +160,7 @@ export const webpackConfigJs = {
         },
         output: {
             filename: "[name].bundle.js",
-            path: pathData.build.js,
+            //path: pathData.build.js,  //will be piped to gulp.dest with the path: pathData.build.js
         },
         optimization: {
             minimize: true,
@@ -135,20 +181,23 @@ export const webpackConfigJs = {
                 {
                     test: /\.js$/,
                     exclude: /node_modules/,
-                    use: {
-                        loader: "babel-loader",
-                        options: {
-                            presets: [
-                                ["@babel/preset-env", {
-                                    "modules": false,
-                                }]
-                            ],
-                            plugins: [
-                                "@babel/plugin-transform-runtime",
-                                "@babel/plugin-transform-classes",
-                            ],
-                        },
-                    }
+                    use: [
+                        {
+                            loader: "babel-loader",
+                            options: {
+                                presets: [
+                                    [
+                                        "@babel/preset-env",
+                                        { "modules": false, }
+                                    ]
+                                ],
+                                plugins: [
+                                    "@babel/plugin-transform-runtime",
+                                    "@babel/plugin-transform-classes",
+                                ],
+                            },
+                        }
+                    ]
                 },
                 {
                     test: /\.css$/,
@@ -161,3 +210,112 @@ export const webpackConfigJs = {
         },
     }
 }
+
+export const webConfigImg = {
+    dev: {
+        mode: "development",
+        module: {
+            rules: [
+                {
+                    test: /\.(jpe?g|png|webp|avif)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (data) => {
+                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
+                            return path.join(pathData.build.img, relativePath);
+                        }
+                    },
+                    use: [
+                        {
+                            loader: 'sharp-loader',
+                            options: {
+                                quality: 75,
+                                progressive: true,
+                                withMetadata: false,
+                            },
+                        },
+                    ],
+                },
+                {
+                    test: /\.svg$/,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (data) => {
+                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
+                            return path.join(pathData.build.img, relativePath);
+                        }
+                    },
+                    use: [
+                        {
+                            loader: 'svgo-loader',
+                            options: svgoOptions.dev,
+                        },
+                    ],
+                },
+                {
+                    test: /\.(gif)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (data) => {
+                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
+                            return path.join(pathData.build.img, relativePath);
+                        }
+                    },
+                },
+            ],
+        },
+    },
+    build: {
+        mode: "production",
+        module: {
+            rules: [
+                {
+                    test: /\.(jpe?g|png|webp|avif)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (data) => {
+                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
+                            return path.join(pathData.build.img, relativePath);
+                        }
+                    },
+                    use: [
+                        {
+                            loader: 'sharp-loader',
+                            options: {
+                                quality: 75,
+                                progressive: true,
+                                withMetadata: false,
+                            },
+                        },
+                    ],
+                },
+                {
+                    test: /\.svg$/,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (data) => {
+                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
+                            return path.join(pathData.build.img, relativePath);
+                        }
+                    },
+                    use: [
+                        {
+                            loader: 'svgo-loader',
+                            options: svgoOptions.build,
+                        },
+                    ],
+                },
+                {
+                    test: /\.(gif)$/i,
+                    type: 'asset/resource',
+                    generator: {
+                        filename: (data) => {
+                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
+                            return path.join(pathData.build.img, relativePath);
+                        }
+                    },
+                },
+            ],
+        },
+    },
+};

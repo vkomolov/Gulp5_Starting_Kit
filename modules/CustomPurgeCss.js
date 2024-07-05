@@ -6,6 +6,8 @@ import PluginError from 'plugin-error';
 import path from 'path';
 import { checkAccess } from "../gulp/utilFuncs.js";
 
+/////////////// END OF IMPORTS /////////////////////////
+
 const PLUGIN_NAME = 'customPurgeCss';
 /**
  * CustomPurgeCss transform stream for purging unused CSS based on HTML file content.

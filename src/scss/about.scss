@@ -32,3 +32,8 @@ h1 {
   @include init-font(2em, 700);
   @include text-shadow(0.05em, 0.05em);
 }
+
+.about-wrapper__calendar-wrapper {
+  width: 100%;
+  @include flex-box($flex-box-col-center-wrap...);
+}

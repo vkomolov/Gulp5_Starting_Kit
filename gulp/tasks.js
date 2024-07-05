@@ -1,7 +1,7 @@
 "use strict";
 
 import gulp from "gulp";
-import { pathData, modes, fileIncludeSettings, webpackConfigJs } from "./vars.js";
+import { pathData, modes, fileIncludeSettings, webpackConfigJs, webConfigImg } from "./vars.js";
 
 //error handling plugins
 import plumber from "gulp-plumber";
@@ -25,7 +25,11 @@ import cssnano from "cssnano";
 import normalizeWhitespace from "postcss-normalize-whitespace";
 
 //js plugins
-import webpack from "webpack-stream";
+import webpackStream from "webpack-stream";
+import webpack from "webpack";
+
+//image plugins
+
 
 //fonts plugins
 //import ttf2woff2 from "gulp-ttf2woff2";
@@ -132,7 +136,7 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleJs...")
                 }))
-                .pipe(webpack(webpackConfigJs.dev))
+                .pipe(webpackStream(webpackConfigJs.dev, webpack))
                 .pipe(dest(pathData.build.js))
         },
         pipeImages() {
@@ -141,6 +145,7 @@ const tasks = {
                     errorHandler: handleError("Error at handleImages...")
                 }))
                 .pipe(new CustomNewer())
+                .pipe(webpackStream(webConfigImg.dev, webpack))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {
@@ -199,7 +204,7 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleJs...")
                 }))
-                .pipe(webpack(webpackConfigJs.build))
+                .pipe(webpackStream(webpackConfigJs.build, webpack))
                 .pipe(dest(pathData.build.js));
         },
         pipeImages() {
@@ -208,6 +213,7 @@ const tasks = {
                     errorHandler: handleError("Error at handleImages...")
                 }))
                 .pipe(new CustomNewer())
+                .pipe(webpackStream(webConfigImg.dev, webpack))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {

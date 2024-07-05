@@ -4,6 +4,8 @@ import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
 
+/////////////// END OF IMPORTS /////////////////////////
+
 const PLUGIN_NAME = 'customIf';
 /**
  * CustomIf transform stream for filtering files based on filename or file nesting conditions.
