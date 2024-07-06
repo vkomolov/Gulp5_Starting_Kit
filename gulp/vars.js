@@ -28,8 +28,9 @@ export const pathData = {
     src: {
         html: path.join(srcPath, "*.html"),
         styles: path.join(srcPath, "scss", "**", "*.scss"),   //only changed files will be processed
+        stylesNotNested: path.join(srcPath, "scss", "*.scss"),   //root *.scss, connected to html (for build tasks)
         js: path.join(srcPath, "js", "*.js"),
-        img: path.join(srcPath, "assets", "img", "**", "*.{jpe?g,png,svg,gif,webp,avif}"),
+        img: path.join(srcPath, "assets", "img", "**", "*.{jpg,jpeg,png,svg,gif,webp,avif}"),
         fonts: path.join(srcPath, "assets", "fonts", "**", "*.{eot,woff,woff2,ttf,otf}"),
         data: path.join(srcPath, "assets", "data", "**", "*.{json, pdf, xml}"),
     },
@@ -51,7 +52,7 @@ export const pathData = {
             path.join(srcPath, "js", "**", "*.js"),
             path.join(srcPath, "modules", "**", "*.js"),
         ],
-        img: path.join(srcPath, "assets", "img", "**", "*.{jpe?g,png,svg,gif,webp,avif}"),
+        img: path.join(srcPath, "assets", "img", "**", "*.{jpg,jpeg,png,svg,gif,webp,avif}"),
         fonts: path.join(srcPath, "assets", "fonts", "**", "*.{eot,woff,woff2,ttf,otf}"),
         data: path.join(srcPath, "assets", "data", "**", "*.{json, pdf, xml}"),
     },
@@ -68,6 +69,15 @@ export const entries = {
         about: path.join(srcPath, "about.html"),
     }
 }
+
+export const useGulpSizeConfig = (params = {}) => {
+    return Object.assign({
+        showFiles: true,
+        pretty: true,
+        showTotal: false,
+        gzip: false,
+    }, params);
+};
 
 export const webpackConfigJs = {
     dev: {

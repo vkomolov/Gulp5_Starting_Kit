@@ -1,7 +1,7 @@
 "use strict";
 
 import gulp from "gulp";
-import { pathData, modes, fileIncludeSettings, webpackConfigJs } from "./vars.js";
+import { pathData, modes, fileIncludeSettings, webpackConfigJs, useGulpSizeConfig } from "./vars.js";
 
 //error handling plugins
 import plumber from "gulp-plumber";
@@ -38,7 +38,7 @@ import webpack from "webpack";
 import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
 import changed from "gulp-changed"; //TODO can be removed
 import debug from "gulp-debug";
-import size from 'gulp-size';
+import size from "gulp-size";
 
 //other plugins
 import fileInclude from "gulp-file-include";
@@ -121,14 +121,18 @@ const tasks = {
                 .pipe(dependents()) //it collects the files which are dependant to the updated file
                 .pipe(debug({title: "dependants: "}))
                 .pipe(new CustomIf(/^[^\\]*\.scss$/))   //it filters the dependant root scss files not nested in /**/
+                .pipe(size(useGulpSizeConfig({
+                    title: "Before sass: "
+                })))
                 .pipe(sass({}, () => {}))
-                .pipe(debug({title: "Sass: "}))
-                .pipe(size())
+                .pipe(size(useGulpSizeConfig({
+                    title: "After sass: "
+                })))
                 .pipe(postcss(optimizeCss)) //to optimize *.css
-                .pipe(debug({title: "css optimized: "}))
-                .pipe(size())
+                .pipe(size(useGulpSizeConfig({
+                    title: "After optimizeCss: "
+                })))
                 .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
-                //TODO: to omit renaming at dev
                 .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
                 .pipe(dest(pathData.build.styles, { sourcemaps: "." })); //to paste compressed *.css to dist/
         },
@@ -146,11 +150,14 @@ const tasks = {
                     errorHandler: handleError("Error at handleImages...")
                 }))
                 .pipe(new CustomNewer())
+                .pipe(size(useGulpSizeConfig({
+                    title: "Before optimization: "
+                })))
                 .pipe(new CustomImgOptimizer({
                     //resize: { width: 1000 },
-                    jpeg: { quality: 80 },
-                    png: { compressionLevel: 6 },
-                    webp: { quality: 70 },
+                    jpeg: { quality: 75 },
+                    png: { quality: 80 },
+                    webp: { quality: 75 },
                     avif: { quality: 60 },
                     svg: {
                         js2svg: { indent: 2, pretty: true },
@@ -170,6 +177,9 @@ const tasks = {
                         ],
                     }
                 }))
+                .pipe(size(useGulpSizeConfig({
+                    title: "After optimization: "
+                })))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {
@@ -199,27 +209,30 @@ const tasks = {
                 .pipe(dest(pathData.build.html));
         },
         pipeStyles() {
-            return src(pathData.src.styles)
+            return src(pathData.src.stylesNotNested)
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleStyles...")
                 }))
-                .pipe(new CustomNewer())    //it caches and filters files by the modified time
-                .pipe(dependents()) //it collects the files which are dependant to the updated file
-                .pipe(debug({title: "dependants: "}))
-                .pipe(new CustomIf(/^[^\\]*\.scss$/))   //it filters the dependant root scss files not nested in /**/
+                .pipe(size(useGulpSizeConfig({
+                    title: "Before sass: "
+                })))
                 .pipe(sass({}, () => {}))
-                .pipe(debug({title: "Sass: "}))
-                .pipe(size())
+                .pipe(size(useGulpSizeConfig({
+                    title: "After sass: "
+                })))
                 .pipe(new CustomPurgeCss(pathData.build.html))  //to filter ${basename}.css selectors not used in ${basename}.html
-                .pipe(debug({title: "PurgeCss: "}))
-                .pipe(size())
+                .pipe(size(useGulpSizeConfig({
+                    title: "After PurgeCss: "
+                })))
                 .pipe(postcss(optimizeCss)) //to optimize *.css
-                .pipe(debug({title: "css optimized: "}))
-                .pipe(size())
+                .pipe(size(useGulpSizeConfig({
+                    title: "After optimizeCss: "
+                })))
                 .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
-                .pipe(postcss(minifyCss))   //to compress *.ss
-                .pipe(debug({title: "css compressed: "}))
-                .pipe(size())
+                .pipe(postcss(minifyCss))   //to compress *.css
+                .pipe(size(useGulpSizeConfig({
+                    title: "After minifyCss: "
+                })))
                 .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
                 .pipe(dest(pathData.build.styles)); //to paste compressed *.css to dist/
         },
@@ -236,8 +249,30 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleImages...")
                 }))
-                .pipe(new CustomNewer())
-                .pipe(new CustomImgOptimizer())
+                .pipe(new CustomImgOptimizer({
+                    //resize: { width: 1000 },
+                    jpeg: { quality: 75 },
+                    png: { quality: 80 },
+                    webp: { quality: 75 },
+                    avif: { quality: 60 },
+                    svg: {
+                        js2svg: { indent: 2, pretty: true },
+                        plugins: [
+                            {
+                                name: 'preset-default',
+                                params: {
+                                    overrides: {
+                                        removeViewBox: false,
+                                        cleanupIds: false,
+                                        inlineStyles: {
+                                            onlyMatchedOnce: false,
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    }
+                }))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {

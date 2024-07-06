@@ -8,7 +8,7 @@
 
 .header-wrapper {
   width: 100%;
-  border: 1px solid $blue;
+  border: 1px solid $red;
   background-color: $greenLight;
 
   @include flex-box($flex-box-row-center-wrap...);
