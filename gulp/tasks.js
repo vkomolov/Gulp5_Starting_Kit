@@ -1,7 +1,7 @@
 "use strict";
 
 import gulp from "gulp";
-import { pathData, modes, fileIncludeSettings, webpackConfigJs, webConfigImg } from "./vars.js";
+import { pathData, modes, fileIncludeSettings, webpackConfigJs } from "./vars.js";
 
 //error handling plugins
 import plumber from "gulp-plumber";
@@ -48,6 +48,7 @@ import CustomRenameFile from "../modules/CustomRenameFile.js";
 import CustomPurgeCss from "../modules/CustomPurgeCss.js";
 import CustomIf from "../modules/CustomIf.js";
 import CustomNewer from "../modules/CustomNewer.js";
+import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
 import { combinePaths, handleError } from "./utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -145,7 +146,30 @@ const tasks = {
                     errorHandler: handleError("Error at handleImages...")
                 }))
                 .pipe(new CustomNewer())
-                .pipe(webpackStream(webConfigImg.dev, webpack))
+                .pipe(new CustomImgOptimizer({
+                    //resize: { width: 1000 },
+                    jpeg: { quality: 80 },
+                    png: { compressionLevel: 6 },
+                    webp: { quality: 70 },
+                    avif: { quality: 60 },
+                    svg: {
+                        js2svg: { indent: 2, pretty: true },
+                        plugins: [
+                            {
+                                name: 'preset-default',
+                                params: {
+                                    overrides: {
+                                        removeViewBox: false,
+                                        cleanupIds: false,
+                                        inlineStyles: {
+                                            onlyMatchedOnce: false,
+                                        },
+                                    },
+                                },
+                            },
+                        ],
+                    }
+                }))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {
@@ -213,7 +237,7 @@ const tasks = {
                     errorHandler: handleError("Error at handleImages...")
                 }))
                 .pipe(new CustomNewer())
-                .pipe(webpackStream(webConfigImg.dev, webpack))
+                .pipe(new CustomImgOptimizer())
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {

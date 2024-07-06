@@ -30,7 +30,6 @@ export const pathData = {
         styles: path.join(srcPath, "scss", "**", "*.scss"),   //only changed files will be processed
         js: path.join(srcPath, "js", "*.js"),
         img: path.join(srcPath, "assets", "img", "**", "*.{jpe?g,png,svg,gif,webp,avif}"),
-        imgBase: path.join(srcPath, "assets", "img"),
         fonts: path.join(srcPath, "assets", "fonts", "**", "*.{eot,woff,woff2,ttf,otf}"),
         data: path.join(srcPath, "assets", "data", "**", "*.{json, pdf, xml}"),
     },
@@ -67,45 +66,6 @@ export const entries = {
     html: {
         index: path.join(srcPath, "index.html"),
         about: path.join(srcPath, "about.html"),
-    }
-}
-
-const svgoOptions = {
-    dev: {
-        plugins: [
-            {
-                name: 'preset-default',
-                params: {
-                    overrides: {
-                        // disable a default plugin
-                        cleanupIds: false,
-
-                        // customize the params of a default plugin
-                        inlineStyles: {
-                            onlyMatchedOnce: false,
-                        },
-                    },
-                },
-            },
-        ],
-    },
-    build: {
-        plugins: [
-            {
-                name: 'preset-default',
-                params: {
-                    overrides: {
-                        // disable a default plugin
-                        cleanupIds: false,
-
-                        // customize the params of a default plugin
-                        inlineStyles: {
-                            onlyMatchedOnce: false,
-                        },
-                    },
-                },
-            },
-        ],
     }
 }
 
@@ -210,112 +170,3 @@ export const webpackConfigJs = {
         },
     }
 }
-
-export const webConfigImg = {
-    dev: {
-        mode: "development",
-        module: {
-            rules: [
-                {
-                    test: /\.(jpe?g|png|webp|avif)$/i,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: (data) => {
-                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
-                            return path.join(pathData.build.img, relativePath);
-                        }
-                    },
-                    use: [
-                        {
-                            loader: 'sharp-loader',
-                            options: {
-                                quality: 75,
-                                progressive: true,
-                                withMetadata: false,
-                            },
-                        },
-                    ],
-                },
-                {
-                    test: /\.svg$/,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: (data) => {
-                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
-                            return path.join(pathData.build.img, relativePath);
-                        }
-                    },
-                    use: [
-                        {
-                            loader: 'svgo-loader',
-                            options: svgoOptions.dev,
-                        },
-                    ],
-                },
-                {
-                    test: /\.(gif)$/i,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: (data) => {
-                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
-                            return path.join(pathData.build.img, relativePath);
-                        }
-                    },
-                },
-            ],
-        },
-    },
-    build: {
-        mode: "production",
-        module: {
-            rules: [
-                {
-                    test: /\.(jpe?g|png|webp|avif)$/i,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: (data) => {
-                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
-                            return path.join(pathData.build.img, relativePath);
-                        }
-                    },
-                    use: [
-                        {
-                            loader: 'sharp-loader',
-                            options: {
-                                quality: 75,
-                                progressive: true,
-                                withMetadata: false,
-                            },
-                        },
-                    ],
-                },
-                {
-                    test: /\.svg$/,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: (data) => {
-                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
-                            return path.join(pathData.build.img, relativePath);
-                        }
-                    },
-                    use: [
-                        {
-                            loader: 'svgo-loader',
-                            options: svgoOptions.build,
-                        },
-                    ],
-                },
-                {
-                    test: /\.(gif)$/i,
-                    type: 'asset/resource',
-                    generator: {
-                        filename: (data) => {
-                            const relativePath = path.relative(pathData.src.imgBase, data.filename);
-                            return path.join(pathData.build.img, relativePath);
-                        }
-                    },
-                },
-            ],
-        },
-    },
-};

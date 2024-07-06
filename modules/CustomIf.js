@@ -31,7 +31,7 @@ export default class CustomIf extends Transform {
 
         if (file.isStream()) {
             callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-            return; // No need to return here, just to exit the function
+            return;
         }
 
         try {
