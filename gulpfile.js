@@ -17,9 +17,9 @@ const browserSync = new BrowserSync({
 
 function watchFiles() {
     const pipesDev = tasks[modes.dev];
-    watch(pathData.watch.html, series(pipesDev.pipeHtml, browserSync.reload));
-    watch(pathData.watch.styles, series(pipesDev.pipeStyles, browserSync.reload));
-    watch(pathData.watch.js, series(pipesDev.pipeJs, browserSync.reload));
+    watch(pathData.watch.htmlNested, series(pipesDev.pipeHtml, browserSync.reload));
+    watch(pathData.watch.stylesNested, series(pipesDev.pipeStyles, browserSync.reload));
+    watch(pathData.watch.jsNested, series(pipesDev.pipeJs, browserSync.reload));
     watch(pathData.watch.img, series(pipesDev.pipeImages, browserSync.reload));
     watch(pathData.watch.fonts, series(pipesDev.pipeFonts, browserSync.reload));
     watch(pathData.watch.data, series(pipesDev.pipeData, browserSync.reload));

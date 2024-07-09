@@ -58,7 +58,7 @@ export default class CustomNewer extends Transform {
                 }
             } else {
                 cache.set(cacheKey, MTimeValue);
-                console.log("Updating cache: ", cacheKey);
+                console.log("caching: ", cacheKey);
                 return callback(null, file);
             }
         } catch (err) {

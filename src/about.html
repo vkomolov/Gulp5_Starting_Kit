@@ -1,23 +1,9 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="description">
-    <meta name="keywords" content="keywords">
-    <meta name="page-topic" content="page topic">
-    <meta name="description" content="description">
-    <meta name="keywords" content="keywords">
-    <meta name="page-topic" content="page-topic">
-    <meta name="robots" content="noindex">
-    <title>About</title>
-    <!-- TODO: to change basename of css file *.css|*.min.css with regard to dev and build -->
-    <link rel="stylesheet" href="css/about.min.css">
-</head>
+  @@include("html/templates/head.html", {"page": "about"})
   <body>
     <div class="total-wrapper">
-      @@include("html/layouts/header.html")
+      @@include("html/templates/header.html")
       <h1>About HTML</h1>
       <div class="modal-wrapper">
         <h3>Hello from Modal Wrapper</h3>
@@ -35,7 +21,7 @@
         </div>
       </div>
 
-      @@include("html/layouts/footer.html")
+      @@include("html/templates/footer.html")
     </div>
 
     <!-- SCRIPTS -->

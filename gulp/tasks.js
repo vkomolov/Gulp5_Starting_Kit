@@ -1,7 +1,15 @@
 "use strict";
 
 import gulp from "gulp";
-import { pathData, modes, fileIncludeSettings, webpackConfigJs, useGulpSizeConfig } from "./vars.js";
+import {
+    pathData,
+    modes,
+    fileIncludeSettings,
+    webpackConfigJs,
+    useGulpSizeConfig,
+    optimizeCss,
+    minifyCss
+} from "./vars.js";
 
 //error handling plugins
 import plumber from "gulp-plumber";
@@ -9,27 +17,18 @@ import plumber from "gulp-plumber";
 //html plugins
 import typograf from "gulp-typograf";
 import htmlclean from "gulp-htmlclean";
-import prettier from "@bdchauvette/gulp-prettier";
 
 //styles plugins
 import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
 import dependents from "gulp-dependents";
-import autoprefixer from "autoprefixer";
-import sortMediaQueries from "postcss-sort-media-queries";
-import discardUnused from "postcss-discard-unused";
 
 //postcss environment
 import postcss from "gulp-postcss";
-import cssnano from "cssnano";
-import normalizeWhitespace from "postcss-normalize-whitespace";
 
 //js plugins
 import webpackStream from "webpack-stream";
 import webpack from "webpack";
-
-//image plugins
-
 
 //fonts plugins
 //import ttf2woff2 from "gulp-ttf2woff2";
@@ -43,6 +42,7 @@ import size from "gulp-size";
 //other plugins
 import fileInclude from "gulp-file-include";
 
+
 //custom modules
 import CustomRenameFile from "../modules/CustomRenameFile.js";
 import CustomPurgeCss from "../modules/CustomPurgeCss.js";
@@ -55,26 +55,10 @@ import { combinePaths, handleError } from "./utilFuncs.js";
 
 const { src, dest } = gulp;
 const sass = gulpSass(dartSass);
-const optimizeCss = [
-    sortMediaQueries({
-        sort: "mobile-first"
-    }),
-    autoprefixer(),
-    discardUnused({}),
-    cssnano({
-        preset: [
-            "default",
-            {
-                normalizeWhitespace: false //avoiding compressing css file
-            }
-        ]
-    })
-];
-const minifyCss = [
-    normalizeWhitespace(),
-];
 
 /**
+ * TASKS:
+ *
  * ///// pipeHtml: /////
  *
  * ///// pipeStyles: /////
@@ -113,13 +97,13 @@ const tasks = {
                 .pipe(dest(pathData.build.html));
         },
         pipeStyles() {
-            return src(pathData.src.styles, { sourcemaps: true })
+            return src(pathData.src.stylesNested, { sourcemaps: true })
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleStyles...")
                 }))
                 .pipe(new CustomNewer())    //it caches and filters files by the modified time
                 .pipe(dependents()) //it collects the files which are dependant to the updated file
-                .pipe(debug({title: "dependants: "}))
+                //.pipe(debug({title: "dependants: "})) //to show what files are dependant to the styles changed
                 .pipe(new CustomIf(/^[^\\]*\.scss$/))   //it filters the dependant root scss files not nested in /**/
                 .pipe(size(useGulpSizeConfig({
                     title: "Before sass: "
@@ -151,34 +135,7 @@ const tasks = {
                 }))
                 .pipe(new CustomNewer())
                 .pipe(size(useGulpSizeConfig({
-                    title: "Before optimization: "
-                })))
-                .pipe(new CustomImgOptimizer({
-                    //resize: { width: 1000 },
-                    jpeg: { quality: 75 },
-                    png: { quality: 80 },
-                    webp: { quality: 75 },
-                    avif: { quality: 60 },
-                    svg: {
-                        js2svg: { indent: 2, pretty: true },
-                        plugins: [
-                            {
-                                name: 'preset-default',
-                                params: {
-                                    overrides: {
-                                        removeViewBox: false,
-                                        cleanupIds: false,
-                                        inlineStyles: {
-                                            onlyMatchedOnce: false,
-                                        },
-                                    },
-                                },
-                            },
-                        ],
-                    }
-                }))
-                .pipe(size(useGulpSizeConfig({
-                    title: "After optimization: "
+                    title: "image: "
                 })))
                 .pipe(dest(pathData.build.img));
         },
@@ -206,10 +163,11 @@ const tasks = {
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
+                .pipe(htmlclean())  //html minification
                 .pipe(dest(pathData.build.html));
         },
         pipeStyles() {
-            return src(pathData.src.stylesNotNested)
+            return src(pathData.src.styles)
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleStyles...")
                 }))
@@ -249,6 +207,9 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleImages...")
                 }))
+                .pipe(size(useGulpSizeConfig({
+                    title: "Image before optimization: "
+                })))
                 .pipe(new CustomImgOptimizer({
                     //resize: { width: 1000 },
                     jpeg: { quality: 75 },
@@ -273,6 +234,9 @@ const tasks = {
                         ],
                     }
                 }))
+                .pipe(size(useGulpSizeConfig({
+                    title: "Image after optimization: "
+                })))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {

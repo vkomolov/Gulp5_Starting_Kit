@@ -1,23 +1,9 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="description" content="description">
-    <meta name="keywords" content="keywords">
-    <meta name="page-topic" content="page topic">
-    <meta name="description" content="description">
-    <meta name="keywords" content="keywords">
-    <meta name="page-topic" content="page-topic">
-    <meta name="robots" content="noindex">
-    <title>Main</title>
-    <!-- the basename of the css file must be the same as the html file: index.html - main.min.css -->
-    <link rel="stylesheet" href="css/index.min.css">
-</head>
+  @@include("html/templates/head.html", {"page": "index"})
   <body>
     <div class="total-wrapper">
-      @@include("html/layouts/header.html")
+      @@include("html/templates/header.html")
       <h1>Main Page</h1>
       <div class="testWrapper">
         <h4 class="testWrapper__heading">Hello from testWrapper</h4>
@@ -28,7 +14,7 @@
           <h3>Here is Main Container</h3>
         </div>
       </div>
-      @@include("html/layouts/footer.html")
+      @@include("html/templates/footer.html")
     </div>
 
     <!-- SCRIPTS -->

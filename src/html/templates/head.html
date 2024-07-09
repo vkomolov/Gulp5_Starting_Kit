@@ -1,0 +1,19 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    @@if (page && headParams && headParams[page]) {
+        <meta name="description" content="@@headParams.@@page.description">
+        <meta name="keywords" content="@@headParams.@@page.keywords">
+        <meta name="page-topic" content="@@headParams.@@page.pageTopic">
+        <meta name="robots" content="@@headParams.@@page.robots">
+        <title>@@headParams.@@page.title</title>
+        <link rel="stylesheet" href="@@headParams.@@page.linkStyles">
+        @@if (headParams[page].linkScripts && headParams[page].linkScripts.loadMode) {
+            <script type="module" src="@@headParams.@@page.linkScripts.link" @@headParams.@@page.linkScripts.loadMode></script>
+        }
+        @@if (headParams[page].linkScripts && !headParams[page].linkScripts.loadMode) {
+            <script type="module" src="@@headParams.@@page.linkScripts.link"></script>
+        }
+    }
+</head>
