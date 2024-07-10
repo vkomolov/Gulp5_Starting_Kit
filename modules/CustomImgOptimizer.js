@@ -9,34 +9,49 @@ import { optimize as svgoOptimize } from 'svgo';
 const PLUGIN_NAME = 'customImgOptimizer';
 
 export default class CustomImgOptimizer extends Transform {
+    /**
+     * @param {Object} [options={}] - params of the image file to be optimized. It may be empty to use the default settings...
+     * @param {Object} [options.resize] - possible property for resizing the image
+     * @param {Object} [options.jpeg] - possible settings for jpeg
+     * @param {Object} [options.png] - possible settings for png
+     * @param {Object} [options.webp] - possible settings for webp
+     * @param {Object} [options.avif] - possible settings for avif
+     * @param {Object} [options.svg] - possible settings for svg
+     * @example {
+     *                     resize: { width: 1000 },
+     *                     jpeg: { quality: 75 },
+     *                     png: { quality: 80, compressionLevel: 5 },
+     *                     webp: { quality: 75 },
+     *                     avif: { quality: 60 },
+     *                     svg: {
+     *                         js2svg: { indent: 2, pretty: true },
+     *                         plugins: [
+     *                             {
+     *                                 name: 'preset-default',
+     *                                 params: {
+     *                                     overrides: {
+     *                                         removeViewBox: false,
+     *                                         cleanupIds: false,
+     *                                         inlineStyles: {
+     *                                             onlyMatchedOnce: false,
+     *                                         },
+     *                                     },
+     *                                 },
+     *                             },
+     *                         ],
+     *                     }
+     *                 }
+     */
     constructor(options = {}) {
         super({ objectMode: true });
         this.options = options;
-    }
-
-    async _transform(file, encoding, callback) {
-        if (file.isNull()) {
-            console.error("file is null...", file.baseName);
-            return callback(null, file);
-        }
-
-        if (file.isStream()) {
-            callback(new PluginError(PLUGIN_NAME, "Streaming not supported"));
-            return;
-        }
-
-        // Ensure file.contents is a buffer
-        if (!Buffer.isBuffer(file.contents)) {
-            file.contents = Buffer.from(file.contents);
-        }
-
-        const formatMap = {
-            ".jpg": "jpeg",
-            ".jpeg": "jpeg",
-            ".png": "png",
-            ".webp": "webp",
-            ".avif": "avif",
-            ".svg": "svg"
+        this.formatMap = {
+            "jpg": "jpeg",
+            "jpeg": "jpeg",
+            "png": "png",
+            "webp": "webp",
+            "avif": "avif",
+            "svg": "svg"
         };
 
         /**
@@ -178,7 +193,7 @@ export default class CustomImgOptimizer extends Transform {
          * }
          *}}
          */
-        const formatOptionsMap = {
+        this.formatOptionsMap = {
             jpeg: {
                 quality: 75,
                 progressive: true,
@@ -233,33 +248,45 @@ export default class CustomImgOptimizer extends Transform {
                 ],
             }
         };
+    }
 
-        const fileExt = path.extname(file.path).toLowerCase();
-
+    async _transform(file, encoding, callback) {
         try {
-            if (fileExt in formatMap) {
-                const format = formatMap[fileExt];
-                const formatOptions = Object.assign({}, formatOptionsMap[format], this.options[format] || {});
+            // Ensure file.contents is a buffer
+            if (!(Buffer.isBuffer(file.contents))) {
+                file.contents = Buffer.from(file.contents);
+            }
 
-                if (format !== "svg") {
-                    file.contents = await sharp(file.contents)
-                        .resize(this.options.resize || {})
-                        .toFormat(format, formatOptions)
-                        .toBuffer();
+            if (file.isNull()) {
+                console.error("file is null...", file.baseName);
+                return callback(null, file);
+            }
+
+            if (file.isStream()) {
+                throw new Error("Streaming is not supported...");
+            }
+
+            const fileExt = path.extname(file.path).toLowerCase().slice(1);
+            if (!(fileExt in this.formatMap)) {
+                console.log(`omitting not supported file: ${ path.basename(file.path) }`);
+                return callback(null, file);
+            }
+
+            const format = this.formatMap[fileExt];
+            const formatOptions = Object.assign({}, this.formatOptionsMap[format], this.options[format] || {});
+
+            if (format === "svg") {
+                const result = svgoOptimize(file.contents.toString(), formatOptions);
+                if (result.error) {
+                    throw new Error(`SVG optimization failed: ${result.error}`);
                 }
-                else {
-                    const result = svgoOptimize(file.contents.toString(), formatOptions);
-
-                    if (result.error) {
-                        throw new Error(result.error);
-                    }
-
-                    file.contents = Buffer.from(result.data);
-                }
+                file.contents = Buffer.from(result.data);
             }
             else {
-                console.log("file is not identified...", path.basename(file.path));
-                //return callback(null, file);
+                file.contents = await sharp(file.contents)
+                    .resize(this.options.resize || {})
+                    .toFormat(format, formatOptions)
+                    .toBuffer();
             }
 
             return callback(null, file);

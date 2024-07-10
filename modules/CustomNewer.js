@@ -37,15 +37,17 @@ export default class CustomNewer extends Transform {
 
     async _transform(file, encoding, callback) {
         try {
-            const { cacheKey, MTimeValue } = await makeCacheKeyValue(file.path);
-
             if (file.isNull()) {
+                console.error("file is null...", file.baseName);
                 return callback(null, file);
             }
+
             if (file.isStream()) {
-                callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-                return;
+                throw new Error("Streaming is not supported...");
             }
+
+            const { cacheKey, MTimeValue } = await makeCacheKeyValue(file.path);
+
             if (cache.has(cacheKey)) {
                 // Getting modify time from cache
                 const cachedMTime = cache.get(cacheKey);
@@ -62,7 +64,7 @@ export default class CustomNewer extends Transform {
                 return callback(null, file);
             }
         } catch (err) {
-            callback(new PluginError(PLUGIN_NAME, `Error processing file: ${err.message}`));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
         }
     }
 }

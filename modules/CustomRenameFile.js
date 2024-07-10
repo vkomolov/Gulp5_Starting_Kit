@@ -23,25 +23,26 @@ export default class CustomRenameFile extends Transform {
     }
 
     _transform(file, encoding, callback) {
-        if (file.isNull()) {
-            return callback(null, file);
-        }
-
-        if (file.isStream()) {
-            callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-            return; // No need to return here, just to exit the function
-        }
-
         try {
+            if (file.isNull()) {
+                console.error("file is null...", file.baseName);
+                return callback(null, file);
+            }
+
+            if (file.isStream()) {
+                throw new Error("Streaming is not supported...");
+            }
+
             const ext = path.extname(file.path);
             const basename = this.baseName || path.basename(file.path, ext);
             const newFileName = this.suffix
                 ? `${basename}.${this.suffix}${ext}`
                 : `${basename}${ext}`;
             file.path = path.resolve(path.dirname(file.path), newFileName);
-            callback(null, file);
+
+            return callback(null, file);
         } catch (err) {
-            callback(new PluginError(PLUGIN_NAME, err, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
         }
     }
 }

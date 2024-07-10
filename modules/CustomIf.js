@@ -25,39 +25,29 @@ export default class CustomIf extends Transform {
     }
 
     _transform(file, encoding, callback) {
-        if (file.isNull() || !this.filterBy) {
-            return callback(null, file);
-        }
-
-        if (file.isStream()) {
-            callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-            return;
-        }
-
         try {
+            if (file.isNull() || !this.filterBy) {
+                return callback(null, file);
+            }
+            if (file.isStream()) {
+                throw new Error("Streaming is not supported...");
+            }
+
             if (this.filterBy instanceof RegExp) {
-
-                //log("file.relative: ", file.relative);
-
                 const res = this.filterBy.test(file.relative);
-
-                //log(` RegExp ${file.relative}: `, res);
                 return res ? callback(null, file) : callback();
             }
             else if (typeof this.filterBy  === "string") {
-                //log("filterBy is string...");
-
                 const fileName = path.basename(file.path);  //full name of the file with the extension
                 const res = this.isTale ? fileName.endsWith(this.filterBy) : fileName.includes(this.filterBy);
                 return res ? callback(null, file) : callback();
             }
             else {
-                console.error("the given argument to CustomIf is not string or RegExp...");
-                return callback(null, file);
+                throw new Error(`The given argument ${ this.filterBy } is not string or RegExp...`);
             }
         }
         catch (err) {
-            callback(new PluginError(PLUGIN_NAME, err, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
         }
     }
 }

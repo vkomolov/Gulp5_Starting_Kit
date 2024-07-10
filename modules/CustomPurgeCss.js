@@ -26,32 +26,30 @@ export default class CustomPurgeCss extends Transform {
      * Asynchronously transforms each CSS file by purging unused CSS based on associated HTML content.
      */
     async _transform(file, encoding, callback) {
-        if (file.isNull()) {
-            return callback(null, file);
-        }
-
-        if (file.isStream()) {
-            callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
-            return; // No need to return here, just to exit the function
-        }
-
         try {
+            if (file.isNull()) {
+                console.error("file is null...", file.baseName);
+                return callback(null, file);
+            }
+
+            if (file.isStream()) {
+                throw new Error("Streaming is not supported...");
+            }
+
             const ext = path.extname(file.path);
 
             if (ext !== ".css") {
-                throw new Error("ext is not '.css' in the file given... ");
+                throw new Error(`ext is not '.css' in the file given ${ path.basename(file.path) }`);
             }
 
-            const fullName = path.basename(file.path, ext);
-            const basename = fullName.split(".")[0];
-            const targetHtml = path.resolve(this.srcDir, `${basename}.html`);
+            const fullName = path.basename(file.path, ext); //file name without extension
+            const baseName = fullName.split(".")[0]; //splitting suffixes (.min...)
+            const targetHtml = path.resolve(this.srcDir, `${baseName}.html`);
 
             // Checking for targetHtml to exist using checkFileExistence function
             const exists = await checkAccess(targetHtml);
             if (!exists) {
-                return callback(
-                    new PluginError(PLUGIN_NAME,
-                        `HTML file ${targetHtml} not found... please, make it first `));
+               throw new Error(`HTML file ${ targetHtml } not found... please, make it first...`);
             }
 
             // Create an instance of PurgeCSS
@@ -66,14 +64,14 @@ export default class CustomPurgeCss extends Transform {
 
                 // Update the original file with purged CSS contents
                 file.contents = Buffer.from(result.css);
-                callback(null, file);
-            } else {
-                callback(new PluginError(PLUGIN_NAME, 'PurgeCSS returned no results'));
-            }
 
+                return callback(null, file);
+            } else {
+                throw new Error(`PurgeCSS with file: ${ path.basename(file.path) } returned no results...`);
+            }
         }
         catch (err) {
-            callback(new PluginError(PLUGIN_NAME, err, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
         }
     }
 }

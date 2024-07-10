@@ -69,7 +69,19 @@ will change for the alternatives.
   //v8.dev/blog/math-random for details.
   17 vulnerabilities (9 moderate, 8 high)
 
+- gulp-htmlmin
+  html-minifier  *
+  Severity: high
+  kangax html-minifier REDoS vulnerability - https://github.com/advisories/GHSA-pfq8-rq6v-vf5m
+  No fix available
+  node_modules/html-minifier
+  gulp-htmlmin  *
+  Depends on vulnerable versions of html-minifier
+  node_modules/gulp-htmlmin
 
+2 high severity vulnerabilities
+
+Used gulp-htmlclean 
 
 
 

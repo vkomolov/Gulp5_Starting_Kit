@@ -8,7 +8,8 @@ import {
     webpackConfigJs,
     useGulpSizeConfig,
     optimizeCss,
-    minifyCss
+    minifyCss,
+    beautifySettings
 } from "./vars.js";
 
 //error handling plugins
@@ -16,7 +17,8 @@ import plumber from "gulp-plumber";
 
 //html plugins
 import typograf from "gulp-typograf";
-import htmlclean from "gulp-htmlclean";
+import htmlClean from "gulp-htmlclean";
+import beautify from "gulp-beautify";
 
 //styles plugins
 import * as dartSass from "sass";
@@ -70,10 +72,6 @@ const sass = gulpSass(dartSass);
  *  Then it removes the css selectors from ${baseName}.css, which are not used in the following ${baseName}.html
  *  Then it optimizes the css files with no compression for the following writing to .dist/
  *  Then it compresses the css files and renames them with .min suffix for the following writing to .dist/
- * TODO: to the find solution with the correct sourcemaps...
- * TODO: CustomPurgeCss and postCss([normalizeWhitespace()]) break the sourcemap
- * TODO: https://www.npmjs.com/package/gulp-sourcemaps have 3 moderate vulnerabilities and was removed...
- * TODO: src(srcPath, { sourcemaps: true })/gulp.dest(distPath, { sourcemaps: '.' }) are also broken by the upper modules
  *
  * ///// pipeJs: /////
  *
@@ -94,6 +92,7 @@ const tasks = {
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
+                .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));
         },
         pipeStyles() {
@@ -163,7 +162,7 @@ const tasks = {
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
-                .pipe(htmlclean())  //html minification
+                .pipe(htmlClean())
                 .pipe(dest(pathData.build.html));
         },
         pipeStyles() {
