@@ -51,12 +51,15 @@ import CustomPurgeCss from "../modules/CustomPurgeCss.js";
 import CustomIf from "../modules/CustomIf.js";
 import CustomNewer from "../modules/CustomNewer.js";
 import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
+import CustomImgConverter from "../modules/CustomImgConverter.js";
 import { combinePaths, handleError } from "./utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
 const { src, dest } = gulp;
 const sass = gulpSass(dartSass);
+
+
 
 /**
  * TASKS:
@@ -136,6 +139,10 @@ const tasks = {
                 .pipe(size(useGulpSizeConfig({
                     title: "image: "
                 })))
+                .pipe(dest(pathData.build.img))
+                .pipe(new CustomImgConverter(["jpg", "jpeg"], "webp", {
+                    toSkipOthers: true,
+                }))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {
@@ -236,6 +243,10 @@ const tasks = {
                 .pipe(size(useGulpSizeConfig({
                     title: "Image after optimization: "
                 })))
+                .pipe(dest(pathData.build.img))
+                .pipe(new CustomImgConverter(["jpg", "jpeg"], "webp", {
+                    toSkipOthers: true,
+                }))
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {

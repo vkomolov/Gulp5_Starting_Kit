@@ -3,29 +3,45 @@
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
-import sharp, { format } from 'sharp';
+import sharp from 'sharp';
+
+//////////// END OF IMPORTS
+function canConvert(formatInput, formatOutput) {
+    // Map of formats that can be converted to another format
+    const convertibleFormats = {
+        "jpeg": ["webp", "avif"],
+        "png": ["webp", "avif"],
+        "gif": ["webp"],
+        "avif": [],
+        "webp": [],
+        "svg": [],
+        // Add other conversions as needed
+    };
+
+    if (formatInput in convertibleFormats) {
+        return convertibleFormats[formatInput].includes(formatOutput);
+    }
+    return false;
+}
 
 const PLUGIN_NAME = 'customImgConverter';
 
 export default class CustomImgConverter extends Transform {
     /**
-     *
-     * @param { string } formatInput - what format of the file is to be converted ("jpg", "jpeg", "png", "gif")
-     * @param { string } formatOutput - to what format the file is to be converted("webp", "avif")
-     * @param { Object } options - params of the image format to be optimized. It may be empty to use the default settings...
+     * @param {string | string[]} formatInput - what format of the file is to be converted ("jpg", "jpeg", "png", "gif")
+     * @param {string} formatOutput - to what format the file is to be converted("webp", "avif")
+     * @param {Object} [options={}] - options of the image to be converted. It may be empty to use the default settings...
+     * @param {Object} [options.params] - params of the image format to be converted. It may be empty to use the default settings...
+     * @param {Object} [options.resize] - possible property for resizing the image
+     * @param {boolean} [options.toSkipOthers] - to skip files with other formats (true) or to pass through with no touch
      * @example {
-     *     params: {
-     *
-     *     },
-     *     resize: {
-     *
-     *     }
+     *     params: { quality: 80, compressionLevel: 5 },
+     *     resize: {  width: 1000 },
+     *     toSkipOthers: true,
      * }
      */
     constructor(formatInput, formatOutput, options = {}) {
         super({ objectMode: true });
-        this.formatInput = formatInput;
-        this.formatOutput = formatOutput;
         this.options = options;
         this.formatMap = {
             "jpg": "jpeg",
@@ -36,6 +52,16 @@ export default class CustomImgConverter extends Transform {
             "webp": "webp",
             "avif": "avif"
         };
+        this.formatInArr = [].concat(formatInput);
+        this.formatOutput = formatOutput;
+        this.formatOut = this.formatMap[this.formatOutput] || null;
+        this.targetFormatArr = this.formatInArr.filter((acc, format) => {
+            const formatIn = this.formatMap[format] || null;
+            if (formatIn && this.formatOut && canConvert(formatIn, this.formatOut)) {
+                return acc.concat(formatIn);
+            }
+            return acc;
+        }, []);
 
         /**
          * sharp output options: https://sharp.pixelplumbing.com/api-output
@@ -233,70 +259,50 @@ export default class CustomImgConverter extends Transform {
         };
     }
 
-    canConvert(formatInput, formatOutput) {
-        // Map of formats that can be converted to another format
-        const convertibleFormats = {
-            "jpeg": ["webp", "avif"],
-            "png": ["webp", "avif"],
-            "gif": ["webp"],
-            "avif": [],
-            "webp": [],
-            "svg": [],
-            // Add other conversions as needed
-        };
-        if (formatInput in convertibleFormats) {
-            return convertibleFormats[formatInput].includes(formatOutput);
-        }
-        return false;
-    }
     async _transform(file, encoding, callback) {
-        if (file.isNull()) {
-            console.error("file is null...", file.baseName);
-            return callback(null, file);
-        }
-
-        if (file.isStream()) {
-            callback(new PluginError(PLUGIN_NAME, "Streaming not supported"));
-            return;
-        }
-
-        // Ensure file.contents is a buffer
-        if (!Buffer.isBuffer(file.contents)) {
-            file.contents = Buffer.from(file.contents);
-        }
-
-        const formatIn = this.formatMap[this.formatInput] || null;
-        const formatOut = this.formatMap[this.formatOutput] || null;
-        if (!formatIn || !formatOut || !this.canConvert(formatIn, formatOut)) {
-            callback(new PluginError(PLUGIN_NAME,
-                `The given formatInput ${ this.formatInput } is not supported or not convertible to ${ this.formatOutput }...`)
-            );
-            return;
-        }
-
         try {
+            if (!this.targetFormatArr.length) {
+                throw new Error(`The given formatInput ${ this.formatInArr.join(",") } is not supported or not convertible to ${ this.formatOutput }...`);
+            }
+
+            // Ensure file.contents is a buffer
+            if (!(Buffer.isBuffer(file.contents))) {
+                file.contents = Buffer.from(file.contents);
+            }
+
+            if (file.isNull()) {
+                console.error("file is null...", file.baseName);
+                return callback(null, file);
+            }
+
+            if (file.isStream()) {
+                throw new Error("Streaming is not supported...");
+            }
+
             const fileExt = path.extname(file.path).toLowerCase().slice(1);
             const fileFormat = this.formatMap[fileExt] || null;
 
-            if (fileFormat && fileFormat === formatIn) {
-
-
-
-                const convertedBuffer = await sharp(file.contents)
+            if (fileFormat && this.targetFormatArr.includes(fileFormat)) {
+                const formatOptions = Object.assign({}, this.formatOptionsMap[this.formatOut], this.options.params || {});
+                file.contents = await sharp(file.contents)
                     .resize(this.options.resize || {})  // Optional: Resize options if needed
-                    .toFormat(formatOut, { quality: 75 })  // Adjust quality as needed
+                    .toFormat(this.formatOut, formatOptions)  // Adjust quality as needed
                     .toBuffer();
 
-                // Replace original content with WebP content
-                file.contents = convertedBuffer;
+                // Change file extension to the target extension
+                file.path = file.path.replace(path.extname(file.path), `.${ this.formatOut }`);
 
-                // Change file extension to .webp
-                file.path = file.path.replace(path.extname(file.path), ".webp");
+                return callback(null, file);
             }
-
-            // The unsupported or not convertible formats are passed through unchanged
-            console.log(`omitting not supported ${ path.basename(file.path) }...`);
-            return callback(null, file);
+            else {
+                if (this.options?.toSkipOthers) {
+                    //skipping files with other formats...
+                    console.log(`${ path.basename(file.path) } is skipped ...`);
+                    return callback();
+                }
+                console.log(`${ path.basename(file.path) } is passed through with no touch...`);
+                return callback(null, file);
+            }
         } catch (err) {
             return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
         }
