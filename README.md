@@ -1,11 +1,16 @@
 ## Gulp 5 Front-End package 
-### Gulp version: "^5.0.0" !
-### Node version: "v22.2.0" !
+#### Gulp version: "^5.0.0" !
+#### Node version: "v22.2.0" !
+#### 0 vulnerabilities and 0 deprecations of the chosen plugins on the current time...
+The Gulp v5 Starting Pack was constructed using modern features such as Simplified Stream Constructions with 
+Transform stream, omitting the use of through2 and vinyl: https://nodejs.org/api/stream.html#stream_simplified_construction
+
+Motivation:
+- to get rid of annoying deprecations and vulnerabilities installing npm plugins;
+- to finally apply the long-suffering Gulp version 5, hoping for its further support and development;
 
 Task: to compile the npm plugins for production with HTML, CSS, JS, and IMAGES files.
-This starting gulp pack has 0 vulnerabilities and deprecations on current time...
-Some popular plugins which had vulnerabilities and deprecations were replaced with the custom ones using
-Simplified Stream Constructions: https://nodejs.org/api/stream.html#stream_simplified_construction
+Some popular plugins which had vulnerabilities and deprecations were replaced with the custom modules... 
 
 ## Feature:
 - При добавлении страницы необходимо обновлять gulp/vars.js: entries для webpack

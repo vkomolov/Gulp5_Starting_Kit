@@ -52,6 +52,7 @@ import CustomIf from "../modules/CustomIf.js";
 import CustomNewer from "../modules/CustomNewer.js";
 import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
 import CustomImgConverter from "../modules/CustomImgConverter.js";
+import CustomGulpWebpHtml from "../modules/CustomGulpWebpHtml.js";
 import { combinePaths, handleError } from "./utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
@@ -95,6 +96,7 @@ const tasks = {
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
+                .pipe(new CustomGulpWebpHtml())
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));
         },
@@ -169,6 +171,7 @@ const tasks = {
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
+                .pipe(new CustomGulpWebpHtml())
                 .pipe(htmlClean())
                 .pipe(dest(pathData.build.html));
         },
