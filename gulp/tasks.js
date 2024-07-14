@@ -23,7 +23,6 @@ import beautify from "gulp-beautify";
 //styles plugins
 import * as dartSass from "sass";
 import gulpSass from "gulp-sass";
-import dependents from "gulp-dependents";
 
 //postcss environment
 import postcss from "gulp-postcss";
@@ -48,7 +47,6 @@ import fileInclude from "gulp-file-include";
 //custom modules
 import CustomRenameFile from "../modules/CustomRenameFile.js";
 import CustomPurgeCss from "../modules/CustomPurgeCss.js";
-import CustomIf from "../modules/CustomIf.js";
 import CustomNewer from "../modules/CustomNewer.js";
 import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
 import CustomImgConverter from "../modules/CustomImgConverter.js";
@@ -154,12 +152,26 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleImages...")
                 }))
-                .pipe(new CustomNewer())
                 .pipe(size(useGulpSizeConfig({
                     title: "image: "
                 })))
                 .pipe(dest(pathData.build.img))
-                .pipe(new CustomImgConverter(["jpg", "jpeg"], "webp", {
+                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
+                    toSkipOthers: true,
+                }))
+                .pipe(dest(pathData.build.img));
+        },
+        pipeImagesChanged() {
+            return src(pathData.src.img, { encoding: false })
+                .pipe(plumber({
+                    errorHandler: handleError("Error at handleImages...")
+                }))
+                .pipe(changed(pathData.build.img, { changed: compareContents }))
+                .pipe(size(useGulpSizeConfig({
+                    title: "image: "
+                })))
+                .pipe(dest(pathData.build.img))
+                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
                     toSkipOthers: true,
                 }))
                 .pipe(dest(pathData.build.img));
@@ -264,7 +276,7 @@ const tasks = {
                     title: "Image after optimization: "
                 })))
                 .pipe(dest(pathData.build.img))
-                .pipe(new CustomImgConverter(["jpg", "jpeg"], "webp", {
+                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
                     toSkipOthers: true,
                 }))
                 .pipe(dest(pathData.build.img));

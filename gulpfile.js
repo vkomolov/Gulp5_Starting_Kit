@@ -20,7 +20,7 @@ function watchFiles() {
     watch(pathData.watch.htmlNested, series(pipesDev.pipeHtml, browserSync.reload));
     watch(pathData.watch.stylesNested, series(pipesDev.pipeStylesChanged, browserSync.reload));
     watch(pathData.watch.jsNested, series(pipesDev.pipeJs, browserSync.reload));
-    watch(pathData.watch.img, series(pipesDev.pipeImages, browserSync.reload));
+    watch(pathData.watch.img, series(pipesDev.pipeImagesChanged, browserSync.reload));
     watch(pathData.watch.fonts, series(pipesDev.pipeFonts, browserSync.reload));
     watch(pathData.watch.data, series(pipesDev.pipeData, browserSync.reload));
 }
