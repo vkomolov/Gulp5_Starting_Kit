@@ -37,7 +37,7 @@ import webpack from "webpack";
 
 //control plugins
 import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
-import changed from "gulp-changed"; //TODO can be removed
+import changed, { compareContents } from "gulp-changed"; //TODO can be removed
 import debug from "gulp-debug";
 import size from "gulp-size";
 
@@ -101,14 +101,31 @@ const tasks = {
                 .pipe(dest(pathData.build.html));
         },
         pipeStyles() {
-            return src(pathData.src.stylesNested, { sourcemaps: true })
+            return src(pathData.src.styles, { sourcemaps: true })
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleStyles...")
                 }))
-                .pipe(new CustomNewer())    //it caches and filters files by the modified time
-                .pipe(dependents()) //it collects the files which are dependant to the updated file
-                //.pipe(debug({title: "dependants: "})) //to show what files are dependant to the styles changed
-                .pipe(new CustomIf(/^[^\\]*\.scss$/))   //it filters the dependant root scss files not nested in /**/
+                .pipe(size(useGulpSizeConfig({
+                    title: "Before sass: "
+                })))
+                .pipe(sass({}, () => {}))
+                .pipe(size(useGulpSizeConfig({
+                    title: "After sass: "
+                })))
+                .pipe(postcss(optimizeCss)) //to optimize *.css
+                .pipe(size(useGulpSizeConfig({
+                    title: "After optimizeCss: "
+                })))
+                .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
+                .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
+                .pipe(dest(pathData.build.styles, { sourcemaps: "." })); //to paste compressed *.css to dist/
+        },
+        pipeStylesChanged() {
+            return src(pathData.src.styles, { sourcemaps: true })
+                .pipe(plumber({
+                    errorHandler: handleError("Error at handleStyles...")
+                }))
+                .pipe(changed(pathData.build.styles, { changed: compareContents }))
                 .pipe(size(useGulpSizeConfig({
                     title: "Before sass: "
                 })))
