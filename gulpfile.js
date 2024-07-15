@@ -7,22 +7,24 @@ import tasks from "./gulp/tasks.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 const { series, parallel, watch } = gulp;
-const browserSync = new BrowserSync({
-    baseDir: distPath,
-    index: "index.html",
-    open: true,
-    notify: true,
-    noCacheHeaders: true
-});
+const initBs = () => {
+    return new BrowserSync({
+        baseDir: distPath,
+        index: "index.html",
+        open: true,
+        notify: false,
+        noCacheHeaders: true
+    });
+};
 
-function watchFiles() {
+function watchFiles(bs) {
     const pipesDev = tasks[modes.dev];
-    watch(pathData.watch.htmlNested, series(pipesDev.pipeHtml, browserSync.reload));
-    watch(pathData.watch.stylesNested, series(pipesDev.pipeStylesChanged, browserSync.reload));
-    watch(pathData.watch.jsNested, series(pipesDev.pipeJs, browserSync.reload));
-    watch(pathData.watch.img, series(pipesDev.pipeImagesChanged, browserSync.reload));
-    watch(pathData.watch.fonts, series(pipesDev.pipeFonts, browserSync.reload));
-    watch(pathData.watch.data, series(pipesDev.pipeData, browserSync.reload));
+    watch(pathData.watch.htmlNested, series(pipesDev.pipeHtml, bs.reload));
+    watch(pathData.watch.stylesNested, series(pipesDev.pipeStylesChanged, bs.reload));
+    watch(pathData.watch.jsNested, series(pipesDev.pipeJs, bs.reload));
+    watch(pathData.watch.img, series(pipesDev.pipeImagesChanged, bs.reload));
+    watch(pathData.watch.fonts, series(pipesDev.pipeFonts, bs.reload));
+    watch(pathData.watch.data, series(pipesDev.pipeData, bs.reload));
 }
 
 /**
@@ -63,16 +65,18 @@ export function pipesBuild(cb) {
 }
 
 export function runDev(cb) {
+    const bs = initBs();
     series(
         pipesDev,
-        browserSync.reload,
-        watchFiles
+        bs.start,
+        () => watchFiles(bs)
     )(cb);
 }
 
 export function runBuild(cb) {
+    const bs = initBs();
     series(
         pipesBuild,
-        browserSync.reload,
+        bs.start,
     )(cb);
 }
