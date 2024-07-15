@@ -47,7 +47,6 @@ import fileInclude from "gulp-file-include";
 //custom modules
 import CustomRenameFile from "../modules/CustomRenameFile.js";
 import CustomPurgeCss from "../modules/CustomPurgeCss.js";
-import CustomNewer from "../modules/CustomNewer.js";
 import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
 import CustomImgConverter from "../modules/CustomImgConverter.js";
 import CustomGulpWebpHtml from "../modules/CustomGulpWebpHtml.js";
@@ -166,7 +165,7 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleImages...")
                 }))
-                .pipe(changed(pathData.build.img, { changed: compareContents }))
+                .pipe(changed(pathData.build.img))
                 .pipe(size(useGulpSizeConfig({
                     title: "image: "
                 })))
@@ -181,7 +180,14 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleFonts...")
                 }))
-                .pipe(new CustomNewer())
+                .pipe(dest(pathData.build.fonts));
+        },
+        pipeFontsChanged() {
+            return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
+                .pipe(plumber({
+                    errorHandler: handleError("Error at handleFonts...")
+                }))
+                .pipe(changed(pathData.build.fonts))
                 .pipe(dest(pathData.build.fonts));
         },
         pipeData() {
@@ -189,7 +195,14 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleData...")
                 }))
-                .pipe(new CustomNewer())
+                .pipe(dest(pathData.build.data));
+        },
+        pipeDataChanged() {
+            return src(pathData.src.data, { encoding: false })
+                .pipe(plumber({
+                    errorHandler: handleError("Error at handleData...")
+                }))
+                .pipe(changed(pathData.build.data))
                 .pipe(dest(pathData.build.data));
         },
     },
@@ -286,7 +299,6 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleFonts...")
                 }))
-                .pipe(new CustomNewer())
                 .pipe(dest(pathData.build.fonts));
         },
         pipeData() {
@@ -294,7 +306,6 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleData...")
                 }))
-                .pipe(new CustomNewer())
                 .pipe(dest(pathData.build.data));
         },
     }
