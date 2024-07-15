@@ -306,12 +306,14 @@ const tasks = {
                 .pipe(dest(pathData.build.data));
         },
         pipeZipDist() {
+            console.log("rootFolder: ", pathData.rootFolder);
+
             return src(pathData.src.zipDist, {})
                 .pipe(plumber({
                     errorHandler: handleError("Error at zipDist...")
                 }))
-                .pipe(zip(`${ pathData.rootFolder }`))
-                .pipe(dest(pathData.build));
+                .pipe(zip(`${ pathData.rootFolder }.zip`))
+                .pipe(dest(pathData.build.zipDist));
         }
     }
 };

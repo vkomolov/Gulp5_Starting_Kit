@@ -36,6 +36,10 @@ function watchFiles(bs) {
 function runPipes(mode, cb) {
     if (mode in modes) {
         const task = tasks[mode];
+        const zipDist = () => {
+            return task.pipeZipDist ? task.pipeZipDist() : Promise.resolve();
+        }
+
         series(
             distClean,
             task.pipeHtml,
@@ -46,6 +50,7 @@ function runPipes(mode, cb) {
                 task.pipeFonts,
                 task.pipeData
             ),
+            zipDist
         )(cb);
     }
     else {
