@@ -1,7 +1,8 @@
 import gulp from "gulp";
 import BrowserSync from "./modules/BrowserSync.js";
 
-import { distPath, pathData, modes } from "./gulp/vars.js";
+import { pathData } from "./gulp/paths.js";
+import { modes } from "./gulp/settings.js";
 import { cleanDist } from "./gulp/utilFuncs.js";
 import tasks from "./gulp/tasks.js";
 
@@ -9,7 +10,7 @@ import tasks from "./gulp/tasks.js";
 const { series, parallel, watch } = gulp;
 const initBs = () => {
     return new BrowserSync({
-        baseDir: distPath,
+        baseDir: pathData.distPath,
         index: "index.html",
         open: true,
         notify: false,

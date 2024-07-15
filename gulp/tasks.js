@@ -2,7 +2,6 @@
 
 import gulp from "gulp";
 import {
-    pathData,
     modes,
     fileIncludeSettings,
     webpackConfigJs,
@@ -10,13 +9,13 @@ import {
     optimizeCss,
     minifyCss,
     beautifySettings
-} from "./vars.js";
+} from "./settings.js";
+import { pathData } from "./paths.js";
 
 //error handling plugins
 import plumber from "gulp-plumber";
 
 //html plugins
-import typograf from "gulp-typograf";
 import htmlClean from "gulp-htmlclean";
 import beautify from "gulp-beautify";
 
@@ -42,7 +41,7 @@ import size from "gulp-size";
 
 //other plugins
 import fileInclude from "gulp-file-include";
-
+import zip from "gulp-zip";
 
 //custom modules
 import CustomRenameFile from "../modules/CustomRenameFile.js";
@@ -56,8 +55,6 @@ import { combinePaths, handleError } from "./utilFuncs.js";
 
 const { src, dest } = gulp;
 const sass = gulpSass(dartSass);
-
-
 
 /**
  * TASKS:
@@ -308,6 +305,14 @@ const tasks = {
                 }))
                 .pipe(dest(pathData.build.data));
         },
+        pipeZipDist() {
+            return src(pathData.src.zipDist, {})
+                .pipe(plumber({
+                    errorHandler: handleError("Error at zipDist...")
+                }))
+                .pipe(zip(`${ pathData.rootFolder }`))
+                .pipe(dest(pathData.build));
+        }
     }
 };
 export default tasks;
