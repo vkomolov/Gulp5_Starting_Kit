@@ -20,15 +20,18 @@ export async function checkAccess(path, mode = constants.F_OK) {
 
 /**
  * If the path exists, it returns the Promise of the path to be deleted; else it returns an empty Promise
- * @param {string} path - path to delete
+ * @param {string | [string]} path - path or array of paths to delete
  * @returns {Promise<void>}
  */
 export async function cleanDist(path) {
-    const pathExists = await checkAccess(path);
-
-    if (pathExists) {
-        await rimraf(path);
-    }
+    const pathArr = [].concat(path);
+    const deletePromises = pathArr.map(async pathStr => {
+        const pathExists = await checkAccess(pathStr);
+        if (pathExists) {
+            await rimraf(pathStr);
+        }
+    });
+    await Promise.all(deletePromises);
 }
 
 export function handleError(taskTypeError) {

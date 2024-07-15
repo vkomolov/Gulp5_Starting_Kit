@@ -39,6 +39,9 @@ function runPipes(mode, cb) {
         const zipDist = () => {
             return task.pipeZipDist ? task.pipeZipDist() : Promise.resolve();
         }
+        const zipProject = () => {
+            return task.pipeZipProject ? task.pipeZipProject() : Promise.resolve();
+        }
 
         series(
             distClean,
@@ -50,7 +53,8 @@ function runPipes(mode, cb) {
                 task.pipeFonts,
                 task.pipeData
             ),
-            zipDist
+            zipProject,
+            zipDist,
         )(cb);
     }
     else {

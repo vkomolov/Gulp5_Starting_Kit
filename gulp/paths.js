@@ -29,7 +29,12 @@ export const pathData = {
         img: `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif}`,
         fonts: `${ srcPath }/assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
         data: `${ srcPath }/assets/data/**/*.{json, pdf, xml}`,
-        zipDist: `${ distPath }/**/*.*`
+        zipDist: `${ distPath }/**/*.*`,
+        zipProject: [
+            '!node_modules/**/*',
+            '!dist/**/*',
+            '**/*.*'
+        ]
     },
     build: {
         html: distPath,
@@ -38,7 +43,8 @@ export const pathData = {
         img: `${ distPath }/assets/img`,
         fonts: `${ distPath }/assets/fonts`,
         data: `${ distPath }/assets/data`,
-        zipDist: distPath
+        zipProject: distPath,
+        zipDist: "./"
     },
     watch: {
         htmlNested: [
@@ -54,7 +60,10 @@ export const pathData = {
         fonts: `${ srcPath }/assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
         data: `${ srcPath }/assets/data/**/*.{json, pdf, xml}`,
     },
-    clean: distPath,
+    clean: [
+        distPath,
+        `./${ rootFolder }.zip`
+    ],
 }
 export const entries = {
     js: {

@@ -305,9 +305,15 @@ const tasks = {
                 }))
                 .pipe(dest(pathData.build.data));
         },
+        pipeZipProject() {
+            return src(pathData.src.zipProject, {})
+                .pipe(plumber({
+                    errorHandler: handleError("Error at zipProject...")
+                }))
+                .pipe(zip(`${ pathData.rootFolder }.project.zip`))
+                .pipe(dest(pathData.build.zipProject));
+        },
         pipeZipDist() {
-            console.log("rootFolder: ", pathData.rootFolder);
-
             return src(pathData.src.zipDist, {})
                 .pipe(plumber({
                     errorHandler: handleError("Error at zipDist...")
