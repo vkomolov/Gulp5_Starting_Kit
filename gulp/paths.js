@@ -22,7 +22,10 @@ export const pathData = {
     distPath,
     ftp: "",
     src: {
-        html: `${ srcPath }/*.html`,
+        html: [
+            `${ srcPath }/html/**/*.html`,
+            `!${ srcPath }/html/templates/*.html`
+        ],
         stylesNested: `${ srcPath }/scss/**/*.scss`,
         styles: `${ srcPath }/scss/*.scss`,   //root *.scss, connected to html (for build tasks)
         js: `${ srcPath }/js/*.js`,
@@ -47,8 +50,7 @@ export const pathData = {
         zipDist: "./"
     },
     watch: {
-        htmlNested: [
-            `${ srcPath }/*.html`,
+        html: [
             `${ srcPath }/html/**/*.html`,
         ],
         stylesNested: `${ srcPath }/scss/**/*.scss`,

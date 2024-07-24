@@ -1,9 +1,12 @@
 <header class="header-wrapper" role="banner">
+  @@if (page && headParams && headParams[page]) {
   <div class="img-wrapper">
-    <img src="./assets/img/meditation_1.jpg" alt="meditation">
+    <img src="@@headParams.@@page.root/assets/img/meditation_1.jpg" alt="meditation">
   </div>
   <nav class="header__nav" role="navigation">
-    <a href="./index.html" target="_self" class="nav-link">Main Page</a>
-    <a href="./about.html" target="_self" class="nav-link">About Page</a>
+    <a href="@@headParams.@@page.root/index.html" target="_self" class="nav-link">Main Page</a>
+    <a href="@@headParams.@@page.root/about.html" target="_self" class="nav-link">About Page</a>
+    <a href="@@headParams.@@page.root/somePages/somePage.html" target="_self" class="nav-link">Some Page</a>
   </nav>
+  }
 </header>

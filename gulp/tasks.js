@@ -34,7 +34,6 @@ import webpack from "webpack";
 //import ttf2woff2 from "gulp-ttf2woff2";
 
 //control plugins
-import cached from "gulp-cached";   //TODO can be removed in favor to gulp-newer
 import changed, { compareContents } from "gulp-changed"; //TODO can be removed
 import debug from "gulp-debug";
 import size from "gulp-size";
@@ -90,6 +89,9 @@ const tasks = {
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
+                //.pipe(changed(pathData.build.html))
+                //.pipe(changed(pathData.build.html, { hasChanged: compareContents }))
+                .pipe(debug({title: 'file:'}))
                 .pipe(new CustomGulpWebpHtml())
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));
@@ -119,7 +121,8 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleStyles...")
                 }))
-                .pipe(changed(pathData.build.styles, { changed: compareContents }))
+                //.pipe(changed(pathData.build.styles))
+                //.pipe(debug({title: 'file:'}))
                 .pipe(size(useGulpSizeConfig({
                     title: "Before sass: "
                 })))
