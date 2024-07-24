@@ -89,9 +89,9 @@ const tasks = {
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
-                //.pipe(changed(pathData.build.html))
-                //.pipe(changed(pathData.build.html, { hasChanged: compareContents }))
-                .pipe(debug({title: 'file:'}))
+                .pipe(changed(`${pathData.tempPath}/html/`, { hasChanged: compareContents }))
+                .pipe(debug({title: 'file changed:'}))
+                .pipe(dest(`${pathData.tempPath}/html/`))
                 .pipe(new CustomGulpWebpHtml())
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));

@@ -16,10 +16,12 @@ const rootFolder = nodePath.basename(nodePath.resolve());
 
 const srcPath = path.resolve(curWD, "src");
 const distPath = path.resolve(curWD, "dist");
+const tempPath = path.resolve(srcPath, "temp");
 export const pathData = {
     rootFolder,
     srcPath,
     distPath,
+    tempPath,
     ftp: "",
     src: {
         html: [
@@ -64,7 +66,8 @@ export const pathData = {
     },
     clean: [
         distPath,
-        `./${ rootFolder }.zip`
+        `./${ rootFolder }.zip`,
+        tempPath,
     ],
 }
 export const entries = {
