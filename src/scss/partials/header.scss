@@ -35,7 +35,7 @@
 .nav-link {
   font-family: "Ubuntu-Regular", sans-serif;
   color: $blue;
-  @include init-font(1.05em, 600);
+  @include init-font(1em, 600);
   @include text-shadow(0.05em, 0.05em);
   @include transition();
 

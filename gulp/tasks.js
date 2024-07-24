@@ -84,7 +84,7 @@ const sass = gulpSass(dartSass);
 const tasks = {
     [modes.dev]: {
         pipeHtml() {
-            return src(pathData.src.html)
+            return src(pathData.src.htmlNested)
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleHtml...")
                 }))
@@ -108,28 +108,9 @@ const tasks = {
                 .pipe(size(useGulpSizeConfig({
                     title: "After sass: "
                 })))
-                .pipe(postcss(optimizeCss)) //to optimize *.css
-                .pipe(size(useGulpSizeConfig({
-                    title: "After optimizeCss: "
-                })))
-                .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
-                .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
-                .pipe(dest(pathData.build.styles, { sourcemaps: "." })); //to paste compressed *.css to dist/
-        },
-        pipeStylesChanged() {
-            return src(pathData.src.styles, { sourcemaps: true })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at handleStyles...")
-                }))
-                //.pipe(changed(pathData.build.styles))
-                //.pipe(debug({title: 'file:'}))
-                .pipe(size(useGulpSizeConfig({
-                    title: "Before sass: "
-                })))
-                .pipe(sass({}, () => {}))
-                .pipe(size(useGulpSizeConfig({
-                    title: "After sass: "
-                })))
+                .pipe(changed(`${pathData.tempPath}/css/`, { hasChanged: compareContents }))
+                .pipe(debug({title: 'file changed:'}))
+                .pipe(dest(`${pathData.tempPath}/css/`))
                 .pipe(postcss(optimizeCss)) //to optimize *.css
                 .pipe(size(useGulpSizeConfig({
                     title: "After optimizeCss: "

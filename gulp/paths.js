@@ -24,11 +24,10 @@ export const pathData = {
     tempPath,
     ftp: "",
     src: {
-        html: [
+        htmlNested: [
             `${ srcPath }/html/**/*.html`,
             `!${ srcPath }/html/templates/*.html`
         ],
-        stylesNested: `${ srcPath }/scss/**/*.scss`,
         styles: `${ srcPath }/scss/*.scss`,   //root *.scss, connected to html (for build tasks)
         js: `${ srcPath }/js/*.js`,
         img: `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif}`,
@@ -52,7 +51,7 @@ export const pathData = {
         zipDist: "./"
     },
     watch: {
-        html: [
+        htmlNested: [
             `${ srcPath }/html/**/*.html`,
         ],
         stylesNested: `${ srcPath }/scss/**/*.scss`,
@@ -75,8 +74,4 @@ export const entries = {
         index: `${ pathData.srcPath }/js/index.js`,
         about: `${ pathData.srcPath }/js/about.js`,
     },
-    html: {
-        index: `${ pathData.srcPath }/js/index.html`,
-        about: `${ pathData.srcPath }/js/about.html`,
-    }
 }

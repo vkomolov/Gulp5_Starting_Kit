@@ -20,8 +20,8 @@ const initBs = () => {
 
 function watchFiles(bs) {
     const pipesDev = tasks[modes.dev];
-    watch(pathData.watch.html, series(pipesDev.pipeHtml, bs.reload));
-    watch(pathData.watch.stylesNested, series(pipesDev.pipeStylesChanged, bs.reload));
+    watch(pathData.watch.htmlNested, series(pipesDev.pipeHtml, bs.reload));
+    watch(pathData.watch.stylesNested, series(pipesDev.pipeStyles, bs.reload));
     watch(pathData.watch.jsNested, series(pipesDev.pipeJs, bs.reload));
     watch(pathData.watch.img, series(pipesDev.pipeImagesChanged, bs.reload));
     watch(pathData.watch.fonts, series(pipesDev.pipeFontsChanged, bs.reload));
