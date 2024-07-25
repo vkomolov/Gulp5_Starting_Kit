@@ -1,17 +1,20 @@
 "use strict";
 
 import { Transform } from 'stream';
+import path from "path";
 import PluginError from 'plugin-error';
+import { checkAccess } from "../gulp/utilFuncs.js";
 
 const PLUGIN_NAME = 'customGulpWebpHtml';
 
 export default class CustomGulpWebpHtml extends Transform {
-    constructor() {
+    constructor(rootImgSource = "./dist/") {
         super({ objectMode: true });
         this.extensions = ['.jpg', '.jpeg', '.png', '.gif'];
         this.imgRegex = /<img([^>]*)src="(\S+)"([^>]*)>/gi;
+        this.rootImgSource = rootImgSource;
     }
-    _transform(file, encoding, callback) {
+    async _transform(file, encoding, callback) {
         try {
             if (file.isNull()) {
                 return callback(null, file);
@@ -23,31 +26,37 @@ export default class CustomGulpWebpHtml extends Transform {
             }
 
             let inPicture = false;
-            const data = file.contents
+            const data = await Promise.all(file.contents
                 .toString()
                 .split('\n')
-                .map(line => {
+                .map(async line => {
                     if (line.indexOf('<picture') !== -1) inPicture = true;
                     if (line.indexOf('</picture') !== -1) inPicture = false;
 
                     if (line.indexOf('<img') !== -1 && !inPicture) {
                         const matches = Array.from(line.matchAll(this.imgRegex));
 
-                        matches.forEach(match => {
+                        for (const match of matches) {
                             const [fullMatch, , url] = match;
                             if (this.isGifOrSvg(url)) {
-                                return;
+                                continue;
                             }
                             const newUrl = this.replaceExtensions(url);
-                            const newImgTag = this.pictureRender(newUrl, fullMatch);
-                            line = line.replace(fullMatch, newImgTag);
-                        });
+                            const relativePath = path.normalize(newUrl.replace(/^(\.{1,2}\/)+/, ""));
+                            const distImgUrl = path.join(this.rootImgSource, relativePath);
+                            const webpExists = await checkAccess(distImgUrl);
+
+                            if (webpExists) {
+                                const newImgTag = this.pictureRender(newUrl, fullMatch);
+                                line = line.replace(fullMatch, newImgTag);
+                            }
+                        }
                     }
                     return line;
                 })
-                .join('\n');
+            );
 
-            file.contents = Buffer.from(data);
+            file.contents = Buffer.from(data.join('\n'));
             return callback(null, file);
         } catch (err) {
             console.error('[ERROR] Ensure there are no spaces or Cyrillic characters in the image file name');

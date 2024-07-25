@@ -45,11 +45,11 @@ function runPipes(mode, cb) {
 
         series(
             distClean,
-            task.pipeHtml,
+            task.pipeImages,
+            task.pipeHtml,  //it needs images with alternative *.webp for tag <picture>
             parallel(
                 task.pipeStyles,
                 task.pipeJs,
-                task.pipeImages,
                 task.pipeFonts,
                 task.pipeData
             ),
