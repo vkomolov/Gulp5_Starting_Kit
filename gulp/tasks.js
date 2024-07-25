@@ -106,12 +106,6 @@ const tasks = {
                         return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
                     })
                 ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(
-                    replace(
-                        /(?<=src=|href=|srcset=)(['"])(\.(\.)?\/)*(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
-                        '$1./$4$5$7$1'
-                    )
-                )
                 .pipe(new CustomGulpWebpHtml())
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));

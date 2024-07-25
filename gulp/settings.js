@@ -66,13 +66,13 @@ export const fileIncludeSettings = {
 };
 export const beautifySettings = {
     html: {
-        indent_size: 2,
-        indent_char: ' ',
-        indent_with_tabs: false,
-        preserve_newlines: true,
-        max_preserve_newlines: 1,
-        wrap_line_length: 80,
-        extra_liners: ['head', 'body', '/html']
+        //indent_size: 2,
+        //indent_char: ' ',
+        indent_with_tabs: true,
+        preserve_newlines: false,
+        //max_preserve_newlines: 0,
+        //wrap_line_length: 80,
+        //extra_liners: ['head', 'body', '/html']
     }
 }
 export const optimizeCss = [

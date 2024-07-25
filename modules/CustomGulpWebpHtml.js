@@ -5,13 +5,12 @@ import PluginError from 'plugin-error';
 
 const PLUGIN_NAME = 'customGulpWebpHtml';
 
-export default class _CustomGulpWebpHtml extends Transform {
+export default class CustomGulpWebpHtml extends Transform {
     constructor() {
         super({ objectMode: true });
         this.extensions = ['.jpg', '.jpeg', '.png', '.gif'];
         this.imgRegex = /<img([^>]*)src="(\S+)"([^>]*)>/gi;
     }
-
     _transform(file, encoding, callback) {
         try {
             if (file.isNull()) {
@@ -77,4 +76,9 @@ export default class _CustomGulpWebpHtml extends Transform {
             return `<picture><source srcset="${url}" type="image/webp">${imgTag}</picture>`;
         }
     }
+}
+
+///////////////// dev
+function log(it, comments='value: ') {
+    console.log(comments, it);
 }
