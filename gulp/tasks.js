@@ -40,6 +40,7 @@ import size from "gulp-size";
 
 //other plugins
 import fileInclude from "gulp-file-include";
+import replace from "gulp-replace";
 import zip from "gulp-zip";
 
 //custom modules
@@ -59,6 +60,14 @@ const sass = gulpSass(dartSass);
  * TASKS:
  *
  * ///// pipeHtml: /////
+ * It takes all *.html from .src/html including in nested folders except .src/html/templates/*.html.
+ * Then it includes partial files from .src/html/templates/*.html.
+ * Then it checks whether the ${baseName}.html is changed compared to the previously included ${baseName}.html in
+ * the created .src/temp/html folder.
+ * If it is changed, then it is piped to .src/temp/html folder with the new version of the file.
+ * Then it removes extra spaces and line breaks inside a tag <img>.
+ * Then it is piped to new CustomGulpWebpHtml() to alter the <img> tags with the alternative <picture> webp format.
+ * Then it is beautified and written to .dist/
  *
  * ///// pipeStyles: /////
  *  It takes all scss files:
@@ -92,6 +101,17 @@ const tasks = {
                 .pipe(changed(`${pathData.tempPath}/html/`, { hasChanged: compareContents }))
                 .pipe(debug({title: 'file changed:'}))
                 .pipe(dest(`${pathData.tempPath}/html/`))
+                .pipe(
+                    replace(/<img(?:.|\n|\r)*?>/g, function(match) {
+                        return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
+                    })
+                ) //removes extra spaces and line breaks inside a tag <img>
+                .pipe(
+                    replace(
+                        /(?<=src=|href=|srcset=)(['"])(\.(\.)?\/)*(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
+                        '$1./$4$5$7$1'
+                    )
+                )
                 .pipe(new CustomGulpWebpHtml())
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));
