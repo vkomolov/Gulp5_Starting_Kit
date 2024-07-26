@@ -3,7 +3,7 @@
   "name": "gulp5_starting_kit_2024",
   "version": "1.0.0",
   "description": "gulp version 5 Node 22.2.0 starting kit",
-  "main": "index.js",
+  "main": "gulpfile.js",
   "scripts": {
     "dev": "gulp runDev",
     "build": "gulp runBuild",
@@ -11,7 +11,7 @@
     "pipesBuild": "gulp pipesBuild",
     "clean": "gulp distClean"
   },
-  "author": "",
+  "author": "vkomolov.ua@gmail.com",
   "license": "ISC",
   "browserslist": [
     "last 5 versions",
@@ -30,7 +30,6 @@
     "cssnano": "^7.0.2",
     "gulp": "^5.0.0",
     "gulp-beautify": "^3.0.0",
-    "gulp-cached": "^1.1.1",
     "gulp-changed": "^5.0.2",
     "gulp-cli": "^3.0.0",
     "gulp-debug": "^5.0.1",
@@ -41,7 +40,6 @@
     "gulp-replace": "^1.1.4",
     "gulp-sass": "^5.1.0",
     "gulp-size": "^5.0.0",
-    "gulp-typograf": "^4.1.0",
     "gulp-zip": "^6.0.0",
     "lru-cache": "^10.2.2",
     "plugin-error": "^2.0.1",
@@ -50,7 +48,6 @@
     "postcss-normalize-whitespace": "^7.0.0",
     "postcss-sort-media-queries": "^5.2.0",
     "purgecss": "^6.0.0",
-    "responsive-loader": "^3.1.2",
     "rimraf": "^5.0.7",
     "sass": "^1.77.6",
     "sharp": "^0.33.4",

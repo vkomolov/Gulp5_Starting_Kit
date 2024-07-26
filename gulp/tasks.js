@@ -31,10 +31,9 @@ import webpackStream from "webpack-stream";
 import webpack from "webpack";
 
 //fonts plugins
-//import ttf2woff2 from "gulp-ttf2woff2";
 
 //control plugins
-import changed, { compareContents } from "gulp-changed"; //TODO can be removed
+import changed, { compareContents } from "gulp-changed";
 import debug from "gulp-debug";
 import size from "gulp-size";
 
@@ -106,7 +105,7 @@ const tasks = {
                         return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
                     })
                 ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(new CustomGulpWebpHtml(pathData.distPath))
+                .pipe(new CustomGulpWebpHtml(pathData.distPath, "@2x"))
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));
         },
@@ -182,7 +181,7 @@ const tasks = {
                         return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
                     })
                 ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(new CustomGulpWebpHtml(pathData.distPath))
+                .pipe(new CustomGulpWebpHtml(pathData.distPath, "@2x"))
                 .pipe(htmlClean())
                 .pipe(dest(pathData.build.html));
         },

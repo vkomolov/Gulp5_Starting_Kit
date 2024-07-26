@@ -8,29 +8,36 @@ import { checkAccess } from "../gulp/utilFuncs.js";
 const PLUGIN_NAME = 'customGulpWebpHtml';
 
 export default class CustomGulpWebpHtml extends Transform {
-    constructor(rootImgSource = "./dist/") {
+    /**
+     * It checks for alternative *.webp format and retina sizes, then it replaces the original <img src> with
+     * <picture><source srcset> version of the image, adding alternative webp format and retina sizes if they exist...
+     * @param {string} [rootImgSource="dist"] - root folder from which to search for the alternative images
+     * @param {string} [retinaSize="2x"] - it will search the following retina sizes
+     */
+    constructor(rootImgSource = "dist", retinaSize = "@2x") {
         super({ objectMode: true });
         this.extensions = ['.jpg', '.jpeg', '.png', '.gif'];
         this.imgRegex = /<img([^>]*)src="(\S+)"([^>]*)>/gi;
         this.rootImgSource = rootImgSource;
+        this.retinaSize = retinaSize;
     }
 
     async checkRetinaImages(basePath) {
-        const webp2xPath = basePath.replace('.webp', '@2x.webp');
-        const jpg2xPath = basePath.replace('.webp', '@2x.jpg');
-        const png2xPath = basePath.replace('.webp', '@2x.png');
+        const webpRetinaPath = basePath.replace(".webp", `${this.retinaSize}.webp`);
+        const jpgRetinaPath = basePath.replace(".webp", `${this.retinaSize}.jpg`);
+        const pngRetinaPath = basePath.replace(".webp", `${this.retinaSize}.png`);
 
-        const webp2xExists = await checkAccess(webp2xPath);
-        const jpg2xExists = await checkAccess(jpg2xPath.replace('.webp', '.jpg'));
-        const png2xExists = await checkAccess(png2xPath.replace('.webp', '.png'));
+        const webpRetinaExists = await checkAccess(webpRetinaPath);
+        const jpgRetinaExists = await checkAccess(jpgRetinaPath.replace(".webp", ".jpg"));
+        const pngRetinaExists = await checkAccess(pngRetinaPath.replace(".webp", ".png"));
 
-        return { webp2xExists, jpg2xExists, png2xExists };
+        return { webpRetinaExists, jpgRetinaExists, pngRetinaExists };
     }
 
-    generateSrcset(basePath, webp2xExists, jpg2xExists, png2xExists) {
-        const srcsetWebp = `${basePath} 1x${webp2xExists ? `, ${basePath.replace('.webp', '@2x.webp')} 2x` : ''}`;
-        const srcsetJpg = jpg2xExists ? `${basePath.replace('.webp', '.jpg')} 1x, ${basePath.replace('.webp', '@2x.jpg').replace('.webp', '.jpg')} 2x` : '';
-        const srcsetPng = png2xExists ? `${basePath.replace('.webp', '.png')} 1x, ${basePath.replace('.webp', '@2x.png').replace('.webp', '.png')} 2x` : '';
+    generateSrcset(basePath, webpRetinaExists, jpgRetinaExists, pngRetinaExists) {
+        const srcsetWebp = `${basePath} 1x${webpRetinaExists ? `, ${basePath.replace('.webp', `${this.retinaSize}.webp`)} ${this.retinaSize}` : ""}`;
+        const srcsetJpg = jpgRetinaExists ? `${basePath.replace(".webp", ".jpg")} 1x, ${basePath.replace(".webp", `${this.retinaSize}.jpg`).replace(".webp", ".jpg")} ${this.retinaSize}` : "";
+        const srcsetPng = pngRetinaExists ? `${basePath.replace(".webp", ".png")} 1x, ${basePath.replace(".webp", `${this.retinaSize}.png`).replace(".webp", ".png")} ${this.retinaSize}` : "";
 
         return { srcsetWebp, srcsetJpg, srcsetPng };
     }
@@ -49,12 +56,12 @@ export default class CustomGulpWebpHtml extends Transform {
             let inPicture = false;
             const data = await Promise.all(file.contents
                 .toString()
-                .split('\n')
+                .split("\n")
                 .map(async line => {
-                    if (line.indexOf('<picture') !== -1) inPicture = true;
-                    if (line.indexOf('</picture') !== -1) inPicture = false;
+                    if (line.indexOf("<picture") !== -1) inPicture = true;
+                    if (line.indexOf("</picture") !== -1) inPicture = false;
 
-                    if (line.indexOf('<img') !== -1 && !inPicture) {
+                    if (line.indexOf("<img") !== -1 && !inPicture) {
                         const matches = Array.from(line.matchAll(this.imgRegex));
 
                         for (const match of matches) {
@@ -65,12 +72,16 @@ export default class CustomGulpWebpHtml extends Transform {
 
                             const newUrl = this.replaceExtensions(url);
                             const relativePath = path.normalize(newUrl.replace(/^(\.{1,2}\/)+/, ""));
-                            const distImgUrl = path.join(this.rootImgSource, relativePath);
+                            const distImgUrl = path.resolve(this.rootImgSource, relativePath);
                             const webpExists = await checkAccess(distImgUrl);
 
                             if (webpExists) {
-                                const { webp2xExists, jpg2xExists, png2xExists } = await this.checkRetinaImages(distImgUrl);
-                                const newImgTag = this.pictureRender(newUrl, fullMatch, webp2xExists, jpg2xExists, png2xExists);
+                                const {
+                                    webpRetinaExists,
+                                    jpgRetinaExists,
+                                    pngRetinaExists
+                                } = await this.checkRetinaImages(distImgUrl);
+                                const newImgTag = this.pictureRender(newUrl, fullMatch, webpRetinaExists, jpgRetinaExists, pngRetinaExists);
                                 line = line.replace(fullMatch, newImgTag);
                             }
                         }
@@ -78,7 +89,7 @@ export default class CustomGulpWebpHtml extends Transform {
                     return line;
                 }));
 
-            file.contents = Buffer.from(data.join('\n'));
+            file.contents = Buffer.from(data.join("\n"));
             return callback(null, file);
         } catch (err) {
             console.error('[ERROR] Ensure there are no spaces or Cyrillic characters in the image file name');
@@ -87,7 +98,7 @@ export default class CustomGulpWebpHtml extends Transform {
     }
 
     isGifOrSvg(url) {
-        return url.includes('.svg') || url.includes('.gif');
+        return url.includes(".svg") || url.includes(".gif");
     }
 
     replaceExtensions(url) {
@@ -99,12 +110,16 @@ export default class CustomGulpWebpHtml extends Transform {
         return newUrl;
     }
 
-    pictureRender(url, imgTag, webp2xExists, jpg2xExists, png2xExists) {
-        const { srcsetWebp, srcsetJpg, srcsetPng } = this.generateSrcset(url, webp2xExists, jpg2xExists, png2xExists);
+    pictureRender(url, imgTag, webpRetinaExists, jpgRetinaExists, pngRetinaExists) {
+        const {
+            srcsetWebp,
+            srcsetJpg,
+            srcsetPng
+        } = this.generateSrcset(url, webpRetinaExists, jpgRetinaExists, pngRetinaExists);
 
         const webpSource = `<source srcset="${srcsetWebp}" type="image/webp">`;
-        const jpgSource = jpg2xExists ? `<source srcset="${srcsetJpg}" type="image/jpeg">` : '';
-        const pngSource = png2xExists ? `<source srcset="${srcsetPng}" type="image/png">` : '';
+        const jpgSource = jpgRetinaExists ? `<source srcset="${srcsetJpg}" type="image/jpeg">` : "";
+        const pngSource = pngRetinaExists ? `<source srcset="${srcsetPng}" type="image/png">` : "";
 
         return `<picture>${webpSource}${jpgSource}${pngSource}${imgTag}</picture>`;
     }
