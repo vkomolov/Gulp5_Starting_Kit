@@ -106,7 +106,7 @@ const tasks = {
                         return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
                     })
                 ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(new CustomGulpWebpHtml())
+                .pipe(new CustomGulpWebpHtml(pathData.distPath))
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));
         },
@@ -146,24 +146,7 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleImages...")
                 }))
-                .pipe(size(useGulpSizeConfig({
-                    title: "image: "
-                })))
-                .pipe(dest(pathData.build.img))
-                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
-                    toSkipOthers: true,
-                }))
-                .pipe(dest(pathData.build.img));
-        },
-        pipeImagesChanged() {
-            return src(pathData.src.img, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at handleImages...")
-                }))
                 .pipe(changed(pathData.build.img))
-                .pipe(size(useGulpSizeConfig({
-                    title: "image: "
-                })))
                 .pipe(dest(pathData.build.img))
                 .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
                     toSkipOthers: true,
@@ -171,13 +154,6 @@ const tasks = {
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {
-            return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
-                .pipe(plumber({
-                    errorHandler: handleError("Error at handleFonts...")
-                }))
-                .pipe(dest(pathData.build.fonts));
-        },
-        pipeFontsChanged() {
             return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleFonts...")
@@ -190,25 +166,23 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleData...")
                 }))
-                .pipe(dest(pathData.build.data));
-        },
-        pipeDataChanged() {
-            return src(pathData.src.data, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at handleData...")
-                }))
                 .pipe(changed(pathData.build.data))
                 .pipe(dest(pathData.build.data));
         },
     },
     [modes.build]: {
         pipeHtml() {
-            return src(pathData.src.html)
+            return src(pathData.src.htmlNested)
                 .pipe(plumber({
                     errorHandler: handleError("Error at handleHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
-                .pipe(new CustomGulpWebpHtml())
+                .pipe(
+                    replace(/<img(?:.|\n|\r)*?>/g, function(match) {
+                        return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
+                    })
+                ) //removes extra spaces and line breaks inside a tag <img>
+                .pipe(new CustomGulpWebpHtml(pathData.distPath))
                 .pipe(htmlClean())
                 .pipe(dest(pathData.build.html));
         },
@@ -286,7 +260,7 @@ const tasks = {
                 .pipe(dest(pathData.build.img))
                 .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
                     toSkipOthers: true,
-                }))
+                })) //conversion and optimization
                 .pipe(dest(pathData.build.img));
         },
         pipeFonts() {

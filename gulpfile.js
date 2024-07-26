@@ -23,9 +23,9 @@ function watchFiles(bs) {
     watch(pathData.watch.htmlNested, series(pipesDev.pipeHtml, bs.reload));
     watch(pathData.watch.stylesNested, series(pipesDev.pipeStyles, bs.reload));
     watch(pathData.watch.jsNested, series(pipesDev.pipeJs, bs.reload));
-    watch(pathData.watch.img, series(pipesDev.pipeImagesChanged, bs.reload));
-    watch(pathData.watch.fonts, series(pipesDev.pipeFontsChanged, bs.reload));
-    watch(pathData.watch.data, series(pipesDev.pipeDataChanged, bs.reload));
+    watch(pathData.watch.img, series(pipesDev.pipeImages, bs.reload));
+    watch(pathData.watch.fonts, series(pipesDev.pipeFonts, bs.reload));
+    watch(pathData.watch.data, series(pipesDev.pipeData, bs.reload));
 }
 
 /**

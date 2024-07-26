@@ -14,6 +14,27 @@ export default class CustomGulpWebpHtml extends Transform {
         this.imgRegex = /<img([^>]*)src="(\S+)"([^>]*)>/gi;
         this.rootImgSource = rootImgSource;
     }
+
+    async checkRetinaImages(basePath) {
+        const webp2xPath = basePath.replace('.webp', '@2x.webp');
+        const jpg2xPath = basePath.replace('.webp', '@2x.jpg');
+        const png2xPath = basePath.replace('.webp', '@2x.png');
+
+        const webp2xExists = await checkAccess(webp2xPath);
+        const jpg2xExists = await checkAccess(jpg2xPath.replace('.webp', '.jpg'));
+        const png2xExists = await checkAccess(png2xPath.replace('.webp', '.png'));
+
+        return { webp2xExists, jpg2xExists, png2xExists };
+    }
+
+    generateSrcset(basePath, webp2xExists, jpg2xExists, png2xExists) {
+        const srcsetWebp = `${basePath} 1x${webp2xExists ? `, ${basePath.replace('.webp', '@2x.webp')} 2x` : ''}`;
+        const srcsetJpg = jpg2xExists ? `${basePath.replace('.webp', '.jpg')} 1x, ${basePath.replace('.webp', '@2x.jpg').replace('.webp', '.jpg')} 2x` : '';
+        const srcsetPng = png2xExists ? `${basePath.replace('.webp', '.png')} 1x, ${basePath.replace('.webp', '@2x.png').replace('.webp', '.png')} 2x` : '';
+
+        return { srcsetWebp, srcsetJpg, srcsetPng };
+    }
+
     async _transform(file, encoding, callback) {
         try {
             if (file.isNull()) {
@@ -41,20 +62,21 @@ export default class CustomGulpWebpHtml extends Transform {
                             if (this.isGifOrSvg(url)) {
                                 continue;
                             }
+
                             const newUrl = this.replaceExtensions(url);
                             const relativePath = path.normalize(newUrl.replace(/^(\.{1,2}\/)+/, ""));
                             const distImgUrl = path.join(this.rootImgSource, relativePath);
                             const webpExists = await checkAccess(distImgUrl);
 
                             if (webpExists) {
-                                const newImgTag = this.pictureRender(newUrl, fullMatch);
+                                const { webp2xExists, jpg2xExists, png2xExists } = await this.checkRetinaImages(distImgUrl);
+                                const newImgTag = this.pictureRender(newUrl, fullMatch, webp2xExists, jpg2xExists, png2xExists);
                                 line = line.replace(fullMatch, newImgTag);
                             }
                         }
                     }
                     return line;
-                })
-            );
+                }));
 
             file.contents = Buffer.from(data.join('\n'));
             return callback(null, file);
@@ -77,17 +99,13 @@ export default class CustomGulpWebpHtml extends Transform {
         return newUrl;
     }
 
-    pictureRender(url, imgTag) {
-        if (imgTag.indexOf("data-src") !== -1) {
-            imgTag = imgTag.replace("<img", '<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" ');
-            return `<picture><source data-srcset="${url}" srcset="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" type="image/webp">${imgTag}</picture>`;
-        } else {
-            return `<picture><source srcset="${url}" type="image/webp">${imgTag}</picture>`;
-        }
-    }
-}
+    pictureRender(url, imgTag, webp2xExists, jpg2xExists, png2xExists) {
+        const { srcsetWebp, srcsetJpg, srcsetPng } = this.generateSrcset(url, webp2xExists, jpg2xExists, png2xExists);
 
-///////////////// dev
-function log(it, comments='value: ') {
-    console.log(comments, it);
+        const webpSource = `<source srcset="${srcsetWebp}" type="image/webp">`;
+        const jpgSource = jpg2xExists ? `<source srcset="${srcsetJpg}" type="image/jpeg">` : '';
+        const pngSource = png2xExists ? `<source srcset="${srcsetPng}" type="image/png">` : '';
+
+        return `<picture>${webpSource}${jpgSource}${pngSource}${imgTag}</picture>`;
+    }
 }

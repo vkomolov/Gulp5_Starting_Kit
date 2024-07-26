@@ -4,7 +4,7 @@ import { PurgeCSS } from 'purgecss';
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
-import { checkAccess } from "../gulp/utilFuncs.js";
+import { checkFileInDir } from "../gulp/utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -44,17 +44,22 @@ export default class CustomPurgeCss extends Transform {
 
             const fullName = path.basename(file.path, ext); //file name without extension
             const baseName = fullName.split(".")[0]; //splitting suffixes (.min...)
-            const targetHtml = path.resolve(this.srcDir, `${baseName}.html`);
+            const targetHtml = `${baseName}.html`;
 
-            // Checking for targetHtml to exist using checkFileExistence function
-            const exists = await checkAccess(targetHtml);
-            if (!exists) {
+            // Checking for targetHtml to exist in the nested folders of the path
+            const checkedPath = await checkFileInDir(
+                this.srcDir,
+                targetHtml,
+                true,
+                true
+            );
+            if (!checkedPath) {
                throw new Error(`HTML file ${ targetHtml } not found... please, make it first...`);
             }
 
             // Create an instance of PurgeCSS
             const purgeCSSResults = await new PurgeCSS().purge({
-                content: [targetHtml],
+                content: [checkedPath],
                 css: [{ raw: file.contents.toString() }]
             });
 
