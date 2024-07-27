@@ -1,54 +1,51 @@
 @import './_variables.scss';
 @import './_mixins.scss';
 
-/*@media screen and (max-width: 1920px) {
-}
-@media screen and (max-width: 1680px) {
-}
-@media screen and (max-width: 1440px) {
-}
-@media screen and (max-width: 1366px) {
-}
-@media screen and (max-width: 1280px) {
-}*/
-
-@media screen and (max-width: 1024px) {
-  #root {
-    font-size: 0.9rem !important;
+/* mobile (portrait) */
+@mixin mobilePortrait() {
+  @media (max-width: 480px) {
+    @content
   }
 }
 
-/*@media screen and (max-width: 992px) {
-
-}*/
-
-/*@media screen and (max-width: 800px) {
-
-}
-
-@media screen and (max-width: 782px) {
-
-}*/
-
-@media screen and (max-width: 768px) {
-  #root {
-    font-size: 0.75rem !important;
+/* mobile (landscape) */
+@mixin mobileLandscape() {
+  @media (min-width: 481px) and (max-width: 767px) {
+    @content
   }
 }
 
-/*@media screen and (max-width: 600px) {
-}*/
-
-/*@media screen and (max-width: 568px) {
-}*/
-
-/*@media screen and (max-width: 425px) {
-
-}*/
-
-/*
-@media screen and (max-width: 375px) {
+/* tablet (portrait) */
+@mixin tabletPortrait() {
+  @media (min-width: 768px) and (max-width: 1024px) {
+    @content
+  }
 }
 
-@media screen and (max-width: 320px) {
-}*/
+/* tablet (landscape) */
+@mixin tabletLandscape() {
+  @media (min-width: 1025px) and (max-width: 1279px) {
+    @content
+  }
+}
+
+/* laptop */
+@mixin laptop() {
+  @media (min-width: 1280px) and (max-width: 1440px) {
+    @content
+  }
+}
+
+/* desktop */
+@mixin desktop() {
+  @media (min-width: 1441px) and (max-width: 1920px) {
+    @content
+  }
+}
+
+/* large desktop */
+@mixin desktopLarge() {
+  @media (min-width: 1921px) {
+    @content
+  }
+}
