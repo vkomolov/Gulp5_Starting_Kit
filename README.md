@@ -181,10 +181,37 @@ package-lock.json
 README.md
 </pre>
 
+***
+#### HTML:
+It takes all `*.html` from `.src/html/*.html` including in nested folders except `.src/html/templates/*.html`.
+
+[gulp-file-include](https://www.npmjs.com/package/gulp-file-include) will assemble all @@include partial html files from `from .src/html/templates/*.html` 
+to the root html files in`dist/`
+
+The [settings](gulp/settings.js) of `gulp-file-include`, located in `const fileIncludeSettings` has `context` property
+for every root *.html page, which is useful for writing special data in common included *.html files...
+
+Then it removes extra spaces and line breaks inside a tag `<img>`.  
+Then it is piped to [CustomGulpWebpHtml](modules/CustomGulpWebpHtml.js) to replace the `<img>` tags 
+with the alternative `srcset` with the converted webp format of the file (if exists) and the default the original `<img>`.  
+Then it is beautified and written to .dist/
+
+**NOTE!!!** No comments in html is allowed before the `<img>` tags, as `CustomGulpWebpHtml` will not convert `<img>` to `<picture><source>` structure.
+***
+
 #### CSS:
 
-Each scss file, located in 'src/scss' (except inner
-directories), will be piped to 'build/css' as minimized
-file (with 'min' prefix) and not minimized version
-for convenience; The minimized version of css file will
-be linked in html page;
+Each scss file, located in `src/scss/*.scss` (except inner directories), will be piped to `build/css` as minimized
+file (with `min` prefix) and additionally not minimized version for dev convenience; 
+The minimized version of css file will be loaded from the html file;
+
+#### IMAGES:
+All images inside `src/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif}` will be piped to `dist/assets/img/`
+with the included folders...
+[CustomImgOptimizer](modules/CustomImgOptimizer.js) will optimize the following images: `jpeg/jpg, png, webp, avif, svg`
+
+In production mode the [CustomImgConverter](modules/CustomImgConverter.js) will automatically convert the images `"jpg", "jpeg", "png"` 
+to the alternative `webp`.
+All retina images will be converted correspondingly: image@2x.jpg to image@2x.webp
+
+***

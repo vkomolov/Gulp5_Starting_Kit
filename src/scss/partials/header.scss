@@ -3,6 +3,7 @@
 @import "../global_styles/mixins";
 @import "../global_styles/fonts";
 @import "../global_styles/animations";
+@import "../global_styles/media";
 
 /////// STYLES ///////
 
@@ -17,8 +18,9 @@
     border: 5px solid blue !important;
   }
 
-  .img-wrapper {
-    max-width: 14em;
+  .header-image-wrapper {
+    width: 4em;
+    margin: 1em;
 
     img {
       width: 100%;
@@ -28,7 +30,9 @@
 }
 
 .header__nav {
-  @include flex-box($flex-box-row-center-wrap...);
+  padding: 1em;
+  flex-grow: 1;
+  @include flex-box($flex-box-row-right-wrap...);
   gap: 0.5em;
 }
 
@@ -45,3 +49,83 @@
   }
 }
 
+.header__layer {
+  width: 100%;
+
+  @include flex-box($flex-box-row-center-wrap...);
+}
+
+.bg-container {
+  position: relative;
+  width: 100%;
+  max-width: 1120px;
+  height: 100vh;
+  max-height: 500px;
+  padding: 1em;
+
+/*  background-image: image-set(
+                  url("../assets/img/professional_2.webp") 1x,
+                  url("../assets/img/professional_2.jpg") 1x,
+                  url("../assets/img/professional_2@2x.webp") 2x,
+                  url("../assets/img/professional_2@2x.jpg") 2x
+  );*/
+
+/*  @media (max-width: 768px) {
+    background-image: image-set(
+                    url("../assets/img/professional_2-768.webp") 1x,
+                    url("../assets/img/professional_2-768.jpg") 1x,
+                    url("../assets/img/professional_2-768@2x.webp") 2x,
+                    url("../assets/img/professional_2-768@2x.jpg") 2x
+    )
+  }
+
+  @media (max-width: 1280px) {
+    background-image: image-set(
+                    url("../assets/img/professional_2-1280.webp") 1x,
+                    url("../assets/img/professional_2-1280.jpg") 1x,
+                    url("../assets/img/professional_2-1280@2x.webp") 2x,
+                    url("../assets/img/professional_2-1280@2x.jpg") 2x
+    )
+  }
+
+  @media (min-width: 1281px) {
+    background-image: image-set(
+                    url("../assets/img/professional_2-2240.webp") 1x,
+                    url("../assets/img/professional_2-2240.jpg") 1x,
+                    url("../assets/img/professional_2-2240@2x.webp") 2x,
+                    url("../assets/img/professional_2-2240@2x.jpg") 2x
+    )
+
+  }*/
+
+  background-image: image-set(
+     url("../assets/img/professional_2.webp") 1x,
+     url("../assets/img/professional_2.jpg") 1x
+  );
+
+  @include desktopLarge {
+    background-image: image-set(
+     url("../assets/img/professional_2@2x.webp") 2x,
+     url("../assets/img/professional_2@2x.jpg") 2x
+    );
+  }
+
+  @include flex-box($flex-box-row-center-wrap...);
+
+  &:before {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    content: "";
+    background-color: rgba(0,0,0,0.5);
+  }
+
+  h2 {
+    position: relative;
+    color: $foxy;
+
+    @include init-font(42px, 700);
+  }
+}

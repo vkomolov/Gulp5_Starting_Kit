@@ -105,7 +105,7 @@ const tasks = {
                         return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
                     })
                 ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(new CustomGulpWebpHtml(pathData.distPath, "@2x"))
+                .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
                 .pipe(beautify.html(beautifySettings.html))
                 .pipe(dest(pathData.build.html));
         },
@@ -181,7 +181,7 @@ const tasks = {
                         return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
                     })
                 ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(new CustomGulpWebpHtml(pathData.distPath, "@2x"))
+                .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
                 .pipe(htmlClean())
                 .pipe(dest(pathData.build.html));
         },

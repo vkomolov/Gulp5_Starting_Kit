@@ -17,11 +17,22 @@
   @include flex-box($flex-box-row-center-wrap...);
 
   .main-container {
+    width: 100%;
     color: $foxy;
   }
 
   .pointer-container {
     color: green;
+  }
+}
+
+.someBlock {
+  width: 90%;
+  margin: 0 auto;
+
+  img, picture {
+    width: inherit;
+    height: auto;
   }
 }
 

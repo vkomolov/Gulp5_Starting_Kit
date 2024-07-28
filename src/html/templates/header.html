@@ -1,6 +1,7 @@
 <header class="header-wrapper" role="banner">
   @@if (page && headParams && headParams[page]) {
-  <div class="img-wrapper">
+  <p>this "jpg" image is automatically converted to "webp", and is written with "picture" tag, alternative webp format and retina alternative, if exists...</p>
+  <div class="header-image-wrapper">
     <img src="@@headParams.@@page.root/assets/img/img-experience_1.jpg" loading="lazy" alt="meditation">
   </div>
   <nav class="header__nav" role="navigation">
@@ -8,5 +9,11 @@
     <a href="@@headParams.@@page.root/about.html" target="_self" class="nav-link">About Page</a>
     <a href="@@headParams.@@page.root/somePages/somePage.html" target="_self" class="nav-link">Some Page</a>
   </nav>
+  <div class="header__layer">
+    <p>This background image is written in styles with image-set of alternatives: webp, retina..</p>
+    <div class="bg-container">
+      <h2>Hello World!!!</h2>
+    </div>
+  </div>
   }
 </header>

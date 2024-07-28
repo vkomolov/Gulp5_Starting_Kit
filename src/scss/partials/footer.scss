@@ -16,4 +16,13 @@
   }
 
   @include flex-box($flex-box-row-center-wrap...);
+
+  .footer-image-wrapper {
+    width: 100%;
+
+    img {
+      width: 100%;
+      height: auto;
+    }
+  }
 }

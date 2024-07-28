@@ -14,18 +14,19 @@ export default class CustomGulpWebpHtml extends Transform {
      * @param {string} [rootImgSource="dist"] - root folder from which to search for the alternative images
      * @param {string} [retinaSize="2x"] - it will search the following retina sizes
      */
-    constructor(rootImgSource = "dist", retinaSize = "@2x") {
+    constructor(rootImgSource = "dist", retinaSize = "2x") {
         super({ objectMode: true });
         this.extensions = ['.jpg', '.jpeg', '.png', '.gif'];
         this.imgRegex = /<img([^>]*)src="(\S+)"([^>]*)>/gi;
         this.rootImgSource = rootImgSource;
         this.retinaSize = retinaSize;
+        this.retinaSuffix = `@${this.retinaSize}`;
     }
 
     async checkRetinaImages(basePath) {
-        const webpRetinaPath = basePath.replace(".webp", `${this.retinaSize}.webp`);
-        const jpgRetinaPath = basePath.replace(".webp", `${this.retinaSize}.jpg`);
-        const pngRetinaPath = basePath.replace(".webp", `${this.retinaSize}.png`);
+        const webpRetinaPath = basePath.replace(".webp", `${this.retinaSuffix}.webp`);
+        const jpgRetinaPath = basePath.replace(".webp", `${this.retinaSuffix}.jpg`);
+        const pngRetinaPath = basePath.replace(".webp", `${this.retinaSuffix}.png`);
 
         const webpRetinaExists = await checkAccess(webpRetinaPath);
         const jpgRetinaExists = await checkAccess(jpgRetinaPath.replace(".webp", ".jpg"));
@@ -35,9 +36,9 @@ export default class CustomGulpWebpHtml extends Transform {
     }
 
     generateSrcset(basePath, webpRetinaExists, jpgRetinaExists, pngRetinaExists) {
-        const srcsetWebp = `${basePath} 1x${webpRetinaExists ? `, ${basePath.replace('.webp', `${this.retinaSize}.webp`)} ${this.retinaSize}` : ""}`;
-        const srcsetJpg = jpgRetinaExists ? `${basePath.replace(".webp", ".jpg")} 1x, ${basePath.replace(".webp", `${this.retinaSize}.jpg`).replace(".webp", ".jpg")} ${this.retinaSize}` : "";
-        const srcsetPng = pngRetinaExists ? `${basePath.replace(".webp", ".png")} 1x, ${basePath.replace(".webp", `${this.retinaSize}.png`).replace(".webp", ".png")} ${this.retinaSize}` : "";
+        const srcsetWebp = `${basePath} 1x${webpRetinaExists ? `, ${basePath.replace('.webp', `${this.retinaSuffix}.webp`)} ${this.retinaSize}` : ""}`;
+        const srcsetJpg = jpgRetinaExists ? `${basePath.replace(".webp", ".jpg")} 1x, ${basePath.replace(".webp", `${this.retinaSuffix}.jpg`).replace(".webp", ".jpg")} ${this.retinaSize}` : "";
+        const srcsetPng = pngRetinaExists ? `${basePath.replace(".webp", ".png")} 1x, ${basePath.replace(".webp", `${this.retinaSuffix}.png`).replace(".webp", ".png")} ${this.retinaSize}` : "";
 
         return { srcsetWebp, srcsetJpg, srcsetPng };
     }
