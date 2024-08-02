@@ -84,10 +84,9 @@ export async function cleanDist(targetPaths) {
 }
 
 export function handleError(taskTypeError) {
-    return (err) => {
+    return function(err) {
         console.error(taskTypeError, err.message);
-        //console.error(err);
-        //this.emit('end'); // halt the pipe
+        this.emit('end'); // halt the pipe gracefully
     }
 }
 

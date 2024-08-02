@@ -27,7 +27,7 @@
 }
 
 .someBlock {
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
 
   img, picture {
@@ -38,4 +38,13 @@
 
 .unused {
 
+}
+
+.image-wrapper {
+  width: 100%;
+
+  img, picture {
+    width: 100%;
+    height: auto;
+  }
 }
