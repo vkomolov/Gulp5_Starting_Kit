@@ -53,6 +53,16 @@
   width: 100%;
 
   @include flex-box($flex-box-row-center-wrap...);
+
+  .svg-icons {
+    padding: 0.5em 1em;
+    @include flex-box($flex-box-row-center-wrap...);
+
+    .social {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
 }
 
 .bg-container {

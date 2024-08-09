@@ -49,6 +49,7 @@ import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
 import CustomImgConverter from "../modules/CustomImgConverter.js";
 import CustomGulpWebpHtml from "../modules/CustomGulpWebpHtml.js";
 import { combinePaths, handleError } from "./utilFuncs.js";
+import CustomGulpSVGSprite from "../modules/CustomGulpSVGSprite.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -94,7 +95,7 @@ const tasks = {
         pipeHtml() {
             return src(pathData.src.htmlNested)
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleHtml...")
+                    errorHandler: handleError("Error at pipeHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
                 .pipe(changed(`${pathData.tempPath}/html/`, { hasChanged: compareContents }))
@@ -112,7 +113,7 @@ const tasks = {
         pipeStyles() {
             return src(pathData.src.styles, { sourcemaps: true })
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleStyles...")
+                    errorHandler: handleError("Error at pipeStyles...")
                 }))
                 .pipe(size(useGulpSizeConfig({
                     title: "Before sass: "
@@ -135,7 +136,7 @@ const tasks = {
         pipeJs() {
             return src(pathData.src.js)
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleJs...")
+                    errorHandler: handleError("Error at pipeJs...")
                 }))
                 .pipe(webpackStream(webpackConfigJs.dev, webpack))
                 .pipe(dest(pathData.build.js))
@@ -143,7 +144,7 @@ const tasks = {
         pipeImages() {
             return src(pathData.src.img, { encoding: false })
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleImages...")
+                    errorHandler: handleError("Error at pipeImages...")
                 }))
                 .pipe(changed(pathData.build.img))
                 .pipe(dest(pathData.build.img))
@@ -152,10 +153,18 @@ const tasks = {
                 }))
                 .pipe(dest(pathData.build.img));
         },
+        pipeSvgSprite() {
+            return src(pathData.src.svgIcons, { encoding: false })
+                .pipe(plumber({
+                    errorHandler: handleError("Error at pipeSvgSprite...")
+                }))
+                .pipe(new CustomGulpSVGSprite(false))
+                .pipe(dest(pathData.build.svgIcons));
+        },
         pipeFonts() {
             return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleFonts...")
+                    errorHandler: handleError("Error at pipeFonts...")
                 }))
                 .pipe(changed(pathData.build.fonts))
                 .pipe(dest(pathData.build.fonts));
@@ -163,7 +172,7 @@ const tasks = {
         pipeData() {
             return src(pathData.src.data, { encoding: false })
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleData...")
+                    errorHandler: handleError("Error at pipeData...")
                 }))
                 .pipe(changed(pathData.build.data))
                 .pipe(dest(pathData.build.data));
@@ -173,7 +182,7 @@ const tasks = {
         pipeHtml() {
             return src(pathData.src.htmlNested)
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleHtml...")
+                    errorHandler: handleError("Error at pipeHtml...")
                 }))
                 .pipe(fileInclude(fileIncludeSettings))
                 .pipe(
@@ -188,7 +197,7 @@ const tasks = {
         pipeStyles() {
             return src(pathData.src.styles)
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleStyles...")
+                    errorHandler: handleError("Error at pipeStyles...")
                 }))
                 .pipe(size(useGulpSizeConfig({
                     title: "Before sass: "
@@ -216,7 +225,7 @@ const tasks = {
         pipeJs() {
             return src(pathData.src.js)
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleJs...")
+                    errorHandler: handleError("Error at pipeJs...")
                 }))
                 .pipe(webpackStream(webpackConfigJs.build, webpack))
                 .pipe(dest(pathData.build.js));
@@ -224,7 +233,7 @@ const tasks = {
         pipeImages() {
             return src(pathData.src.img, { encoding: false })
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleImages...")
+                    errorHandler: handleError("Error at pipeImages...")
                 }))
                 .pipe(size(useGulpSizeConfig({
                     title: "Image before optimization: "
@@ -262,24 +271,32 @@ const tasks = {
                 })) //conversion and optimization
                 .pipe(dest(pathData.build.img));
         },
+        pipeSvgSprite() {
+            return src(pathData.src.svgIcons, { encoding: false })
+                .pipe(plumber({
+                    errorHandler: handleError("Error at pipeSvgSprite...")
+                }))
+                .pipe(new CustomGulpSVGSprite(false))
+                .pipe(dest(pathData.build.svgIcons));
+        },
         pipeFonts() {
             return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleFonts...")
+                    errorHandler: handleError("Error at pipeFonts...")
                 }))
                 .pipe(dest(pathData.build.fonts));
         },
         pipeData() {
             return src(pathData.src.data, { encoding: false })
                 .pipe(plumber({
-                    errorHandler: handleError("Error at handleData...")
+                    errorHandler: handleError("Error at pipeData...")
                 }))
                 .pipe(dest(pathData.build.data));
         },
         pipeZipProject() {
             return src(pathData.src.zipProject, {})
                 .pipe(plumber({
-                    errorHandler: handleError("Error at zipProject...")
+                    errorHandler: handleError("Error at pipeZipProject...")
                 }))
                 .pipe(zip(`${ pathData.rootFolder }.project.zip`))
                 .pipe(dest(pathData.build.zipProject));
@@ -287,7 +304,7 @@ const tasks = {
         pipeZipDist() {
             return src(pathData.src.zipDist, {})
                 .pipe(plumber({
-                    errorHandler: handleError("Error at zipDist...")
+                    errorHandler: handleError("Error at pipeZipDist...")
                 }))
                 .pipe(zip(`${ pathData.rootFolder }.zip`))
                 .pipe(dest(pathData.build.zipDist));

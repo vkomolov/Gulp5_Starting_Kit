@@ -54,8 +54,10 @@
     "style-loader": "^4.0.0",
     "svgo": "^3.3.2",
     "terser-webpack-plugin": "^5.3.10",
+    "vinyl": "^3.0.0",
     "webpack": "^5.92.1",
-    "webpack-stream": "^7.0.0"
+    "webpack-stream": "^7.0.0",
+    "xml2js": "^0.6.2"
   },
   "dependencies": {
     "air-datepicker": "^3.5.3"
