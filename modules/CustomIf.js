@@ -3,6 +3,7 @@
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
+import { processFile } from "../gulp/utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -24,13 +25,12 @@ export default class CustomIf extends Transform {
         this.isTale = isTale;
     }
 
-    _transform(file, encoding, callback) {
+    _transform(_file, encoding, callback) {
         try {
-            if (file.isNull() || !this.filterBy) {
-                return callback(null, file);
-            }
-            if (file.isStream()) {
-                throw new Error("Streaming is not supported...");
+            const file = processFile(_file);
+            if (file === null) {
+                console.error("file is null...", _file.baseName);
+                return callback(null, _file);
             }
 
             if (this.filterBy instanceof RegExp) {
@@ -47,7 +47,7 @@ export default class CustomIf extends Transform {
             }
         }
         catch (err) {
-            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: _file.path }));
         }
     }
 }

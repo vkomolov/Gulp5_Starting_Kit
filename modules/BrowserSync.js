@@ -75,6 +75,6 @@ export default class BrowserSync {
 }
 
 ///////////////// dev
-function log(it, comments='value: ') {
+/*function log(it, comments='value: ') {
     console.log(comments, it);
-}
+}*/

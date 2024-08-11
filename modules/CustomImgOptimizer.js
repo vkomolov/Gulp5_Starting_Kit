@@ -5,6 +5,7 @@ import PluginError from 'plugin-error';
 import path from 'path';
 import sharp from 'sharp';
 import { optimize as svgoOptimize } from 'svgo';
+import { processFile } from "../gulp/utilFuncs.js";
 
 const PLUGIN_NAME = 'customImgOptimizer';
 
@@ -252,20 +253,12 @@ export default class CustomImgOptimizer extends Transform {
         };
     }
 
-    async _transform(file, encoding, callback) {
+    async _transform(_file, encoding, callback) {
         try {
-            // Ensure file.contents is a buffer
-            if (!(Buffer.isBuffer(file.contents))) {
-                file.contents = Buffer.from(file.contents);
-            }
-
-            if (file.isNull()) {
-                console.error("file is null...", file.baseName);
-                return callback(null, file);
-            }
-
-            if (file.isStream()) {
-                throw new Error("Streaming is not supported...");
+            const file = processFile(_file);
+            if (file === null) {
+                console.error("file is null...", _file.baseName);
+                return callback(null, _file);
             }
 
             const fileExt = path.extname(file.path).toLowerCase().slice(1);
@@ -293,12 +286,13 @@ export default class CustomImgOptimizer extends Transform {
 
             return callback(null, file);
         } catch (err) {
-           return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
+           return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: _file.path }));
         }
     }
 }
 
 //////////// DEV
+/*
 function log(val, _val= null) {
     _val ? console.log(val, _val) : console.log(val);
-}
+}*/

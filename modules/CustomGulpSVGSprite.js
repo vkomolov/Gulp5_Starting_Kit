@@ -5,6 +5,7 @@ import { basename, extname } from 'path';
 import Vinyl from 'vinyl';
 import { parseString, Builder } from 'xml2js';
 import PluginError from 'plugin-error';
+import { processFile } from "../gulp/utilFuncs.js";
 
 const PLUGIN_NAME = 'customGulpSVGSprite';
 
@@ -21,13 +22,11 @@ export default class CustomGulpSVGSprite extends Transform {
         this.removeStyle = removeStyle;
     }
 
-    _transform(file, encoding, callback) {
-        if (file.isNull()) {
-            return callback();
-        }
-
-        if (file.isStream()) {
-            return callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
+    _transform(_file, encoding, callback) {
+        const file = processFile(_file);
+        if (file === null) {
+            console.error("file is null...", _file.baseName);
+            return callback(null, _file);
         }
 
         if (extname(file.path).toLowerCase() !== '.svg') {

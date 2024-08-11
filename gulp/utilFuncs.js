@@ -101,5 +101,31 @@ export const combinePaths = (...paths) => {
     }, []);
 }
 
+/**
+ * Processes file to ensure its contents are in buffer format, handles null and stream files.
+ * @param {object} file - The file object from the stream.
+ * @throws {Error} - Throws an error if file is a stream or has null contents.
+ * @returns {object} - The processed file object with its contents in buffer format.
+ */
+export function processFile(file) {
+    // Check if file.contents is a buffer; if not, convert it to buffer
+    if (!(Buffer.isBuffer(file.contents))) {
+        file.contents = Buffer.from(file.contents);
+    }
+
+    // Handle null file
+    if (file.isNull()) {
+        console.error("file is null...", file.baseName);
+        return null;
+    }
+
+    // Handle stream file
+    if (file.isStream()) {
+        throw new Error("Streaming is not supported...");
+    }
+
+    return file;
+}
+
 
 

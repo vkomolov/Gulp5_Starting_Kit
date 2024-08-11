@@ -3,7 +3,7 @@
 import { Transform } from 'stream';
 import path from "path";
 import PluginError from 'plugin-error';
-import { checkAccess } from "../gulp/utilFuncs.js";
+import { checkAccess, processFile } from "../gulp/utilFuncs.js";
 
 const PLUGIN_NAME = 'customGulpWebpHtml';
 
@@ -43,15 +43,12 @@ export default class CustomGulpWebpHtml extends Transform {
         return { srcsetWebp, srcsetJpg, srcsetPng };
     }
 
-    async _transform(file, encoding, callback) {
+    async _transform(_file, encoding, callback) {
         try {
-            if (file.isNull()) {
-                return callback(null, file);
-            }
-
-            if (file.isStream()) {
-                console.error(`File is null: ${file.base}`);
-                return callback(new PluginError(PLUGIN_NAME, 'Streaming not supported'));
+            const file = processFile(_file);
+            if (file === null) {
+                console.error("file is null...", _file.baseName);
+                return callback(null, _file);
             }
 
             let inPicture = false;
@@ -94,7 +91,7 @@ export default class CustomGulpWebpHtml extends Transform {
             return callback(null, file);
         } catch (err) {
             console.error('[ERROR] Ensure there are no spaces or Cyrillic characters in the image file name');
-            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: _file.path }));
         }
     }
 

@@ -3,6 +3,7 @@
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
+import { processFile } from "../gulp/utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -22,15 +23,12 @@ export default class CustomRenameFile extends Transform {
         this.suffix = suffix;
     }
 
-    _transform(file, encoding, callback) {
+    _transform(_file, encoding, callback) {
         try {
-            if (file.isNull()) {
-                console.error("file is null...", file.baseName);
-                return callback(null, file);
-            }
-
-            if (file.isStream()) {
-                throw new Error("Streaming is not supported...");
+            const file = processFile(_file);
+            if (file === null) {
+                console.error("file is null...", _file.baseName);
+                return callback(null, _file);
             }
 
             const ext = path.extname(file.path);
@@ -42,7 +40,7 @@ export default class CustomRenameFile extends Transform {
 
             return callback(null, file);
         } catch (err) {
-            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: _file.path }));
         }
     }
 }

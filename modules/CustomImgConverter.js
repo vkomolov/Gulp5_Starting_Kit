@@ -4,6 +4,7 @@ import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
 import sharp from 'sharp';
+import { processFile } from "../gulp/utilFuncs.js";
 
 //////////// END OF IMPORTS
 function canConvert(formatInput, formatOutput) {
@@ -303,24 +304,16 @@ export default class CustomImgConverter extends Transform {
         };
     }
 
-    async _transform(file, encoding, callback) {
+    async _transform(_file, encoding, callback) {
         try {
             if (!this.targetFormatArr.length) {
                 throw new Error(`The given formatInput ${ this.formatInArr.join(",") } is not supported or not convertible to ${ this.formatOutput }...`);
             }
 
-            // Ensure file.contents is a buffer
-            if (!(Buffer.isBuffer(file.contents))) {
-                file.contents = Buffer.from(file.contents);
-            }
-
-            if (file.isNull()) {
-                console.error("file is null...", file.baseName);
-                return callback(null, file);
-            }
-
-            if (file.isStream()) {
-                throw new Error("Streaming is not supported...");
+            const file = processFile(_file);
+            if (file === null) {
+                console.error("file is null...", _file.baseName);
+                return callback(null, _file);
             }
 
             const fileExt = path.extname(file.path).toLowerCase().slice(1);
@@ -350,7 +343,7 @@ export default class CustomImgConverter extends Transform {
                 return callback(null, file);
             }
         } catch (err) {
-            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: _file.path }));
         }
     }
 }

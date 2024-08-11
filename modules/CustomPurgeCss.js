@@ -4,7 +4,7 @@ import { PurgeCSS } from 'purgecss';
 import { Transform } from 'stream';
 import PluginError from 'plugin-error';
 import path from 'path';
-import { checkFileInDir } from "../gulp/utilFuncs.js";
+import { checkFileInDir, processFile } from "../gulp/utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
@@ -25,15 +25,13 @@ export default class CustomPurgeCss extends Transform {
     /**
      * Asynchronously transforms each CSS file by purging unused CSS based on associated HTML content.
      */
-    async _transform(file, encoding, callback) {
+    async _transform(_file, encoding, callback) {
         try {
-            if (file.isNull()) {
-                console.error("file is null...", file.baseName);
-                return callback(null, file);
-            }
-
-            if (file.isStream()) {
-                throw new Error("Streaming is not supported...");
+            // Process the file
+            const file = processFile(_file);
+            if (file === null) {
+                console.error("file is null...", _file.baseName);
+                return callback(null, _file);
             }
 
             const ext = path.extname(file.path);
@@ -76,7 +74,7 @@ export default class CustomPurgeCss extends Transform {
             }
         }
         catch (err) {
-            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: file.path }));
+            return callback(new PluginError(PLUGIN_NAME, err.message, { fileName: _file.path }));
         }
     }
 }
