@@ -41,6 +41,8 @@ $flex-box-col-center-wrap: column, center, center;
   box-shadow: $dim $dim $shadow $color;
 }
 
+
+
 @mixin scroll-init($width, $thumbColor, $trackColor) {
   overflow-x: hidden;
   overflow-y: auto;

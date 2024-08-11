@@ -138,6 +138,7 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at pipeJs...")
                 }))
+                .pipe(debug({title: 'file changed:'}))
                 .pipe(webpackStream(webpackConfigJs.dev, webpack))
                 .pipe(dest(pathData.build.js))
         },
@@ -147,9 +148,17 @@ const tasks = {
                     errorHandler: handleError("Error at pipeImages...")
                 }))
                 .pipe(changed(pathData.build.img))
-                .pipe(dest(pathData.build.img))
+                .pipe(debug({title: 'file changed:'}))
+                .pipe(dest(pathData.build.img)) //storing initial images before conversion
                 .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
-                    toSkipOthers: true,
+                    //resize: { width: 400 },   //optional size of the picture at conversion
+/*
+                    params: {   //it is optional if toOptimize = true; it is redundant if toOptimize = false
+                        quality: 75,
+                      },
+                    */
+                    toOptimize: false,   //by default: false
+                    toSkipOthers: false, //streaming other formats without touch; by default: false
                 }))
                 .pipe(dest(pathData.build.img));
         },
@@ -167,6 +176,7 @@ const tasks = {
                     errorHandler: handleError("Error at pipeFonts...")
                 }))
                 .pipe(changed(pathData.build.fonts))
+                .pipe(debug({title: 'file changed:'}))
                 .pipe(dest(pathData.build.fonts));
         },
         pipeData() {
@@ -175,6 +185,7 @@ const tasks = {
                     errorHandler: handleError("Error at pipeData...")
                 }))
                 .pipe(changed(pathData.build.data))
+                .pipe(debug({title: 'file changed:'}))
                 .pipe(dest(pathData.build.data));
         },
     },
@@ -235,11 +246,20 @@ const tasks = {
                 .pipe(plumber({
                     errorHandler: handleError("Error at pipeImages...")
                 }))
+                .pipe(dest(pathData.build.img)) //storing initial images
+                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
+                    //resize: { width: 400 },
+/*                    params: {
+                        quality: 100,
+                    },*/
+                    toOptimize: false,   //by default: false
+                    toSkipOthers: false,    //streaming other formats without touch; by default: false
+                })) //conversion and optimization
                 .pipe(size(useGulpSizeConfig({
                     title: "Image before optimization: "
                 })))
                 .pipe(new CustomImgOptimizer({
-                    //resize: { width: 1000 },
+                    //resize: { width: 400 },
                     jpeg: { quality: 75 },
                     png: { quality: 80 },
                     webp: { quality: 75 },
@@ -265,10 +285,6 @@ const tasks = {
                 .pipe(size(useGulpSizeConfig({
                     title: "Image after optimization: "
                 })))
-                .pipe(dest(pathData.build.img))
-                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
-                    toSkipOthers: true,
-                })) //conversion and optimization
                 .pipe(dest(pathData.build.img));
         },
         pipeSvgSprite() {

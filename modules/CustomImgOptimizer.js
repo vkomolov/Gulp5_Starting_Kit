@@ -216,9 +216,11 @@ export default class CustomImgOptimizer extends Transform {
                 reductionEffort: 4,
             },
             avif: {
-                quality: 60,
+                quality: 75,
+                alphaQuality: 50,
                 speed: 3,
-                lossless: false
+                lossless: false,
+                effort: 4
             },
             gif: {
                 quality: 75,
