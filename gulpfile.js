@@ -24,7 +24,8 @@ function watchFiles(bs) {
     watch(pathData.watch.stylesNested, series(pipesDev.pipeStyles, bs.reload));
     watch(pathData.watch.jsNested, series(pipesDev.pipeJs, bs.reload));
     watch(pathData.watch.img, series(pipesDev.pipeImages, bs.reload));
-    watch(pathData.watch.svgIcons, series(pipesDev.pipeSvgSprite, bs.reload));
+    watch(pathData.watch.svgIconsMono, series(pipesDev.pipeSvgSpriteMono, bs.reload));
+    watch(pathData.watch.svgIconsMulti, series(pipesDev.pipeSvgSpriteMulti, bs.reload));
     watch(pathData.watch.fonts, series(pipesDev.pipeFonts, bs.reload));
     watch(pathData.watch.data, series(pipesDev.pipeData, bs.reload));
 }
@@ -52,7 +53,8 @@ function runPipes(mode, cb) {
                 task.pipeStyles,
                 task.pipeJs,
                 task.pipeFonts,
-                task.pipeSvgSprite,
+                task.pipeSvgSpriteMono,
+                task.pipeSvgSpriteMulti,
                 task.pipeData
             ),
             zipProject,

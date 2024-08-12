@@ -162,12 +162,20 @@ const tasks = {
                 }))
                 .pipe(dest(pathData.build.img));
         },
-        pipeSvgSprite() {
-            return src(pathData.src.svgIcons, { encoding: false })
+        pipeSvgSpriteMono() {
+            return src(pathData.src.svgIconsMono, { encoding: false })
                 .pipe(plumber({
                     errorHandler: handleError("Error at pipeSvgSprite...")
                 }))
-                .pipe(new CustomGulpSVGSprite(false))
+                .pipe(new CustomGulpSVGSprite("mono", "sprite.mono.svg"))
+                .pipe(dest(pathData.build.svgIcons));
+        },
+        pipeSvgSpriteMulti() {
+            return src(pathData.src.svgIconsMulti, { encoding: false })
+                .pipe(plumber({
+                    errorHandler: handleError("Error at pipeSvgSprite...")
+                }))
+                .pipe(new CustomGulpSVGSprite("multi", "sprite.multi.svg"))
                 .pipe(dest(pathData.build.svgIcons));
         },
         pipeFonts() {
@@ -287,12 +295,20 @@ const tasks = {
                 })))
                 .pipe(dest(pathData.build.img));
         },
-        pipeSvgSprite() {
-            return src(pathData.src.svgIcons, { encoding: false })
+        pipeSvgSpriteMono() {
+            return src(pathData.src.svgIconsMono, { encoding: false })
                 .pipe(plumber({
                     errorHandler: handleError("Error at pipeSvgSprite...")
                 }))
-                .pipe(new CustomGulpSVGSprite(false))
+                .pipe(new CustomGulpSVGSprite("mono", "sprite.mono.svg"))
+                .pipe(dest(pathData.build.svgIcons));
+        },
+        pipeSvgSpriteMulti() {
+            return src(pathData.src.svgIconsMulti, { encoding: false })
+                .pipe(plumber({
+                    errorHandler: handleError("Error at pipeSvgSprite...")
+                }))
+                .pipe(new CustomGulpSVGSprite("multi", "sprite.multi.svg"))
                 .pipe(dest(pathData.build.svgIcons));
         },
         pipeFonts() {

@@ -32,10 +32,14 @@ export const pathData = {
         js: `${ srcPath }/js/*.js`,
         img: [
             `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif}`,
-            `!${ srcPath }/assets/img/svgIcons/**/*`
+            `!${ srcPath }/assets/img/svgIcons/mono/**/*`,
+            `!${ srcPath }/assets/img/svgIcons/multi/**/*`
         ],
-        svgIcons: [
-            `${ srcPath }/assets/img/svgIcons/**/*.svg`
+        svgIconsMono: [
+            `${ srcPath }/assets/img/svgIcons/mono/**/*.svg`
+        ],
+        svgIconsMulti: [
+            `${ srcPath }/assets/img/svgIcons/multi/**/*.svg`
         ],
         fonts: `${ srcPath }/assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
         data: `${ srcPath }/assets/data/**/*.{json, pdf, xml}`,
@@ -68,10 +72,14 @@ export const pathData = {
         ],
         img: [
             `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif}`,
-            `!${ srcPath }/assets/img/svgIcons/**/*`
+            `!${ srcPath }/assets/img/svgIcons/mono/**/*`,
+            `!${ srcPath }/assets/img/svgIcons/multi/**/*`
         ],
-        svgIcons: [
-            `${ srcPath }/assets/img/svgIcons/**/*.svg`
+        svgIconsMono: [
+            `${ srcPath }/assets/img/svgIcons/mono/**/*.svg`
+        ],
+        svgIconsMulti: [
+            `${ srcPath }/assets/img/svgIcons/multi/**/*.svg`
         ],
         fonts: `${ srcPath }/assets/fonts/**/*.{eot,woff,woff2,ttf,otf}`,
         data: `${ srcPath }/assets/data/**/*.{json, pdf, xml}`,

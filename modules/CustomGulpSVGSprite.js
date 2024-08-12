@@ -6,6 +6,8 @@ import Vinyl from 'vinyl';
 import { parseString, Builder } from 'xml2js';
 import PluginError from 'plugin-error';
 import { processFile } from "../gulp/utilFuncs.js";
+import { optimize as svgoOptimize } from "svgo";
+import { svgoSpriteOptions } from "../gulp/settings.js";
 
 const PLUGIN_NAME = 'customGulpSVGSprite';
 
@@ -14,63 +16,51 @@ const PLUGIN_NAME = 'customGulpSVGSprite';
  */
 export default class CustomGulpSVGSprite extends Transform {
     /**
-     * @param {boolean} removeStyle - If true, removes fill and stroke attributes from SVG elements.
+     *
+     * @param {("mono"|"multi")} [svgColor="mono"] - for multi and mono colored svg files
+     * @param {string} [spriteFileName="sprite.mono.svg"] - the resulting file name with the sprite of svgs...
      */
-    constructor(removeStyle = false) {
+    constructor(svgColor = "mono", spriteFileName = "sprite.mono.svg") {
         super({ objectMode: true });
         this.svgs = [];
-        this.removeStyle = removeStyle;
+        this.svgColor = svgColor;
+        this.spriteFileName = spriteFileName;
     }
 
     _transform(_file, encoding, callback) {
-        const file = processFile(_file);
-        if (file === null) {
-            console.error("file is null...", _file.baseName);
-            return callback(null, _file);
-        }
-
-        if (extname(file.path).toLowerCase() !== '.svg') {
-            // Pass through non-SVG files
-            return callback(null, file);
-        }
-
-        const fileName = basename(file.path, '.svg');
-        parseString(file.contents.toString(), (err, result) => {
-            if (err) {
-                return callback(new PluginError(PLUGIN_NAME, err));
+        try {
+            const file = processFile(_file);
+            if (file === null) {
+                console.error("file is null...", _file.baseName);
+                return callback(null, _file);
             }
 
-            const svgContent = result.svg;
-            svgContent.$ = svgContent.$ || {};
-            svgContent.$.id = fileName;
-
-            if (this.removeStyle) {
-                this.removeFillAndStroke(svgContent);
+            if (extname(file.path).toLowerCase() !== '.svg') {
+                // Pass through non-SVG files
+                return callback(null, file);
             }
 
-            this.svgs.push(svgContent);
-            callback();
-        });
-    }
+            const svgoConfig = svgoSpriteOptions[this.svgColor];
+            const optimizedSvg = svgoOptimize(file.contents.toString(), svgoConfig);
+            if (optimizedSvg.error) {
+                throw optimizedSvg.error;
+            }
 
-    /**
-     * Recursively removes fill and stroke attributes from SVG elements.
-     * @param {object} element - The SVG element to process.
-     */
-    removeFillAndStroke(element) {
-        if (element.$) {
-            delete element.$.fill;
-            delete element.$.stroke;
-        }
-
-        for (const key in element) {
-            if (typeof element[key] === 'object' && element[key] !== null) {
-                if (Array.isArray(element[key])) {
-                    element[key].forEach(child => this.removeFillAndStroke(child));
-                } else {
-                    this.removeFillAndStroke(element[key]);
+            parseString(optimizedSvg.data, (err, result) => {
+                if (err) {
+                    throw err;
                 }
-            }
+
+                const fileName = basename(file.path, '.svg');
+                const svgContent = result.svg;
+                svgContent.$ = svgContent.$ || {};
+                svgContent.$.id = fileName;
+
+                this.svgs.push(svgContent);
+                callback();
+            });
+        } catch (err) {
+            return callback(new PluginError(PLUGIN_NAME, err, { fileName: _file.path }));
         }
     }
 
@@ -79,16 +69,16 @@ export default class CustomGulpSVGSprite extends Transform {
             svg: {
                 $: {
                     xmlns: "http://www.w3.org/2000/svg",
-                    style: "display: none;" // Hide the sprite when included directly in HTML
+                    style: "display: none;" // Скрываем спрайт при прямом включении в HTML
                 },
                 symbol: this.svgs
             }
         };
 
-        const builder = new Builder();
+        const builder = new Builder({});
         const spriteContent = builder.buildObject(sprite);
         const spriteFile = new Vinyl({
-            path: "sprite.svg",
+            path: this.spriteFileName,
             contents: Buffer.from(spriteContent)
         });
 
