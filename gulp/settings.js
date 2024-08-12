@@ -211,6 +211,9 @@ export const svgoSpriteOptions = {
                 params: {
                     attrs: ["class", "data-name", "fill", "stroke.*"], //"stroke.*" removing all stroke-related attributes
                 },
+            },
+            {
+                name: "removeDimensions", // it removes width and height
             }
         ]
     },
@@ -221,6 +224,9 @@ export const svgoSpriteOptions = {
                 params: {
                     attrs: ["class", "data-name"],
                 },
+            },
+            {
+                name: "removeDimensions", // it removes width and height
             },
             {
                 name: "removeUselessStrokeAndFill",

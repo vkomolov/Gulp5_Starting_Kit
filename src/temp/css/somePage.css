@@ -1273,7 +1273,11 @@ legend {
 }
 .header__layer .svg-icons .social {
   width: 1.5em;
-  height: 1.5em;
+  height: auto;
+  transition: all 0.15s ease-in-out;
+}
+.header__layer .svg-icons .social:hover {
+  width: 2em;
 }
 
 .bg-container {
