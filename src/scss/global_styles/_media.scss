@@ -10,35 +10,35 @@
 
 /* mobile (landscape) */
 @mixin mobileLandscape() {
-  @media (min-width: 481px) and (max-width: 767px) {
+  @media (max-width: 768px) {
     @content
   }
 }
 
 /* tablet (portrait) */
 @mixin tabletPortrait() {
-  @media (min-width: 768px) and (max-width: 1024px) {
+  @media (max-width: 1024px) {
     @content
   }
 }
 
 /* tablet (landscape) */
 @mixin tabletLandscape() {
-  @media (min-width: 1025px) and (max-width: 1279px) {
+  @media (max-width: 1280px) {
     @content
   }
 }
 
 /* laptop */
 @mixin laptop() {
-  @media (min-width: 1280px) and (max-width: 1440px) {
+  @media (max-width: 1440px) {
     @content
   }
 }
 
 /* desktop */
 @mixin desktop() {
-  @media (min-width: 1441px) and (max-width: 1920px) {
+  @media (max-width: 1920px) {
     @content
   }
 }
