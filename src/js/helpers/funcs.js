@@ -1,5 +1,5 @@
 'use strict';
 
 export function test() {
-    return "message from funcs.js";
+    return "message from funcs.js!";
 }

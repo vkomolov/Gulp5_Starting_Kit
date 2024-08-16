@@ -2,13 +2,13 @@
 
 import gulp from "gulp";
 import {
-    modes,
-    fileIncludeSettings,
-    webpackConfigJs,
-    useGulpSizeConfig,
-    optimizeCss,
-    minifyCss,
-    beautifySettings
+  modes,
+  fileIncludeSettings,
+  webpackConfigJs,
+  useGulpSizeConfig,
+  optimizeCss,
+  minifyCss,
+  beautifySettings
 } from "./settings.js";
 import { pathData } from "./paths.js";
 
@@ -91,256 +91,258 @@ const sass = gulpSass(dartSass);
  *
  */
 const tasks = {
-    [modes.dev]: {
-        pipeHtml() {
-            return src(pathData.src.htmlNested)
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeHtml...")
-                }))
-                .pipe(fileInclude(fileIncludeSettings))
-                .pipe(changed(`${pathData.tempPath}/html/`, { hasChanged: compareContents }))
-                .pipe(debug({title: 'file changed:'}))
-                .pipe(dest(`${pathData.tempPath}/html/`))
-                .pipe(
-                    replace(/<img(?:.|\n|\r)*?>/g, function(match) {
-                        return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
-                    })
-                ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
-                .pipe(beautify.html(beautifySettings.html))
-                .pipe(dest(pathData.build.html));
-        },
-        pipeStyles() {
-            return src(pathData.src.styles, { sourcemaps: true })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeStyles...")
-                }))
-                .pipe(size(useGulpSizeConfig({
-                    title: "Before sass: "
-                })))
-                .pipe(sass({}, () => {}))
-                .pipe(size(useGulpSizeConfig({
-                    title: "After sass: "
-                })))
-                .pipe(changed(`${pathData.tempPath}/css/`, { hasChanged: compareContents }))
-                .pipe(debug({title: 'file changed:'}))
-                .pipe(dest(`${pathData.tempPath}/css/`))
-                .pipe(postcss(optimizeCss)) //to optimize *.css
-                .pipe(size(useGulpSizeConfig({
-                    title: "After optimizeCss: "
-                })))
-                .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
-                .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
-                .pipe(dest(pathData.build.styles, { sourcemaps: "." })); //to paste compressed *.css to dist/
-        },
-        pipeJs() {
-            return src(pathData.src.js)
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeJs...")
-                }))
-                .pipe(debug({title: 'file changed:'}))
-                .pipe(webpackStream(webpackConfigJs.dev, webpack))
-                .pipe(dest(pathData.build.js))
-        },
-        pipeImages() {
-            return src(pathData.src.img, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeImages...")
-                }))
-                .pipe(changed(pathData.build.img))
-                .pipe(debug({title: 'file changed:'}))
-                .pipe(dest(pathData.build.img)) //storing initial images before conversion
-                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
-                    //resize: { width: 400 },   //optional size of the picture at conversion
-/*
-                    params: {   //it is optional if toOptimize = true; it is redundant if toOptimize = false
-                        quality: 75,
-                      },
-                    */
-                    toOptimize: false,   //by default: false
-                    toSkipOthers: false, //streaming other formats without touch; by default: false
-                }))
-                .pipe(dest(pathData.build.img));
-        },
-        pipeSvgSpriteMono() {
-            return src(pathData.src.svgIconsMono, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeSvgSprite...")
-                }))
-                .pipe(new CustomGulpSVGSprite("mono", "sprite.mono.svg"))
-                .pipe(dest(pathData.build.svgIcons));
-        },
-        pipeSvgSpriteMulti() {
-            return src(pathData.src.svgIconsMulti, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeSvgSprite...")
-                }))
-                .pipe(new CustomGulpSVGSprite("multi", "sprite.multi.svg"))
-                .pipe(dest(pathData.build.svgIcons));
-        },
-        pipeFonts() {
-            return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeFonts...")
-                }))
-                .pipe(changed(pathData.build.fonts))
-                .pipe(debug({title: 'file changed:'}))
-                .pipe(dest(pathData.build.fonts));
-        },
-        pipeData() {
-            return src(pathData.src.data, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeData...")
-                }))
-                .pipe(changed(pathData.build.data))
-                .pipe(debug({title: 'file changed:'}))
-                .pipe(dest(pathData.build.data));
-        },
+  [modes.dev]: {
+    pipeHtml() {
+      return src(pathData.src.htmlNested)
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeHtml...")
+        }))
+        .pipe(fileInclude(fileIncludeSettings))
+        .pipe(changed(`${pathData.tempPath}/html/`, { hasChanged: compareContents }))
+        .pipe(debug({ title: "*.html is piped:" }))
+        .pipe(dest(`${pathData.tempPath}/html/`))
+        .pipe(
+          replace(/<img(?:.|\n|\r)*?>/g, function (match) {
+            return match.replace(/\r?\n|\r/g, "").replace(/\s{2,}/g, " ");
+          })
+        ) //removes extra spaces and line breaks inside a tag <img>
+        .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
+        .pipe(beautify.html(beautifySettings.html))
+        .pipe(dest(pathData.build.html));
     },
-    [modes.build]: {
-        pipeHtml() {
-            return src(pathData.src.htmlNested)
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeHtml...")
-                }))
-                .pipe(fileInclude(fileIncludeSettings))
-                .pipe(
-                    replace(/<img(?:.|\n|\r)*?>/g, function(match) {
-                        return match.replace(/\r?\n|\r/g, '').replace(/\s{2,}/g, ' ');
-                    })
-                ) //removes extra spaces and line breaks inside a tag <img>
-                .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
-                .pipe(htmlClean())
-                .pipe(dest(pathData.build.html));
-        },
-        pipeStyles() {
-            return src(pathData.src.styles)
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeStyles...")
-                }))
-                .pipe(size(useGulpSizeConfig({
-                    title: "Before sass: "
-                })))
-                .pipe(sass({}, () => {}))
-                .pipe(size(useGulpSizeConfig({
-                    title: "After sass: "
-                })))
-                .pipe(new CustomPurgeCss(pathData.build.html))  //to filter ${basename}.css selectors not used in ${basename}.html
-                .pipe(size(useGulpSizeConfig({
-                    title: "After PurgeCss: "
-                })))
-                .pipe(postcss(optimizeCss)) //to optimize *.css
-                .pipe(size(useGulpSizeConfig({
-                    title: "After optimizeCss: "
-                })))
-                .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
-                .pipe(postcss(minifyCss))   //to compress *.css
-                .pipe(size(useGulpSizeConfig({
-                    title: "After minifyCss: "
-                })))
-                .pipe(new CustomRenameFile(null, 'min'))    //to rename to *.min.css
-                .pipe(dest(pathData.build.styles)); //to paste compressed *.css to dist/
-        },
-        pipeJs() {
-            return src(pathData.src.js)
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeJs...")
-                }))
-                .pipe(webpackStream(webpackConfigJs.build, webpack))
-                .pipe(dest(pathData.build.js));
-        },
-        pipeImages() {
-            return src(pathData.src.img, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeImages...")
-                }))
-                .pipe(dest(pathData.build.img)) //storing initial images
-                .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
-                    //resize: { width: 400 },
-/*                    params: {
-                        quality: 100,
-                    },*/
-                    toOptimize: false,   //by default: false
-                    toSkipOthers: false,    //streaming other formats without touch; by default: false
-                })) //conversion and optimization
-                .pipe(size(useGulpSizeConfig({
-                    title: "Image before optimization: "
-                })))
-                .pipe(new CustomImgOptimizer({
-                    //resize: { width: 400 },
-                    jpeg: { quality: 75 },
-                    png: { quality: 80 },
-                    webp: { quality: 75 },
-                    avif: { quality: 60 },
-                    svg: {
-                        js2svg: { indent: 2, pretty: true },
-                        plugins: [
-                            {
-                                name: 'preset-default',
-                                params: {
-                                    overrides: {
-                                        removeViewBox: false,
-                                        cleanupIds: false,
-                                        inlineStyles: {
-                                            onlyMatchedOnce: false,
-                                        },
-                                    },
+    pipeStyles() {
+      return src(pathData.src.styles, { sourcemaps: true })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeStyles...")
+        }))
+        /*                .pipe(size(useGulpSizeConfig({
+                            title: "Before sass: "
+                        })))*/
+        .pipe(sass({}, () => {
+        }))
+        /*                .pipe(size(useGulpSizeConfig({
+                            title: "After sass: "
+                        })))*/
+        .pipe(changed(`${pathData.tempPath}/css/`, { hasChanged: compareContents }))
+        .pipe(debug({ title: "*.scss is piped:" }))
+        .pipe(dest(`${pathData.tempPath}/css/`))
+        .pipe(postcss(optimizeCss)) //to optimize *.css
+        .pipe(size(useGulpSizeConfig({
+          title: "After optimizeCss: "
+        })))
+        .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
+        .pipe(new CustomRenameFile(null, "min"))    //to rename to *.min.css
+        .pipe(dest(pathData.build.styles, { sourcemaps: "." })); //to paste compressed *.css to dist/
+    },
+    pipeJs() {
+      return src(pathData.src.js)
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeJs...")
+        }))
+        .pipe(debug({ title: "*.js is piped..." }))
+        .pipe(webpackStream(webpackConfigJs.dev, webpack))
+        .pipe(dest(pathData.build.js));
+    },
+    pipeImages() {
+      return src(pathData.src.img, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeImages...")
+        }))
+        .pipe(changed(pathData.build.img))
+        .pipe(debug({ title: "image is piped:" }))
+        .pipe(dest(pathData.build.img)) //storing initial images before conversion
+        .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
+          //resize: { width: 400 },   //optional size of the picture at conversion
+          /*
+                              params: {   //it is optional if toOptimize = true; it is redundant if toOptimize = false
+                                  quality: 75,
                                 },
-                            },
-                        ],
-                    }
-                }))
-                .pipe(size(useGulpSizeConfig({
-                    title: "Image after optimization: "
-                })))
-                .pipe(dest(pathData.build.img));
-        },
-        pipeSvgSpriteMono() {
-            return src(pathData.src.svgIconsMono, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeSvgSprite...")
-                }))
-                .pipe(new CustomGulpSVGSprite("mono", "sprite.mono.svg"))
-                .pipe(dest(pathData.build.svgIcons));
-        },
-        pipeSvgSpriteMulti() {
-            return src(pathData.src.svgIconsMulti, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeSvgSprite...")
-                }))
-                .pipe(new CustomGulpSVGSprite("multi", "sprite.multi.svg"))
-                .pipe(dest(pathData.build.svgIcons));
-        },
-        pipeFonts() {
-            return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeFonts...")
-                }))
-                .pipe(dest(pathData.build.fonts));
-        },
-        pipeData() {
-            return src(pathData.src.data, { encoding: false })
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeData...")
-                }))
-                .pipe(dest(pathData.build.data));
-        },
-        pipeZipProject() {
-            return src(pathData.src.zipProject, {})
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeZipProject...")
-                }))
-                .pipe(zip(`${ pathData.rootFolder }.project.zip`))
-                .pipe(dest(pathData.build.zipProject));
-        },
-        pipeZipDist() {
-            return src(pathData.src.zipDist, {})
-                .pipe(plumber({
-                    errorHandler: handleError("Error at pipeZipDist...")
-                }))
-                .pipe(zip(`${ pathData.rootFolder }.zip`))
-                .pipe(dest(pathData.build.zipDist));
-        }
+                              */
+          toOptimize: false,   //by default: false
+          toSkipOthers: false, //streaming other formats without touch; by default: false
+        }))
+        .pipe(dest(pathData.build.img));
+    },
+    pipeSvgSpriteMono() {
+      return src(pathData.src.svgIconsMono, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeSvgSprite...")
+        }))
+        .pipe(new CustomGulpSVGSprite("mono", "sprite.mono.svg"))
+        .pipe(dest(pathData.build.svgIcons));
+    },
+    pipeSvgSpriteMulti() {
+      return src(pathData.src.svgIconsMulti, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeSvgSprite...")
+        }))
+        .pipe(new CustomGulpSVGSprite("multi", "sprite.multi.svg"))
+        .pipe(dest(pathData.build.svgIcons));
+    },
+    pipeFonts() {
+      return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeFonts...")
+        }))
+        .pipe(changed(pathData.build.fonts))
+        .pipe(debug({ title: "font is piped:" }))
+        .pipe(dest(pathData.build.fonts));
+    },
+    pipeData() {
+      return src(pathData.src.data, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeData...")
+        }))
+        .pipe(changed(pathData.build.data))
+        .pipe(debug({ title: "file is piped:" }))
+        .pipe(dest(pathData.build.data));
+    },
+  },
+  [modes.build]: {
+    pipeHtml() {
+      return src(pathData.src.htmlNested)
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeHtml...")
+        }))
+        .pipe(fileInclude(fileIncludeSettings))
+        .pipe(
+          replace(/<img(?:.|\n|\r)*?>/g, function (match) {
+            return match.replace(/\r?\n|\r/g, "").replace(/\s{2,}/g, " ");
+          })
+        ) //removes extra spaces and line breaks inside a tag <img>
+        .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
+        .pipe(htmlClean())
+        .pipe(dest(pathData.build.html));
+    },
+    pipeStyles() {
+      return src(pathData.src.styles)
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeStyles...")
+        }))
+        /*.pipe(size(useGulpSizeConfig({
+          title: "Before sass: "
+        })))*/
+        .pipe(sass({}, () => {
+        }))
+        /*.pipe(size(useGulpSizeConfig({
+          title: "After sass: "
+        })))*/
+        .pipe(new CustomPurgeCss(pathData.build.html))  //to filter ${basename}.css selectors not used in ${basename}.html
+        .pipe(size(useGulpSizeConfig({
+          title: "After PurgeCss: "
+        })))
+        .pipe(postcss(optimizeCss)) //to optimize *.css
+        .pipe(size(useGulpSizeConfig({
+          title: "After optimizeCss: "
+        })))
+        .pipe(dest(pathData.build.styles))  //to paste not compressed *.css to dist/
+        .pipe(postcss(minifyCss))   //to compress *.css
+        .pipe(size(useGulpSizeConfig({
+          title: "After minifyCss: "
+        })))
+        .pipe(new CustomRenameFile(null, "min"))    //to rename to *.min.css
+        .pipe(dest(pathData.build.styles)); //to paste compressed *.css to dist/
+    },
+    pipeJs() {
+      return src(pathData.src.js)
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeJs...")
+        }))
+        .pipe(webpackStream(webpackConfigJs.build, webpack))
+        .pipe(dest(pathData.build.js));
+    },
+    pipeImages() {
+      return src(pathData.src.img, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeImages...")
+        }))
+        .pipe(dest(pathData.build.img)) //storing initial images
+        .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
+          //resize: { width: 400 },
+          /*                    params: {
+                                  quality: 100,
+                              },*/
+          toOptimize: false,   //by default: false
+          toSkipOthers: false,    //streaming other formats without touch; by default: false
+        })) //conversion and optimization
+        .pipe(size(useGulpSizeConfig({
+          title: "Image before optimization: "
+        })))
+        .pipe(new CustomImgOptimizer({
+          //resize: { width: 400 },
+          jpeg: { quality: 75 },
+          png: { quality: 80 },
+          webp: { quality: 75 },
+          avif: { quality: 60 },
+          svg: {
+            js2svg: { indent: 2, pretty: true },
+            plugins: [
+              {
+                name: "preset-default",
+                params: {
+                  overrides: {
+                    removeViewBox: false,
+                    cleanupIds: false,
+                    inlineStyles: {
+                      onlyMatchedOnce: false,
+                    },
+                  },
+                },
+              },
+            ],
+          }
+        }))
+        .pipe(size(useGulpSizeConfig({
+          title: "Image after optimization: "
+        })))
+        .pipe(dest(pathData.build.img));
+    },
+    pipeSvgSpriteMono() {
+      return src(pathData.src.svgIconsMono, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeSvgSprite...")
+        }))
+        .pipe(new CustomGulpSVGSprite("mono", "sprite.mono.svg"))
+        .pipe(dest(pathData.build.svgIcons));
+    },
+    pipeSvgSpriteMulti() {
+      return src(pathData.src.svgIconsMulti, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeSvgSprite...")
+        }))
+        .pipe(new CustomGulpSVGSprite("multi", "sprite.multi.svg"))
+        .pipe(dest(pathData.build.svgIcons));
+    },
+    pipeFonts() {
+      return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeFonts...")
+        }))
+        .pipe(dest(pathData.build.fonts));
+    },
+    pipeData() {
+      return src(pathData.src.data, { encoding: false })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeData...")
+        }))
+        .pipe(dest(pathData.build.data));
+    },
+    pipeZipProject() {
+      return src(pathData.src.zipProject, {})
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeZipProject...")
+        }))
+        .pipe(zip(`${pathData.rootFolder}.project.zip`))
+        .pipe(dest(pathData.build.zipProject));
+    },
+    pipeZipDist() {
+      return src(pathData.src.zipDist, {})
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeZipDist...")
+        }))
+        .pipe(zip(`${pathData.rootFolder}.zip`))
+        .pipe(dest(pathData.build.zipDist));
     }
+  }
 };
 export default tasks;

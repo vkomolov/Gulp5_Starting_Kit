@@ -25,6 +25,6 @@ const newFunc = async (str) => {
 }
 document.addEventListener("DOMContentLoaded", async () => {
   console.log(test());
-  const res = await newFunc("hello from async func");
+  const res = await newFunc("hello from async func...");
   console.log(res);
 });
