@@ -3,6 +3,7 @@
 @import "../global_styles/mixins";
 @import "../global_styles/fonts";
 @import "../global_styles/animations";
+@import "../global_styles/media";
 
 /////// STYLES ///////
 
@@ -40,12 +41,18 @@ body:before {
 
   h1, h2, h3, h4, h5, h6 {
     font-family: "Ubuntu", sans-serif;
+    overflow-wrap: break-word;
   }
 
-  @media screen and (max-width: 1024px) {
+  @include tabletPortrait {
     font-size: 0.9rem;
   }
-  @media screen and (max-width: 768px) {
+  @include mobileLandscape {
     font-size: 0.75rem;
   }
+}
+
+img, svg, picture, video {
+  width: 100%;
+  height: auto;
 }

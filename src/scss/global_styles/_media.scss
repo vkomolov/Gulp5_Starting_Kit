@@ -1,6 +1,20 @@
 @import './_variables.scss';
 @import './_mixins.scss';
 
+/* mobile (small) */
+@mixin mobileSmall() {
+  @media (max-width: 325px) {
+    @content
+  }
+}
+
+/* mobile (medium) */
+@mixin mobileMedium() {
+  @media (max-width: 375px) {
+    @content
+  }
+}
+
 /* mobile (portrait) */
 @mixin mobilePortrait() {
   @media (max-width: 480px) {
