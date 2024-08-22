@@ -15,10 +15,17 @@
   }
 }
 
-/* mobile (portrait) */
-@mixin mobilePortrait() {
+/* mobile (portrait narrow) */
+@mixin mobilePortraitNarrow() {
   @media (max-width: 480px) {
     @content
+  }
+}
+
+/* mobile (portrait wide) */
+@mixin mobilePortraitWide() {
+  @media (max-width: 640px) {
+    @content;
   }
 }
 
@@ -64,6 +71,7 @@
   }
 }
 
+/* retina display (2x) */
 @mixin mediaRetina2x() {
   @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     @content;
