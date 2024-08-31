@@ -41,8 +41,6 @@ $flex-box-col-center-wrap: column, center, center;
   box-shadow: $dim $dim $shadow $color;
 }
 
-
-
 @mixin scroll-init($width, $thumbColor, $trackColor) {
   overflow-x: hidden;
   overflow-y: auto;
@@ -62,6 +60,18 @@ $flex-box-col-center-wrap: column, center, center;
   &:hover::-webkit-scrollbar-track {
     background-color: $trackColor;
   }
+}
+
+////////////// FUNCTIONS ////////////////
+//it returns the value with account to the current media width and the given dimension proportions
+//!!! the arguments must be integers with no units of measurement (1280, 640, 80, 32)
+@function calculate-dimension($max-width, $min-width, $max-value, $min-value ) {
+  $width-range: $max-width - $min-width;
+  $value-diff: $max-value - $min-value;
+
+  //@return calc($value-diff * (100vw - #{$min-width}px) / $width-range + #{$min-value}px);
+  //ensure that the viewport width value always stays between $min-width and $max-width
+  @return calc($value-diff * (min(max(100vw, #{$min-width}px), #{$max-width}px) - #{$min-width}px) / $width-range + #{$min-value}px);
 }
 
 
