@@ -22,8 +22,13 @@ $flex-box-col-center-wrap: column, center, center;
   align-items: $align;
 }
 
-@mixin transition($property: all, $time: 0.15s) {
-  transition: $property $time ease-in-out;
+@mixin transition($property: null, $time: 0.15s) {
+  @if $property != null {
+    transition: $property $time ease-in-out;
+  }
+  @else {
+    transition: $time ease-in-out;
+  }
 }
 
 @mixin init-font ($font-size, $font-weight) {
