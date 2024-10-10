@@ -2,20 +2,39 @@
 @import "../global_styles/variables";
 @import "../global_styles/mixins";
 @import "../global_styles/fonts";
-@import "../global_styles/animations";
 @import "../global_styles/media";
+@import "../global_styles/animations";
+
+/////// VARS //////
+
+:root {
+  --range_120-64_max-1280px: #{calculate-dimension(1280, 641, 120, 64)};
+  --range_80-64_max-1280px: #{calculate-dimension(1280, 641, 80, 64)};
+  --range_80-32_max-1280px: #{calculate-dimension(1280, 641, 80, 32)};
+  --range_48-32_max-1280px: #{calculate-dimension(1280, 641, 48, 32)};
+  --range_32-23_max-640px: #{calculate-dimension(640, 320, 32, 23)};
+  --range_24-18_max-1280px: #{calculate-dimension(1280, 641, 24, 18)};
+  --range_18-16_max-1280px: #{calculate-dimension(1280, 641, 18, 16)};
+}
 
 /////// STYLES ///////
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: "Open Sans", sans-serif;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $greyLight;
+  line-height: 1.4;
+  background-color: $color-07;
 
   /**** user-select: none; *****/
   @include transition();
+
 }
+
 /*************TOP BORDER BODY****************/
 body:before {
   content: "";
@@ -29,30 +48,27 @@ body:before {
 }
 /*****************END TOP BORDER BODY************/
 
-.total-wrapper {
-  font-size: 1rem;
-  position: relative; //for the alert block in absolute position
-  max-width: $maxWidth;
-  min-width: $minWidth;
-  margin: 0 auto;
-  padding: 1.5em 1em;
+h1, h2, h3, h4, h5 {
+  font-family: "Ubuntu", sans-serif;
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-wrap: break-word;
+}
 
-  border: 2px dotted $foxy;
+h1 {
+  line-height: 1.25;
+}
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: "Ubuntu", sans-serif;
-    overflow-wrap: break-word;
-  }
-
-  @include tabletPortrait {
-    font-size: 0.9rem;
-  }
-  @include mobileLandscape {
-    font-size: 0.75rem;
-  }
+h2, h3, h4, h5 {
+  line-height: 1.2;
 }
 
 img, svg, picture, video {
   width: 100%;
+  max-width: 100%;
   height: auto;
+  object-fit: cover;
+  object-position: center;
+  vertical-align: top;
 }

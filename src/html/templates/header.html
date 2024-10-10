@@ -1,27 +1,60 @@
-<header class="header-wrapper" role="banner">
-  @@if (page && headParams && headParams[page]) {
-  <p>this "jpg" image is automatically converted to "webp", and is written with "picture" tag, alternative webp format and retina alternative, if exists...</p>
-  <div class="header-image-wrapper">
-    <img src="@@headParams.@@page.root/assets/img/img-experience_1.jpg" loading="lazy" alt="meditation">
-  </div>
-  <nav class="header__nav" role="navigation">
-    <a href="@@headParams.@@page.root/index.html" target="_self" class="nav-link">Main Page</a>
-    <a href="@@headParams.@@page.root/about.html" target="_self" class="nav-link">About Page</a>
-    <a href="@@headParams.@@page.root/somePages/somePage.html" target="_self" class="nav-link">Some Page</a>
-  </nav>
-  <div class="header__layer">
-    <p>This background image is written in styles with image-set of alternatives: webp, retina..</p>
-    <div class="svg-icons">
-      <svg class="social">
-        <use xlink:href="assets/img/svgIcons/sprite.mono.svg#search-line"></use>
-      </svg>
-      <svg class="social">
-        <use xlink:href="assets/img/svgIcons/sprite.multi.svg#telegram" ></use>
-      </svg>
-    </div>
-    <div class="bg-container">
-      <h2>Hello World!!!</h2>
-    </div>
-  </div>
-  }
-</header>
+<div class="header-layer">
+    <header class="header" role="banner">
+        <div class="header__logo-wrapper">
+            <svg viewBox="0 0 190 33">
+                <title>logo of the company</title>
+                <use xlink:href="assets/img/svgIcons/sprite.multi.svg#logo"></use>
+            </svg>
+        </div>
+        <div class="header__contacts-wrapper">
+            <div class="header__contacts-block">
+                <a href="tel:380991019368"
+                   aria-label="Mobile call to Master"
+                   class="phone-link"
+                >
+                    <div class="phone-link__phone-icon">
+                        <svg viewBox="0 0 24 25">
+                            <title>phone icon</title>
+                            <use xlink:href="assets/img/svgIcons/sprite.mono.svg#phone"></use>
+                        </svg>
+                    </div>
+                    <span>+38 (099) 101 93 68</span>
+                </a>
+                <div class="social-icons-wrapper">
+                    <a href="viber://chat?number=+380995555555"
+                       aria-label="Viber Chat with Master"
+                       class="social-icons-wrapper__social-icon"
+                    >
+                        <svg viewBox="0 0 48 48">
+                            <title>viber icon</title>
+                            <use xlink:href="assets/img/svgIcons/sprite.multi.svg#viber"></use>
+                        </svg>
+                    </a>
+                    <a href="https://t.me/username"
+                       target="_blank"
+                       aria-label="Telegram Chat with Master"
+                       rel="noopener noreferrer nofollow"
+                       class="social-icons-wrapper__social-icon"
+                    >
+                        <svg viewBox="0 0 240 240">
+                            <title>telegram icon</title>
+                            <use xlink:href="assets/img/svgIcons/sprite.multi.svg#telegram"></use>
+                        </svg>
+                    </a>
+                    <button id="burger_nav">X</button>
+                </div>
+            </div>
+        </div>
+        <nav class="header__nav" aria-label="navigation menu to services">
+            <ul class="header__nav-list">
+                <li><a href="#" class="header__nav-link">Link 1</a></li>
+                <li><a href="#" class="header__nav-link">Link 2</a></li>
+                <li><a href="#" class="header__nav-link">Link 3</a></li>
+                <li><a href="#" class="header__nav-link">Link 4</a></li>
+                <li><a href="#" class="header__nav-link">Link 5</a></li>
+                <li><a href="#" class="header__nav-link">Link 6</a></li>
+                <li><a href="#" class="header__nav-link">Link 7</a></li>
+            </ul>
+        </nav>
+    </header>
+</div>

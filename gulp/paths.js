@@ -31,7 +31,7 @@ export const pathData = {
         styles: `${ srcPath }/scss/*.scss`,   //root *.scss, connected to html (for build tasks)
         js: `${ srcPath }/js/*.js`,
         img: [
-            `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif}`,
+            `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif,ico}`,
             `!${ srcPath }/assets/img/svgIcons/mono/**/*`,
             `!${ srcPath }/assets/img/svgIcons/multi/**/*`
         ],
@@ -71,7 +71,7 @@ export const pathData = {
             `${ srcPath }/modules/**/*.js`,
         ],
         img: [
-            `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif}`,
+            `${ srcPath }/assets/img/**/*.{jpg,jpeg,png,svg,gif,webp,avif,ico}`,
             `!${ srcPath }/assets/img/svgIcons/mono/**/*`,
             `!${ srcPath }/assets/img/svgIcons/multi/**/*`
         ],
@@ -93,6 +93,5 @@ export const pathData = {
 export const entries = {
     js: {
         index: `${ pathData.srcPath }/js/index.js`,
-        about: `${ pathData.srcPath }/js/about.js`,
     },
 }

@@ -8,10 +8,13 @@ $flex-box-row-right-wrap: row, flex-end, center, wrap;
 $flex-box-row-right-nowrap: row, flex-end, center, nowrap;
 $flex-box-row-top-wrap: row, center, flex-start, wrap;
 $flex-box-row-top-nowrap: row, center, flex-start, nowrap;
+$flex-box-row-bottom-wrap: row, center, flex-end, wrap;
+$flex-box-row-bottom-nowrap: row, center, flex-end, nowrap;
 $flex-box-col-left-wrap: column, center, flex-start;
 $flex-box-col-right-wrap: column, center, flex-end;
 $flex-box-col-top-wrap: column, flex-start, center;
 $flex-box-col-center-wrap: column, center, center;
+$element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
 
 ///MIXIN
 
@@ -68,16 +71,12 @@ $flex-box-col-center-wrap: column, center, center;
 }
 
 ////////////// FUNCTIONS ////////////////
-//it returns the value with account to the current media width and the given dimension proportions
-//!!! the arguments must be integers with no units of measurement (1280, 640, 80, 32)
-@function calculate-dimension($max-width, $min-width, $max-value, $min-value ) {
+//!!! the arguments must be integers, default measure unit is "px" (1280, 640, 80, 32, px)
+@function calculate-dimension($max-width, $min-width, $max-value, $min-value, $measure:px) {
   $width-range: $max-width - $min-width;
   $value-diff: $max-value - $min-value;
 
-  //@return calc($value-diff * (100vw - #{$min-width}px) / $width-range + #{$min-value}px);
   //ensure that the viewport width value always stays between $min-width and $max-width
-  @return calc($value-diff * (min(max(100vw, #{$min-width}px), #{$max-width}px) - #{$min-width}px) / $width-range + #{$min-value}px);
+  //@return calc($value-diff * (min(max(100vw, #{$min-width}px), #{$max-width}px) - #{$min-width}px) / $width-range + #{$min-value}px);
+  @return calc($value-diff * (min(max(100vw, #{$min-width}#{$measure}), #{$max-width}#{$measure}) - #{$min-width}#{$measure}) / $width-range + #{$min-value}#{$measure});
 }
-
-
-

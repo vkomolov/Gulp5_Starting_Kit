@@ -14,6 +14,7 @@ export const modes = {
     build: "build"
 }
 const headParams = {
+    //anotherPage: {},
     index: {
         description: "description of the Page index.html",
         keywords: "keywords of the Page index.html",
@@ -21,47 +22,23 @@ const headParams = {
         robots: "noindex",
         title: "Title of the Page 'index.html'",
         linkStyles: "css/index.min.css",
-        root: ".", //some *.html can be nested in src/html/somePages/ which requires correct path to root: "..", "../.." etc...
+        root: ".", //some *.html can be nested in src/html/somePage/ which requires correct path to root: "..", "../.." etc...
         //if the scripts are to be written in the end of body, the property linkScripts may not exits
 /*        linkScripts: {
             link: "js/index.bundle.js", //this property must exist in linkScripts
             //loadMode: "async"   //"differ" this property may not exist in linkScripts
         }*/
     },
-    about: {
-        description: "description of the Page about.html",
-        keywords: "keywords of the Page about.html",
-        pageTopic: "page-topic of the Page about.html",
-        robots: "noindex",
-        title: "Title of the Page 'about.html'",
-        linkStyles: "css/about.min.css",
-        root: ".", //some *.html can be nested in src/html/somePages/ which requires correct path to root: "..", "../.." etc...
-        //if the scripts are to be written in the end of body, the property linkScripts may not exits
-        /*        linkScripts: {
-                    link: "js/about.bundle.js", //this property must exist in linkScripts
-                    //loadMode: "async"   //"differ" this property may not exist in linkScripts
-                }*/
-    },
-    somePage: {
-        description: "description of the Page somePage.html",
-        keywords: "keywords of the Page somePage.html",
-        pageTopic: "page-topic of the Page somePage.html",
-        robots: "noindex",
-        title: "Title of the Page 'somePage.html'",
-        linkStyles: "../css/somePage.min.css",
-        root: "..",  //some *.html can be nested in src/html/somePages/ which requires correct path to root: "..", "../.." etc...
-        //if the scripts are to be written in the end of body, the property linkScripts may not exits
-        /*        linkScripts: {
-                    link: "js/index.bundle.js", //this property must exist in linkScripts
-                    //loadMode: "async"   //"differ" this property may not exist in linkScripts
-                }*/
-    },
+    //anotherPageHeadParams
 }
+
+//const maybeHeaderParams = {};
 export const fileIncludeSettings = {
     prefix: "@@",
     basepath: "@file",
     context: {
-        headParams
+        headParams,
+        //maybeHeaderParams,
     }
 };
 export const beautifySettings = {
@@ -202,7 +179,6 @@ export const webpackConfigJs = {
         },
     }
 }
-
 export const svgoSpriteOptions = {
     mono: {
         plugins: [

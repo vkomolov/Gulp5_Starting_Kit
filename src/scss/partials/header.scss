@@ -1,146 +1,156 @@
 @import "../global_styles/reset";
 @import "../global_styles/variables";
 @import "../global_styles/mixins";
+@import "../global_styles/extends";
 @import "../global_styles/fonts";
 @import "../global_styles/animations";
 @import "../global_styles/media";
 
+@import "./root";
+
 /////// STYLES ///////
 
-.header-wrapper {
+.header-layer {
   width: 100%;
-  border: 2px solid $foxy;
-  background-color: $white;
+  background: linear-gradient(to right, rgba(40, 32, 23, 1) 25%, $rgba_opacity-0 80%);
+}
 
+.header {
+  font-size: 1em; //parent font-size
+  position: relative;
+
+  @extend %contentWrapper;
   @include flex-box($flex-box-row-center-wrap...);
 
-  @media screen and (max-width: 1024px) {
-    border: 5px solid blue !important;
+  gap: 0.5em 1em;
+  padding-top: 0.625em;
+  padding-bottom: 0.625em;
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    flex-direction: column;
+  }
+}
+
+.header__logo-wrapper {
+  width: 11.875em;
+}
+
+.header__contacts-wrapper {
+  flex-grow: 1;
+
+  @include flex-box($flex-box-row-right-wrap...);
+  gap: 0.5em;
+}
+
+.header__contacts-block {
+  @include flex-box($flex-box-row-center-wrap...);
+  gap: 1em;
+}
+
+.phone-link {
+  text-decoration: none;
+
+  @include flex-box($flex-box-row-center-nowrap...);
+  @include transition();
+
+  gap: 0.625em;
+
+  &:hover {
+    transform: scale(1.03);
   }
 
-  .header-image-wrapper {
-    width: 4em;
-    margin: 1em;
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    font-size: 0.9em;
+  }
 
-    img {
-      width: 100%;
-      height: auto;
+  &__phone-icon {
+    width: 1.375em;
+    fill: $color-01;
+  }
+
+  span {
+    font-family: "Jost", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: $color_01;
+
+    @include init-font(1.375em, 700);
+
+    /* mobile (landscape): (max-width: 768px)*/
+    @include maxMobileLandscape {
+      font-size: 1.13em;
+    }
+  }
+}
+
+.social-icons-wrapper {
+  @include flex-box($flex-box-row-center-nowrap...);
+  gap: 0.625em;
+
+  &__social-icon {
+    width: 2em;
+
+    @include transition();
+
+    &:hover {
+      transform: scale(1.1);
     }
   }
 }
 
 .header__nav {
-  padding: 1em;
-  flex-grow: 1;
+  width: 100%;
+  padding-top: .56em;
   @include flex-box($flex-box-row-right-wrap...);
-  gap: 0.5em;
+
+  /* mobile (landscape): (max-width: 768px)*/
+  @include maxMobileLandscape {
+    position: absolute;
+    display: none;
+  }
 }
 
-.nav-link {
-  font-family: "Ubuntu-Regular", sans-serif;
-  color: $blue;
-  @include init-font(1em, 600);
+#burger_nav {
+  width: 2em;
+  height: 2em;
+  background-color: #413930;
+  display: none;
+
+  /* mobile (landscape): (max-width: 768px)*/
+  @include maxMobileLandscape {
+    display: inline-block;
+  }
+}
+
+.header__nav-list {
+  font-family: "Ubuntu", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1em; //parent font-size: 18px;
+  font-weight: 700;
+
+  @include flex-box($flex-box-row-center-wrap...);
+  gap: 0.5em 1em;
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    font-size: 0.889em; //16px from font-size: 18px;
+  }
+}
+
+.header__nav-link {
+  text-decoration: none;
+  color: $color-01;
+
   @include text-shadow(0.05em, 0.05em);
   @include transition();
 
   &:hover {
-    color: $foxy;
-    transform: scale(1.03) translateY(-0.05em);
+    color: $color-01-darken;
+    @include text-shadow(0.07em, 0.07em);
+    transform: translateY(-0.1em);
   }
 }
 
-.header__layer {
-  width: 100%;
-
-  @include flex-box($flex-box-row-center-wrap...);
-
-  .svg-icons {
-    padding: 0.5em 1em;
-    @include flex-box($flex-box-row-center-wrap...);
-
-    .social {
-      width: 1.5em;
-      height: auto;
-      @include transition();
-
-      &:hover {
-        width: 2em;
-      }
-    }
-  }
-}
-
-.bg-container {
-  position: relative;
-  width: 100%;
-  max-width: 1120px;
-  height: 100vh;
-  max-height: 500px;
-  padding: 1em;
-
-/*  background-image: image-set(
-                  url("../assets/img/professional_2.webp") 1x,
-                  url("../assets/img/professional_2.jpg") 1x,
-                  url("../assets/img/professional_2@2x.webp") 2x,
-                  url("../assets/img/professional_2@2x.jpg") 2x
-  );*/
-
-/*  @media (max-width: 768px) {
-    background-image: image-set(
-                    url("../assets/img/professional_2-768.webp") 1x,
-                    url("../assets/img/professional_2-768.jpg") 1x,
-                    url("../assets/img/professional_2-768@2x.webp") 2x,
-                    url("../assets/img/professional_2-768@2x.jpg") 2x
-    )
-  }
-
-  @media (max-width: 1280px) {
-    background-image: image-set(
-                    url("../assets/img/professional_2-1280.webp") 1x,
-                    url("../assets/img/professional_2-1280.jpg") 1x,
-                    url("../assets/img/professional_2-1280@2x.webp") 2x,
-                    url("../assets/img/professional_2-1280@2x.jpg") 2x
-    )
-  }
-
-  @media (min-width: 1281px) {
-    background-image: image-set(
-                    url("../assets/img/professional_2-2240.webp") 1x,
-                    url("../assets/img/professional_2-2240.jpg") 1x,
-                    url("../assets/img/professional_2-2240@2x.webp") 2x,
-                    url("../assets/img/professional_2-2240@2x.jpg") 2x
-    )
-
-  }*/
-
-  background-image: image-set(
-     url("../assets/img/professional_2.webp") 1x,
-     url("../assets/img/professional_2.jpg") 1x
-  );
-
-  @include desktopLarge {
-    background-image: image-set(
-     url("../assets/img/professional_2@2x.webp") 2x,
-     url("../assets/img/professional_2@2x.jpg") 2x
-    );
-  }
-
-  @include flex-box($flex-box-row-center-wrap...);
-
-  &:before {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    content: "";
-    background-color: rgba(0,0,0,0.5);
-  }
-
-  h2 {
-    position: relative;
-    color: $foxy;
-
-    @include init-font(42px, 700);
-  }
-}

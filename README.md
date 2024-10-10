@@ -10,7 +10,7 @@ Transform stream, omitting the use of through2 and vinyl.
 
 Some useful and popular plugins were omitted because of their vulnerabilities and deprecations...
 <br>Some plugins were replaced with the custom modules in `modules` folder.
-<br>Anyway, the pack is recommended to add with additional plugins for the operations with the files, images etc...
+<br>Anyway, the pack is recommended to add with additional plugins for the operations with the files, images (svg sprites), etc...
 <br>Presently this package is equipped with the basic frontend needs: HTML, SCSS, ES6, image optimizations with the conversion to webp and automation of the alternative versions in html, etc...
 
 ### Features:
@@ -31,7 +31,7 @@ Some useful and popular plugins were omitted because of their vulnerabilities an
 |                         | [cssnano](https://www.npmjs.com/package/cssnano)                                                 |
 |                         | [gulp](https://www.npmjs.com/package/gulp)                                                       |
 |                         | [gulp-beautify](https://www.npmjs.com/package/gulp-beautify)                                     |
-|                         | [gulp-cached](https://www.npmjs.com/package/gulp-cached)                                         |
+| can be removed...       | [gulp-cached](https://www.npmjs.com/package/gulp-cached)                                         |
 |                         | [gulp-changed](https://www.npmjs.com/package/gulp-changed)                                       |
 |                         | [gulp-cli](https://www.npmjs.com/package/gulp-cli)                                               |
 |                         | [gulp-debug](https://www.npmjs.com/package/gulp-debug)                                           |

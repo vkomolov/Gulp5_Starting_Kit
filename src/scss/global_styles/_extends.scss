@@ -1,6 +1,44 @@
 @import "mixins";
 @import "variables";
+@import "media";
+@import "../partials/root";
 
 ///////EXTENDS///////
 
+//padding-top, padding-bottom of the total layer
+%sectionWrapper {
+  padding-top: 80px;
+  padding-bottom: 120px;
 
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    padding-top: var(--range_80-64_max-1280px);
+    padding-bottom: var(--range_120-64_max-1280px);
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    padding-top: 64px;
+    padding-bottom: 64px;
+  }
+}
+
+//padding-left, padding-right of the total layer
+%contentWrapper {
+  max-width: $maxContentWidth;
+  margin: 0 auto;
+  padding-right: 80px;
+  padding-left: 80px;
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    padding-right: var(--range_80-32_max-1280px);
+    padding-left: var(--range_80-32_max-1280px);
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    padding-right: var(--range_32-23_max-640px);
+    padding-left: var(--range_32-23_max-640px);
+  }
+}
