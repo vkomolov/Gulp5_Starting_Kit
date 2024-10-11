@@ -90,8 +90,3 @@ export const pathData = {
         tempPath,
     ],
 }
-export const entries = {
-    js: {
-        index: `${ pathData.srcPath }/js/index.js`,
-    },
-}

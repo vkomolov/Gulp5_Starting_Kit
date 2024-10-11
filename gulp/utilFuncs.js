@@ -127,5 +127,40 @@ export function processFile(file) {
     return file;
 }
 
+/**
+ * It searches the files with the target extension at the given path
+ * @param {string} pathToFiles - path to the files in search
+ * @param {string} targetExt - target extension of the files with dot!!! ".js", ".html"
+ * @returns {Object} returns the object with the name of the file as the property and the path as the value
+ */
+export function getFilesEntries(pathToFiles, targetExt) {
+    const entries = {};
+
+    // Checking for the correct path
+    if (!fs.existsSync(pathToFiles)) {
+        console.error("No such path found:", pathToFiles);
+        return entries; // Return an empty object
+    }
+
+    // Searching for the files
+    const files = fs.readdirSync(pathToFiles);
+    let foundFiles = false;
+
+    files.forEach(file => {
+        if (file.endsWith(targetExt)) {
+            const fileName = path.basename(file, targetExt); // Getting the file name without extension
+            entries[fileName] = path.join(pathToFiles, file); // Creating the path with the file
+            foundFiles = true;
+        }
+    });
+
+    // Checking for the found files
+    if (!foundFiles) {
+        console.error(`No files found with ${targetExt} at ${pathToFiles}`);
+    }
+
+    return entries; // Return the object with found files
+}
+
 
 

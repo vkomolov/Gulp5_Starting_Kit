@@ -6,7 +6,8 @@ import autoprefixer from "autoprefixer";
 import discardUnused from "postcss-discard-unused";
 import cssnano from "cssnano";
 import normalizeWhitespace from "postcss-normalize-whitespace";
-import { entries } from "./paths.js";
+import { getFilesEntries } from "./utilFuncs.js";
+import { pathData } from "./paths.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 export const modes = {
@@ -108,7 +109,7 @@ export const webpackConfigJs = {
         mode: "development",
         devtool: 'source-map',
         entry: {
-            ...entries.js,
+            ...getFilesEntries(`${pathData.srcPath}/js/`, ".js"),
         },
         output: {
             filename: "[name].bundle.js",
@@ -150,7 +151,7 @@ export const webpackConfigJs = {
     build: {
         mode: "production",
         entry: {
-            ...entries.js,
+            ...getFilesEntries(`${pathData.srcPath}/js/`, ".js"),
         },
         output: {
             filename: "[name].bundle.js",
