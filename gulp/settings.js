@@ -13,8 +13,9 @@ export const modes = {
     dev: "dev",
     build: "build"
 }
+
+//it is used for writing data to the head of the page
 const headParams = {
-    //anotherPage: {},
     index: {
         description: "description of the Page index.html",
         keywords: "keywords of the Page index.html",
@@ -23,14 +24,38 @@ const headParams = {
         title: "Title of the Page 'index.html'",
         linkStyles: "css/index.min.css",
         root: ".", //some *.html can be nested in src/html/somePage/ which requires correct path to root: "..", "../.." etc...
-        //if the scripts are to be written in the end of body, the property linkScripts may not exits
-/*        linkScripts: {
-            link: "js/index.bundle.js", //this property must exist in linkScripts
-            //loadMode: "async"   //"differ" this property may not exist in linkScripts
-        }*/
+        //if the scripts are to be written in the end of the page body, the property linkScripts may not exist
+        /*linkScripts: [
+            {
+                link: "js/index.bundle.js",
+                loadMode: ""    //if no load mode is necessary, then to write ""
+            },
+            {
+                link: "js/someFile.bundle.js",
+                loadMode: "defer"   //"async", "defer"
+            }
+        ]*/
     },
-    //anotherPageHeadParams
+    //anotherPage: {}
 }
+
+//it is used for loading scripts at the end of the body in the given page...
+const bodyParams = {
+    index: {
+        //if the scripts are to be written in the head of the page, the property linkScripts may not exist
+        linkScripts: [
+            {
+                link: "js/index.bundle.js",
+                loadMode: ""
+            },
+            {
+                link: "js/someFile.bundle.js",
+                loadMode: "defer"
+            }
+        ]
+    },
+    //anotherPage: {}
+};
 
 //const maybeHeaderParams = {};
 export const fileIncludeSettings = {
@@ -38,7 +63,7 @@ export const fileIncludeSettings = {
     basepath: "@file",
     context: {
         headParams,
-        //maybeHeaderParams,
+        bodyParams,
     }
 };
 export const beautifySettings = {
