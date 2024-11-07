@@ -1,3 +1,5 @@
+@use 'sass:math';
+
 $flex-box-row-center-wrap: row, center, center, wrap;
 $flex-box-row-center-nowrap: row, center, center, nowrap;
 $flex-box-row-between-wrap: row, space-between, center, wrap;
@@ -41,6 +43,32 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
   }
 }
 
+//$font-size-actual - the actual font size in px. If measure unit is not in px, then to return the initial text-shadow
+@mixin init-text-shadow-3d($fontSizeActualPx, $shadowColor, $glowColor: null) {
+  $m-unit: unit($fontSizeActualPx); //measure unit
+  $font-num: strip-unit($fontSizeActualPx); //numeric value of the font-size
+  $ratio-px: 13;
+  $max-layers: 1;
+  $shadow: rgba(0, 0, 0, 0.15) -3px 7px 10px;
+  $shadow-offset-px: 1px;
+
+  @if $m-unit == "px" {
+    $max-layers: round($font-num / $ratio-px);
+    @if $max-layers > 1 {
+      @for $i from 1 through $max-layers {
+        $offset: -$i * $shadow-offset-px;
+        $shadow: #{$shadow}, #{$shadowColor} #{$offset} 1px 1px;
+      }
+    }
+  }
+
+  @if $glowColor != null {
+    $shadow: #{$shadow}, $glowColor -5px 2px 100px;
+  }
+
+  text-shadow: $shadow;
+}
+
 @mixin text-shadow($dim, $shadow, $color:rgba(0,0,0,0.8)) {
   text-shadow: $dim $dim $shadow $color;
 }
@@ -49,7 +77,7 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
   box-shadow: $dim $dim $shadow $color;
 }
 
-@mixin scroll-init($width, $thumbColor, $trackColor) {
+@mixin init-scroll($width, $thumbColor, $trackColor) {
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
@@ -70,6 +98,11 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
   }
 }
 
+//!!! will overwrite the text-shadow styles to glowing shadow around the text
+@mixin glowing-text-shadow($glowColor) {
+  text-shadow: $glowColor -5px 2px 100px;
+}
+
 ////////////// FUNCTIONS ////////////////
 //!!! the arguments must be integers, default measure unit is "px" (1280, 640, 80, 32, px)
 @function calculate-dimension($max-width, $min-width, $max-value, $min-value, $measure:px) {
@@ -79,4 +112,12 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
   //ensure that the viewport width value always stays between $min-width and $max-width
   //@return calc($value-diff * (min(max(100vw, #{$min-width}px), #{$max-width}px) - #{$min-width}px) / $width-range + #{$min-value}px);
   @return calc($value-diff * (min(max(100vw, #{$min-width}#{$measure}), #{$max-width}#{$measure}) - #{$min-width}#{$measure}) / $width-range + #{$min-value}#{$measure});
+}
+
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return math.div($number, ($number * 0 + 1));
+  }
+
+  @return $number;
 }
