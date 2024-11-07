@@ -69,6 +69,24 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
   text-shadow: $shadow;
 }
 
+/**
+* it gives background to the text: gradient, image, etc...
+* $background - background-image, gradient etc...
+* [$text-color = null] - the color of the text with transparent opacity to view the background underneath
+ */
+@mixin init-text-background($background, $text-color: null) {
+  background: $background no-repeat center/cover;
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  @if $text-color == null {
+    color: transparent;
+  }
+  @else {
+    color: $text-color;
+  }
+}
+
 @mixin text-shadow($dim, $shadow, $color:rgba(0,0,0,0.8)) {
   text-shadow: $dim $dim $shadow $color;
 }
