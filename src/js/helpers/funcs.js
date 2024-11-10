@@ -1,5 +1,5 @@
 'use strict';
 
-export function test() {
-    return "message from funcs.js";
+export function randomNum(max, min) {
+  return Math.floor(Math.random() * max) + min;
 }
