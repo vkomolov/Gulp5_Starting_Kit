@@ -118,8 +118,8 @@ const tasks = {
         /*                .pipe(size(useGulpSizeConfig({
                             title: "Before sass: "
                         })))*/
-        .pipe(sass({}, () => {
-        }))
+        .pipe(sass.sync({}, () => {
+        }).on('error', sass.logError))
         /*                .pipe(size(useGulpSizeConfig({
                             title: "After sass: "
                         })))*/
@@ -222,8 +222,8 @@ const tasks = {
         /*.pipe(size(useGulpSizeConfig({
           title: "Before sass: "
         })))*/
-        .pipe(sass({}, () => {
-        }))
+        .pipe(sass.sync({}, () => {
+        }).on('error', sass.logError))
         /*.pipe(size(useGulpSizeConfig({
           title: "After sass: "
         })))*/
