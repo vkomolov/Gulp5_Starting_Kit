@@ -29,7 +29,7 @@ export function migrateElement({ target, parentFrom, parentTo }) {
 }
 
 /**
- * Fountains a certain number of balls.
+ * Fountains a certain number of balls with GSAP (!!! must be installed with npm i gsap)
  * @param {HTMLElement} targetElem - the target Element for animation
  * @param {Object} [params={}] - additional params
  * @param {number} [params.ballsCount = 1] - The quantity of the balls to be fountained. Defaults to 1 if not provided.
@@ -228,4 +228,52 @@ export function fountainBalls(targetElem, params = {}) {
     });
 
     return tl;
+}
+
+/**
+ * A function that adds a scroll event listener to a DOM element, window, or document,
+ * with a delay to limit the number of times the callback function is triggered during scroll events.
+ * It prevents the callback from being called too frequently by using a "lock" mechanism.
+ *
+ * @param {HTMLElement|Window|Document} listenerOwner - The DOM element, window, or document to listen for scroll events.
+ * @param {number} [delay=300] - The delay (in milliseconds) between consecutive callback executions. Defaults to 300ms.
+ * @returns {Function} A function that accepts a callback and parameters, and returns another function to remove the scroll event listener.
+ *
+ * @throws {Error} If the listenerOwner is not a valid DOM element, window, or document.
+ *
+ * @example
+ * // Example of using scrollLimitedListener with the window object
+ * const initScrollLimiter = scrollLimitedListener(window, 700);
+ *     const removeScrollListener = initScrollLimiter(() => {
+ *         const scrollY = window.scrollY || document.documentElement.scrollTop;
+ *         console.log(scrollY); // Logs scroll position
+ *     });
+ *
+ *     // Remove the scroll listener on click
+ *     document.addEventListener("click", () => removeScrollListener());
+ */
+export function scrollLimitedListener(listenerOwner, delay=300) {
+    if (!(listenerOwner instanceof HTMLElement) && window !== listenerOwner && document !== listenerOwner) {
+        throw new Error("Provided listenerOwner at scrollLimitedListener() is not a valid DOM element.");
+    }
+
+    let isLocked = false;
+
+    return (cb, params = []) => {
+        const handler = () => {
+            if (!isLocked) {
+                isLocked = true;
+                setTimeout(() => {
+                    cb(...params);
+                    isLocked = false;
+                }, delay);
+            }
+        };
+
+        listenerOwner.addEventListener("scroll", handler);
+
+        return () => {
+            listenerOwner.removeEventListener("scroll", handler);
+        }
+    };
 }
