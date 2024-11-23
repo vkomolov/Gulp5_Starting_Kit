@@ -277,3 +277,22 @@ export function scrollLimitedListener(listenerOwner, delay=300) {
         }
     };
 }
+
+/**
+ *  It sets attributes to HTMLElement instances
+ * @param {[HTMLElement]} [elements=[]] the list of HTMLElements to be set with the attributes
+ * @param {Object} [targetAttr={}] consists of the keys as the attributes and the values
+ * @returns {void}
+ */
+export function setAttributes(elements = [], targetAttr = {}) {
+
+    elements.forEach((element, i) => {
+        if (!(element instanceof HTMLElement)) {
+            throw new Error(`one of the elements at index ${i} is not the instance of HTMLElement...`);
+        }
+
+        Object.entries(targetAttr).forEach(([attr, value]) => {
+            element.setAttribute(attr, (value !== null && value !== undefined) ? value.toString() : "");
+        });
+    });
+}
