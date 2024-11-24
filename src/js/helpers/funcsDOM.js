@@ -279,6 +279,62 @@ export function scrollLimitedListener(listenerOwner, delay=300) {
 }
 
 /**
+ * A function that adds a scroll event listener to an element and toggles a CSS class on a target element
+ * based on the scroll position of a trigger element.
+ * The target element's style is modified when the trigger element reaches a certain scroll position.
+ * This function uses a "scroll limiter" to ensure the callback is not triggered too frequently during scroll events.
+ *
+ * @param {HTMLElement} target - The DOM element whose style (class) will be toggled based on scroll.
+ * @param {HTMLElement} trigger - The DOM element that acts as the trigger for the scroll event.
+ * @param {string} classActivation - The class to be added or removed from the target element when the trigger is scrolled past.
+ * @param {HTMLElement|Window|Document} [scrollOwner=window] - The element (or window) whose scroll events are being monitored. Defaults to the `window`.
+ * @param {number} [scrollTimeLimit=300] - The delay (in milliseconds) between consecutive scroll event callback executions. Defaults to 300ms.
+ *
+ * @throws {Error} If the provided `target` or `trigger` elements are not found in the DOM.
+ *
+ * @example
+ * // Example usage of customTargetStyleOnScroll
+ * const targetElement = document.querySelector(".target");
+ * const triggerElement = document.querySelector(".trigger");
+ * customTargetStyleOnScroll(targetElement, triggerElement, "active");
+ *
+ * // The "active" class will be added to targetElement when triggerElement is scrolled past.
+ */
+export function customTargetStyleOnScroll(target, trigger, classActivation, scrollOwner = window, scrollTimeLimit = 300) {
+    if (!document.contains(target) || !document.contains(trigger)) {
+        throw new Error("at initTopAppearanceOnScroll(): the given target or trigger are not found in DOM...");
+    }
+
+    /**
+     * is scrolledNav is already active to avoid extra animations
+     * @type {boolean}
+     */
+    let isScrolledActive = false;
+
+    const initScrollLimiter = scrollLimitedListener(scrollOwner, scrollTimeLimit);
+    initScrollLimiter(() => {
+        const triggerTop = trigger.getBoundingClientRect().top;
+
+        if (triggerTop <= 0) {
+            if (!isScrolledActive) {
+                requestAnimationFrame(() => {
+                    target.classList.add(classActivation);
+                    isScrolledActive = true;
+                });
+            }
+        }
+        else {
+            if (isScrolledActive && target.classList.contains(classActivation)) {
+                requestAnimationFrame(() => {
+                    target.classList.remove(classActivation);
+                    isScrolledActive = false;
+                });
+            }
+        }
+    });
+}
+
+/**
  *  It sets attributes to HTMLElement instances
  * @param {[HTMLElement]} [elements=[]] the list of HTMLElements to be set with the attributes
  * @param {Object} [targetAttr={}] consists of the keys as the attributes and the values
