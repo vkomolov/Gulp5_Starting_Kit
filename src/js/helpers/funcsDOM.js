@@ -440,3 +440,117 @@ export function getImagesLoaded(container, options = {}) {
         }
     });
 }
+
+/**
+ * Initializes a masonry grid layout for the specified container, positioning its child image elements.
+ * The function calculates the number of columns based on the container's width and the image item's width,
+ * and positions the images in a masonry style with specified gaps between them.
+ * If a free space in a row exists then it places the columns in the center position...
+ *
+ * @async
+ * @function initMasonry
+ * @param {string} containerSelector - The CSS selector of the container element where the masonry grid will be applied.
+ * @param {Object} [params={}] - Optional configuration parameters for masonry initialization.
+ * @param {number} [params.gap=0] - The gap (in pixels) between the items in the masonry grid. Defaults to 0.
+ *
+ * @returns {Promise<Element[]>} - A promise that resolves to an array of image elements in the container, after they have been positioned.
+ *
+ * @throws {Error} - If the specified container is not found in the DOM or if there is an issue with loading the images.
+ *
+ * @example
+ * // Initialize masonry grid with a 20px gap
+ * initMasonry('#gallery', { gap: 20 }).then((imageItems) => {
+ *   console.log('Masonry initialized and images positioned:', imageItems);
+ * });
+ */
+export async function initMasonry(containerSelector, params = {}) {
+    const options = {
+        gap: 0,
+    };
+    const auxOptions = {
+        ...options,
+        ...params,
+    };
+
+    try {
+        const container = document.querySelector(containerSelector);
+        if (!container) {
+            throw new Error(`at initMasonry: no such selector ${containerSelector} found in DOM`);
+        }
+
+        const imagesArr = await getImagesLoaded(container);
+        const imageItems = [];
+
+        /**
+         * all image items are equal in width by css rule...
+         * if the image items has no equal width in the css rules, or the image items have different widths,
+         * then all the items will have the width of the first element to achieve the columns with the same width
+         * Recommended to use one .selector for all image items with the same width and styles...
+         * if the width of the image item is in percentage, then it is recommended to add min-width to the styles
+         * or to use different widths for different media...
+         */
+        const imgItem = imagesArr[0].elem;
+        const itemWidth = imgItem.offsetWidth;
+        const containerWidth = container.clientWidth; //excluding border width and scroll-bar width
+
+        const { gap } = auxOptions;
+        const { columns, freeWidth } = getColumnsNumber(containerWidth, itemWidth, gap);
+        const leftOffset = freeWidth / 2;
+
+        container.style.position = "relative";
+        container.style.overflowX = "hidden";
+
+        const posLeftArr = new Array(columns).fill(0);
+        const posTopArr = new Array(columns).fill(0);
+
+        for (let i = 0, n = 0; i < imagesArr.length; i++) {
+            const item = imagesArr[i].elem;
+            imageItems.push(item);
+            const itemHeight = imagesArr[i].size.offsetHeight;
+
+            if (n === 0) {
+                posLeftArr[n] = leftOffset;
+            }
+
+            item.style.position = "absolute";
+            item.style.top = `${Math.round(posTopArr[n])}px`;
+            item.style.left = `${Math.round(posLeftArr[n])}px`;
+
+            posTopArr[n] += itemHeight;
+
+            //if the image item is not in the last row...
+            if (i < (imagesArr.length - posLeftArr.length)) {
+                posTopArr[n] += gap;
+            }
+
+            //if the image item is not the last in the row
+            if (n < (posLeftArr.length - 1)) {
+                posLeftArr[n + 1] = posLeftArr[n] + itemWidth + gap;
+                n++;
+            } else {
+                //starting new row...
+                n = 0;
+            }
+        }
+
+        function getColumnsNumber(containerWidth, itemWidth, gap) {
+            const itemGapWidth = itemWidth + gap;
+            const maxColumns = Math.floor(containerWidth / itemGapWidth); // максимально возможное количество колонок
+            const usedWidth = maxColumns * itemGapWidth;
+            const remainingSpace = containerWidth - usedWidth;
+
+            // Если оставшееся пространство больше или равно ширине элемента, добавляем еще одну колонку
+            const columns = remainingSpace >= itemWidth ? maxColumns + 1 : maxColumns;
+
+            // Перерасчет оставшегося свободного пространства после размещения всех колонок
+            const freeWidth = containerWidth - (columns * itemWidth + (columns - 1) * gap);
+
+            return { columns, freeWidth };
+        }
+
+        return imageItems;
+    }
+    catch (error) {
+        console.error("at initMasonry: ", error.message);
+    }
+}
