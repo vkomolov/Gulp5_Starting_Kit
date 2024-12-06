@@ -1,6 +1,7 @@
 'use strict';
 
-import { gsap } from "gsap";
+//import { gsap } from "gsap";
+//import imagesLoaded from 'imagesloaded';
 
 /**
  * It checks whether the given style rule is supported for the given HTML Element
@@ -40,6 +41,11 @@ export function migrateElement({ target, parentFrom, parentTo }) {
  * @return {gsap.core.Timeline | null}
  */
 export function fountainBalls(targetElem, params = {}) {
+    if (typeof gsap === "undefined") {
+        console.error("GSAP is not installed... use npm i gsap...");
+        return null;
+    }
+
     if (!document.body.contains(targetElem)) {
         console.error(`the given targetElem ${targetElem} is not in DOM...`);
         return null;
@@ -350,5 +356,87 @@ export function setAttributes(elements = [], targetAttr = {}) {
         Object.entries(targetAttr).forEach(([attr, value]) => {
             element.setAttribute(attr, (value !== null && value !== undefined) ? value.toString() : "");
         });
+    });
+}
+
+/**
+ * @function getImagesLoaded    (!!! must be installed with npm install imagesloaded)
+ * @description Processes all images within a given container, ensuring they are fully loaded and retrieves their dimensions.
+ * Removes broken images along with their parent elements from the DOM.
+ *
+ * @param {HTMLElement} container - The container element holding image elements or their parent blocks.
+ * @param {Object} [options={}] - Additional options for controlling how background images are detected on load.
+ * @param {boolean|string} [options.background] -
+ *   - If set to `true`, the function will also watch for the load of background images (as defined by CSS `background-image`).
+ *   - If set to a string, it specifies a CSS selector to watch for background images within elements that match this selector.
+ *
+ *   Examples:
+ *   - `{ background: true }` - Will detect background images for all elements.
+ *   - `{ background: '.item' }` - Will detect background images for elements matching the `.item` selector.
+ */
+export function getImagesLoaded(container, options = {}) {
+    return new Promise((resolve, reject) => {
+        try {
+            // Check if imagesLoaded library is available
+            if (typeof imagesLoaded === "undefined") {
+                reject(new Error("imagesLoaded library is not loaded. Please ensure it is included before using getImagesLoaded."));
+                return;
+            }
+            if (!container || !document.contains(container)) {
+                reject(new Error("The given container is not found in the DOM."));
+                return;
+            }
+
+            imagesLoaded(container, options, instance => {
+                const brokenImages = [];
+                const loadedImagesPromises = [];
+
+                //making the static array with references to DOM elements
+                const imgArr = Array.from(container.children);
+
+                const getSize = img => ({
+                    naturalWidth: img.naturalWidth,
+                    naturalHeight: img.naturalHeight,
+                    offsetWidth: img.offsetWidth,
+                    offsetHeight: img.offsetHeight,
+                });
+
+                const ensureSize = img => new Promise(res => {
+                    if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+                        res(getSize(img));
+                    } else {
+                        img.onload = () => res(getSize(img));
+                    }
+                });
+
+                instance.images.forEach((item, index) => {
+                    if (!item.isLoaded) {
+                        brokenImages.push({
+                            src: item.img.src,
+                            elem: imgArr[index],  //adding the block with the broken image
+                        });
+                    }
+                    else {
+                        const sizePromise = ensureSize(item.img).then(size => ({
+                            elem: imgArr[index],
+                            size,
+                        }));
+                        loadedImagesPromises.push(sizePromise);
+                    }
+                });
+
+                // Displaying a warning and removing the elements with the broken images...
+                if (brokenImages.length > 0) {
+                    brokenImages.forEach(({ src, elem }) => {
+                        console.warn("The following URL of the image is not found at getImagesLoaded: ", src);
+                        if (elem) elem.remove();
+                    });
+                }
+
+                resolve(Promise.all(loadedImagesPromises));
+            });
+        } catch (e) {
+            reject(new Error("Error in getImagesLoaded: " + e.message));
+        }
     });
 }
