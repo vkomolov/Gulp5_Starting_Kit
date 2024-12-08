@@ -449,7 +449,7 @@ export function getImagesLoaded(container, options = {}) {
  * If a free space in a row exists then it places the columns in the center position...
  *
  * @async
- * @function initMasonry
+ * @function createMasonry
  * @param {string} containerSelector - The CSS selector of the container element where the masonry grid will be applied.
  * @param {Object} [params={}] - Optional configuration parameters for masonry initialization.
  * @param {number} [params.gap=0] - The gap (in pixels) between the items in the masonry grid. Defaults to 0.
@@ -460,11 +460,11 @@ export function getImagesLoaded(container, options = {}) {
  *
  * @example
  * // Initialize masonry grid with a 20px gap
- * initMasonry('#gallery', { gap: 20 }).then((imageItems) => {
+ * createMasonry('#gallery', { gap: 20 }).then((imageItems) => {
  *   console.log('Masonry initialized and images positioned:', imageItems);
  * });
  */
-export async function initMasonry(containerSelector, params = {}) {
+export async function createMasonry(containerSelector, params = {}) {
     const options = {
         gap: 0,
     };
@@ -482,17 +482,9 @@ export async function initMasonry(containerSelector, params = {}) {
         const imagesArr = await getImagesLoaded(container);
         const imageItems = [];
 
-        /**
-         * all image items are equal in width by css rule...
-         * if the image items has no equal width in the css rules, or the image items have different widths,
-         * then all the items will have the width of the first element to achieve the columns with the same width
-         * Recommended to use one .selector for all image items with the same width and styles...
-         * if the width of the image item is in percentage, then it is recommended to add min-width to the styles
-         * or to use different widths for different media...
-         */
         const imgItem = imagesArr[0].elem;
         const itemWidth = imgItem.offsetWidth;
-        const containerWidth = container.clientWidth; //excluding border width and scroll-bar width
+        const containerWidth = container.clientWidth;
 
         const { gap } = auxOptions;
         const { columns, freeWidth } = getColumnsNumber(containerWidth, itemWidth, gap);
@@ -501,57 +493,46 @@ export async function initMasonry(containerSelector, params = {}) {
         container.style.position = "relative";
         container.style.overflowX = "hidden";
 
-        const posLeftArr = new Array(columns).fill(0);
+        // Initializing arrays for calculating positions
+        const posLeftArr = Array.from({ length: columns }, (_, i) => leftOffset + i * (itemWidth + gap));
         const posTopArr = new Array(columns).fill(0);
 
-        for (let i = 0, n = 0; i < imagesArr.length; i++) {
+        // Arranging the elements
+        for (let i = 0; i < imagesArr.length; i++) {
             const item = imagesArr[i].elem;
             imageItems.push(item);
             const itemHeight = imagesArr[i].size.offsetHeight;
 
-            if (n === 0) {
-                posLeftArr[n] = leftOffset;
+            // Finding the index of the column with the minimum height
+            const minColumnIndex = posTopArr.indexOf(Math.min(...posTopArr));
+            // Making sure that minColumnIndex is always a number
+            if (minColumnIndex === -1) {
+                throw new Error("Invalid column index: no minimum found in posTopArr");
             }
 
+            // Setting the position of the element
             item.style.position = "absolute";
-            item.style.top = `${Math.round(posTopArr[n])}px`;
-            item.style.left = `${Math.round(posLeftArr[n])}px`;
+            item.style.top = `${Math.round(posTopArr[minColumnIndex])}px`;
+            item.style.left = `${Math.round(posLeftArr[minColumnIndex])}px`;
 
-            posTopArr[n] += itemHeight;
-
-            //if the image item is not in the last row...
-            if (i < (imagesArr.length - posLeftArr.length)) {
-                posTopArr[n] += gap;
-            }
-
-            //if the image item is not the last in the row
-            if (n < (posLeftArr.length - 1)) {
-                posLeftArr[n + 1] = posLeftArr[n] + itemWidth + gap;
-                n++;
-            } else {
-                //starting new row...
-                n = 0;
-            }
+            // Updating the column height
+            posTopArr[minColumnIndex] += itemHeight + gap;
         }
 
         function getColumnsNumber(containerWidth, itemWidth, gap) {
             const itemGapWidth = itemWidth + gap;
-            const maxColumns = Math.floor(containerWidth / itemGapWidth); // максимально возможное количество колонок
+            const maxColumns = Math.floor(containerWidth / itemGapWidth);
             const usedWidth = maxColumns * itemGapWidth;
             const remainingSpace = containerWidth - usedWidth;
 
-            // Если оставшееся пространство больше или равно ширине элемента, добавляем еще одну колонку
             const columns = remainingSpace >= itemWidth ? maxColumns + 1 : maxColumns;
-
-            // Перерасчет оставшегося свободного пространства после размещения всех колонок
             const freeWidth = containerWidth - (columns * itemWidth + (columns - 1) * gap);
 
             return { columns, freeWidth };
         }
 
         return imageItems;
-    }
-    catch (error) {
+    } catch (error) {
         console.error("at initMasonry: ", error.message);
     }
 }
