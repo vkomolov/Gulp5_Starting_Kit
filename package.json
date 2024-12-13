@@ -5,10 +5,11 @@
   "description": "gulp version 5 Node 22.2.0 starting kit",
   "main": "gulpfile.js",
   "scripts": {
-    "dev": "gulp runDev",
-    "build": "gulp runBuild",
-    "pipesDev": "gulp pipesDev",
-    "pipesBuild": "gulp pipesBuild",
+    "node:check": "cross-env node nodeCheck.js",
+    "dev": "npm run node:check && gulp runDev",
+    "build": "npm run node:check && gulp runBuild",
+    "pipesDev": "npm run node:check && gulp pipesDev",
+    "pipesBuild": "npm run node:check && gulp pipesBuild",
     "clean": "gulp distClean"
   },
   "author": "vkomolov.ua@gmail.com",
@@ -26,6 +27,7 @@
     "autoprefixer": "^10.4.19",
     "babel-loader": "^9.1.3",
     "browser-sync": "^3.0.2",
+    "cross-env": "^7.0.3",
     "css-loader": "^7.1.2",
     "cssnano": "^7.0.2",
     "gulp": "^5.0.0",
