@@ -536,3 +536,23 @@ export async function createMasonry(containerSelector, params = {}) {
         console.error("at initMasonry: ", error.message);
     }
 }
+
+/**
+ * Replaces the file path of the given URL with a new base path.
+ *
+ * @param {string} url - The original URL (either `src` or `srcset`) with the file.
+ * @param {string} newBase - The new base URL to prepend.
+ * @returns {string} The updated URL with the new base path to the given file.
+ */
+export function replaceFilePath(url, newBase) {
+    const match = url.match(/([^/]+\.\w+(\s\d+x)?)$/); // Find the file name with extension and parameters (if any)
+
+    if (match) {
+        const fileNameWithExt = match[0]; // File name with extension (and possible parameters)
+        const cleanBase = newBase.replace(/^\/+|\/+$/g, ''); // Removing leading and trailing slashes
+
+        return `${cleanBase}/${fileNameWithExt}`;
+    }
+
+    return url; // If no match is found, return the original URL
+}
