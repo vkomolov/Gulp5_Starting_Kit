@@ -8,6 +8,7 @@ import cssnano from "cssnano";
 import normalizeWhitespace from "postcss-normalize-whitespace";
 import { getFilesEntries } from "./utilFuncs.js";
 import { pathData } from "./paths.js";
+import path from "path";
 
 /////////////// END OF IMPORTS /////////////////////////
 export const modes = {
@@ -109,7 +110,7 @@ export const webpackConfigJs = {
         mode: "development",
         devtool: 'source-map',
         entry: {
-            ...getFilesEntries(`${pathData.srcPath}/js/`, ".js"),
+            ...getFilesEntries(path.resolve(pathData.srcPath, "js"), "js"),
         },
         output: {
             filename: "[name].bundle.js",
@@ -151,7 +152,7 @@ export const webpackConfigJs = {
     build: {
         mode: "production",
         entry: {
-            ...getFilesEntries(`${pathData.srcPath}/js/`, ".js"),
+            ...getFilesEntries(path.resolve(pathData.srcPath, "js"), "js"),
         },
         output: {
             filename: "[name].bundle.js",
