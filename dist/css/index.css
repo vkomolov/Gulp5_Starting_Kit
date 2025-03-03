@@ -1,0 +1,1563 @@
+.modal{
+  background-color:rgba(0,0,0,.9);
+  font-size:1.2rem;
+  height:100vh;
+  left:50%;
+  padding:2.5em 5vw;
+  position:fixed;
+  transform:translateX(-50%);
+  width:min(100vw, 1440px);
+  z-index:200;
+}
+
+.modal,.modal__bar{
+  align-items:center;
+  display:flex;
+  justify-content:center;
+  top:0;
+}
+
+.modal__bar{
+  left:0;
+  padding:.8em;
+  position:absolute;
+  width:100%;
+  z-index:210;
+}
+.modal__bar.modal__bar--arrow{
+  gap:2em;
+  justify-content:space-between;
+  top:50%;
+  transform:translateY(-50%);
+}
+.modal__bar .modal-score{
+  color:hsla(0,0%,100%,.8);
+  font-size:1em;
+  line-height:1;
+}
+
+.media-container{
+  box-sizing:border-box;
+  height:100%;
+  max-width:100%;
+}
+.media-container .picture-item{
+  opacity:0;
+  transition:opacity 1s ease;
+}
+.media-container img,.media-container picture{
+  height:100%;
+  -o-object-fit:contain;
+     object-fit:contain;
+  width:auto;
+}
+
+.thumb-arrow{
+  align-items:center;
+  background-color:rgba(255,133,2,.5);
+  border-radius:50%;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  font-size:1em;
+  height:max(1.5em, 28px);
+  justify-content:center;
+  line-height:1;
+  transition:background-color .25s ease,color .25s ease,transform .2s ease-in-out;
+  width:max(1.5em, 28px);
+}
+.thumb-arrow:hover{
+  background-color:#ff8502;
+  color:#282017;
+  transform:scale(1.05);
+}
+.thumb-arrow:active{
+  transform:scale(1.2);
+}
+.thumb-arrow.close{
+  height:max(1.5em, 28px);
+  position:absolute;
+  right:1%;
+  top:20%;
+  width:max(1.5em, 28px);
+}
+
+.header-layer{
+  background:linear-gradient(90deg, #282017 25%, rgba(65,57,48,0) 80%);
+  width:100%;
+}
+
+.header{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  font-size:1em;
+  gap:.5em 1em;
+  justify-content:center;
+  padding-bottom:.625em;
+  padding-top:.625em;
+  position:relative;
+}
+
+.header__logo-heading{
+  color:hsla(0,0%,86%,.5);
+  font-size:1.5em;
+}
+
+.header__contacts-wrapper{
+  flex-grow:1;
+  gap:.5em;
+  justify-content:flex-end;
+  position:relative;
+  z-index:55;
+}
+
+.header__contacts-block,.header__contacts-wrapper{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+}
+
+.header__contacts-block{
+  gap:.5em 1em;
+  justify-content:center;
+}
+
+.icon-link{
+  align-items:center;
+  display:flex;
+  flex-flow:row nowrap;
+  gap:.3em;
+  justify-content:center;
+  text-decoration:none;
+  transform-origin:100% 50%;
+  transition:transform .15s ease-in-out,text-shadow .15s ease-in-out;
+}
+.icon-link:hover{
+  text-shadow:0 0 .5em #fff;
+  transform:translateX(-.3em);
+}
+.icon-link__phone-icon{
+  width:1.2em;
+  fill:#ff8502;
+}
+.icon-link__social-icon{
+  width:1.375em;
+}
+.icon-link__text{
+  font-family:Jost,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1;
+}
+.icon-link__text.icon-link__text--phone{
+  color:#ff8502;
+  font-size:1.375em;
+  font-weight:700;
+}
+.icon-link__text.icon-link__text--social-icon{
+  color:#fff;
+  font-size:1em;
+  font-weight:700;
+}
+
+.social-icons-wrapper{
+  align-items:center;
+  display:flex;
+  flex-flow:row nowrap;
+  gap:.6em;
+  justify-content:center;
+}
+
+.social-icons-wrapper__social-icon{
+  transition:transform .15s ease-in-out;
+  width:1.8em;
+}
+.social-icons-wrapper__social-icon:hover{
+  transform:scale(1.1);
+}
+
+#lang-switcher{
+  height:-moz-fit-content;
+  height:fit-content;
+  position:relative;
+  width:-moz-fit-content;
+  width:fit-content;
+}
+#lang-switcher:hover #lang-list{
+  transform:translateY(0);
+}
+#lang-switcher:hover .lang-switcher__lang-dropdown{
+  pointer-events:auto;
+  transition-delay:0s;
+  visibility:visible;
+}
+
+.lang-switcher__lang-dropdown{
+  left:0;
+  overflow:hidden;
+  pointer-events:none;
+  position:absolute;
+  top:100%;
+  transition:visibility 0s .5s;
+  visibility:hidden;
+}
+
+#lang-list{
+  align-items:center;
+  display:flex;
+  flex-flow:column wrap;
+  gap:.6em;
+  justify-content:flex-start;
+  padding:.6em 0;
+  transform:translateY(-100%);
+  transition:transform .3s ease-in-out;
+}
+
+.lang-switcher__lang-icon{
+  align-items:center;
+  background-color:#918578;
+  border-radius:50%;
+  color:#fff;
+  cursor:pointer;
+  display:flex;
+  flex-flow:row nowrap;
+  height:1.8em;
+  justify-content:center;
+  transition:transform .2s ease-in-out,background-color .2s ease;
+  width:1.8em;
+}
+.lang-switcher__lang-icon:not(.active):hover{
+  background-color:#cc5200;
+  transform:translateY(-3px);
+}
+.lang-switcher__lang-icon.active{
+  background-color:#ff8502;
+}
+.lang-switcher__lang-icon span{
+  font-weight:700;
+}
+
+.header__nav{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  justify-content:flex-end;
+  padding-top:.56em;
+  width:100%;
+}
+.header__nav.abs{
+  -webkit-backdrop-filter:blur(.2em);
+          backdrop-filter:blur(.2em);
+  background-color:hsla(0,0%,100%,.5);
+  display:block;
+  left:0;
+  padding:0;
+  position:fixed;
+  top:-110%;
+  width:100%;
+  z-index:40;
+}
+.header__nav.abs .header__nav-list-wrapper{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  justify-content:flex-end;
+  margin:0 auto;
+  max-width:1280px;
+  padding:3em 2.2em .5em;
+  width:100%;
+}
+
+.header__nav-list{
+  font-family:Ubuntu,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  font-weight:700;
+  gap:.5em .75em;
+  justify-content:center;
+}
+
+.nav-link{
+  color:#ff8502;
+  cursor:default;
+  text-decoration:none;
+  text-shadow:.05em .05em .05em rgba(0,0,0,.8);
+  transition:transform .15s ease-in-out;
+}
+.nav-link:not(.active):hover{
+  color:#cc5200;
+  cursor:pointer;
+  text-shadow:.07em .07em .07em rgba(0,0,0,.8);
+  transform:translateY(-.1em);
+}
+.nav-link.active{
+  color:#8a3700;
+}
+
+.burger_nav{
+  background-color:#fff;
+  border:2px solid #ff8502;
+  border-radius:50%;
+  cursor:pointer;
+  height:1.8em;
+  position:relative;
+  transition:background-color .2s ease-in-out;
+  width:1.8em;
+}
+.burger_nav:hover{
+  background-color:#ff8502;
+}
+.burger_nav:hover span,.burger_nav:hover span:after,.burger_nav:hover span:before{
+  background-color:#fff;
+}
+.burger_nav:hover span:before{
+  top:-7px;
+}
+.burger_nav:hover span:after{
+  top:7px;
+}
+.burger_nav.hidden{
+  display:none;
+}
+.burger_nav.opened{
+  background-color:#fff;
+  border-color:#d30303;
+}
+.burger_nav.opened span{
+  background-color:transparent;
+}
+.burger_nav.opened span:after,.burger_nav.opened span:before{
+  background-color:#d30303;
+}
+.burger_nav.opened span:before{
+  top:0;
+  transform:rotate(45deg);
+}
+.burger_nav.opened span:after{
+  top:0;
+  transform:rotate(-45deg);
+}
+.burger_nav span,.burger_nav span:after,.burger_nav span:before{
+  background-color:#ff8502;
+  display:inline-block;
+  height:.19em;
+  position:absolute;
+  transition:background-color,top,transform .2s ease-in-out;
+  width:1.1em;
+}
+.burger_nav span{
+  left:50%;
+  top:50%;
+  transform:translate(-48%, -50%);
+}
+.burger_nav span:after,.burger_nav span:before{
+  content:"";
+  left:0;
+}
+.burger_nav span:before{
+  top:-5px;
+}
+.burger_nav span:after{
+  top:5px;
+}
+
+#scrolledNav{
+  -webkit-backdrop-filter:blur(.2em);
+          backdrop-filter:blur(.2em);
+  background-color:hsla(0,0%,100%,.2);
+  left:0;
+  position:fixed;
+  top:-100px;
+  width:100%;
+  z-index:50;
+}
+
+.scrolledNav__contacts-block{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  gap:.4em 1em;
+  justify-content:flex-end;
+  margin:0 auto;
+  max-width:1280px;
+  padding:.4em 2em;
+  width:100%;
+}
+html{
+  font-size:100%;
+  -webkit-text-size-adjust:100%;
+  -ms-text-size-adjust:100%;
+  line-height:1;
+  scroll-behavior:smooth;
+}
+a,abbr,acronym,address,applet,article,aside,audio,b,big,blockquote,body,canvas,caption,center,cite,code,dd,del,details,dfn,div,dl,dt,em,embed,fieldset,figcaption,figure,footer,form,h1,h2,h3,h4,h5,h6,header,hgroup,hr,html,i,iframe,img,ins,kbd,label,legend,li,mark,menu,nav,object,ol,output,p,picture,pre,q,ruby,s,samp,section,small,span,strike,strong,sub,summary,sup,svg,table,tbody,td,tfoot,th,thead,time,tr,tt,u,ul,var,video{
+  border:0;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  vertical-align:baseline;
+}
+
+article,aside,audio,canvas,details,embed,figcaption,figure,footer,header,hgroup,iframe,img,menu,nav,object,picture,section,svg,video{
+  display:block;
+}
+canvas,img,object,video{
+  image-rendering:auto;
+}
+
+:after,:before{
+  box-sizing:inherit;
+}
+a{
+  display:inline-block;
+}
+
+a:focus{
+  outline:thin dotted;
+}
+
+a:active,a:hover{
+  outline:0;
+}
+
+button,input,select,textarea{
+  -webkit-appearance:button;
+  background-color:transparent;
+  border:none;
+  box-shadow:none;
+  cursor:pointer;
+  display:inline-block;
+  font-size:100%;
+  line-height:normal;
+  margin:0;
+  outline:none;
+  padding:0;
+  resize:none;
+  text-transform:none;
+  vertical-align:baseline;
+}
+button:active,button:focus{
+  outline:none;
+}
+
+button::-moz-focus-inner{
+  border:none;
+  padding:0;
+}
+input[type=search]{
+  -webkit-appearance:textfield;
+  -moz-appearance:none;
+  box-sizing:content-box;
+}
+
+input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-decoration,input[type=search]::-webkit-search-results-button,input[type=search]::-webkit-search-results-decoration{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+}
+input[type=checkbox],input[type=radio]{
+  box-sizing:border-box;
+  height:13px;
+  padding:0;
+  width:13px;
+}
+table{
+  border-collapse:collapse;
+  border-spacing:0;
+}
+
+fieldset{
+  margin:0;
+}
+
+fieldset,legend{
+  border:0;
+  padding:0;
+}
+
+legend{
+  display:block;
+  white-space:normal;
+}
+
+label{
+  cursor:pointer;
+}
+blockquote,q{
+  quotes:none;
+}
+
+blockquote:after,blockquote:before,q:after,q:before{
+  content:"";
+}
+ul{
+  list-style:none;
+}
+::-moz-selection{
+  background:#b3d4fc;
+  text-shadow:none;
+}
+
+::selection{
+  background:#b3d4fc;
+  text-shadow:none;
+}
+[hidden]{
+  display:none;
+}
+:root{
+  --range_120-64_max-1280px:calc((min(max(100vw, 641px), 1280px) - 641px)*56/639 + 64px);
+  --range_80-64_max-1280px:calc((min(max(100vw, 641px), 1280px) - 641px)*16/639 + 64px);
+  --range_80-32_max-1280px:calc((min(max(100vw, 641px), 1280px) - 641px)*48/639 + 32px);
+  --range_48-32_max-1280px:calc((min(max(100vw, 641px), 1280px) - 641px)*16/639 + 32px);
+  --range_32-23_max-640px:calc((min(max(100vw, 320px), 640px) - 320px)*9/320 + 23px);
+  --range_24-18_max-1280px:calc((min(max(100vw, 641px), 1280px) - 641px)*6/639 + 18px);
+  --range_18-16_max-1280px:calc((min(max(100vw, 641px), 1280px) - 641px)*2/639 + 16px);
+}
+body{
+  font-family:Open Sans,sans-serif;
+  font-weight:400;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  background-color:#dcdcdc;
+  line-height:1.4;
+}
+body:before{
+  box-shadow:0 0 10px rgba(0,0,0,.8);
+  content:"";
+  height:10px;
+  left:0;
+  position:fixed;
+  top:-10px;
+  width:100%;
+  z-index:100;
+}
+h1,h2,h3,h4,h5{
+  font-family:Ubuntu,sans-serif;
+  font-weight:700;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-wrap:break-word;
+}
+
+h1{
+  line-height:1.25;
+}
+
+h2,h3,h4,h5{
+  line-height:1.2;
+}
+
+img,object,picture,svg,video{
+  max-width:100%;
+  width:100%;
+}
+
+.section{
+  padding-bottom:120px;
+  padding-top:80px;
+}
+
+.header,.section__content-layer{
+  margin:0 auto;
+  max-width:1280px;
+  padding-left:80px;
+  padding-right:80px;
+}
+
+@font-face{
+  font-family:Open Sans;
+  font-style:normal;
+  font-weight:400;
+  src:url(/assets/fonts/OpenSans/OpenSans-Regular.woff2) format("woff2"), url(/assets/fonts/OpenSans/OpenSans-Regular.woff) format("woff"), url(/assets/fonts/OpenSans/OpenSans-Regular.ttf) format("truetype");
+}
+@font-face{
+  font-family:Open Sans;
+  font-style:normal;
+  font-weight:600;
+  src:url(/assets/fonts/OpenSans/OpenSans-SemiBold.woff2) format("woff2"), url(/assets/fonts/OpenSans/OpenSans-SemiBold.woff) format("woff"), url(/assets/fonts/OpenSans/OpenSans-SemiBold.ttf) format("truetype");
+}
+@font-face{
+  font-family:Ubuntu;
+  font-style:normal;
+  font-weight:700;
+  src:url(/assets/fonts/Ubuntu/Ubuntu-Bold.woff2) format("woff2"), url(/assets/fonts/Ubuntu/Ubuntu-Bold.woff) format("woff"), url(/assets/fonts/Ubuntu/Ubuntu-Bold.ttf) format("truetype");
+}
+@font-face{
+  font-family:Jost;
+  font-style:normal;
+  font-weight:400;
+  src:url(/assets/fonts/Jost/Jost-Regular.woff2) format("woff2"), url(/assets/fonts/Jost/Jost-Regular.woff) format("woff"), url(/assets/fonts/Jost/Jost-Regular.ttf) format("truetype");
+}
+@font-face{
+  font-family:Jost;
+  font-style:normal;
+  font-weight:700;
+  src:url(/assets/fonts/Jost/Jost-Bold.woff2) format("woff2"), url(/assets/fonts/Jost/Jost-Bold.woff) format("woff"), url(/assets/fonts/Jost/Jost-Bold.ttf) format("truetype");
+}
+.section--footer{
+  background-attachment:fixed;
+  background-position:80%;
+  background-repeat:no-repeat;
+  background-size:cover;
+  padding-top:10em;
+}
+
+.section__content-block--footer{
+  color:#fff;
+}
+
+.footer__logo-heading{
+  color:hsla(0,0%,86%,.8);
+  font-size:1.8em;
+}
+
+.footer__contacts-block{
+  align-items:flex-start;
+  display:flex;
+  flex-flow:column wrap;
+  gap:1em;
+  justify-content:center;
+  max-width:17em;
+}
+
+.footer__content-block{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  flex-grow:1;
+  gap:.5em;
+  justify-content:flex-end;
+}
+
+.footer__content-block-item{
+  align-items:flex-start;
+  display:flex;
+  flex-flow:column wrap;
+  gap:.5em;
+  justify-content:center;
+}
+
+.footer__nav-heading{
+  font-size:1.1em;
+  letter-spacing:.05em;
+  padding-bottom:.4em;
+  padding-top:.55em;
+}
+
+.footer__logo-text{
+  font-size:.8em;
+  font-weight:600;
+}
+
+.footer__nav-list{
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-size:.75em;
+  font-weight:600;
+}
+.footer__nav-list li+li{
+  margin-top:.3em;
+}
+
+.nav-link--footer{
+  text-transform:uppercase;
+}
+
+.icon-link--footer{
+  font-size:.8em;
+}
+.total-wrapper{
+  background-color:#fff;
+  box-sizing:border-box;
+  color:#655c52;
+  font-size:1.125rem;
+  margin:0 auto;
+  max-width:1440px;
+  position:relative;
+}
+
+.section{
+  font-size:1em;
+  overflow:hidden;
+  width:100%;
+}
+
+.button-request{
+  font-family:Open Sans,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  background-color:#ff8502;
+  border:none;
+  border-radius:.5em;
+  box-shadow:.1em .15em .2em rgba(0,0,0,.8);
+  color:#fff;
+  font-size:1.25rem;
+  font-weight:600;
+  margin-top:40px;
+  padding:1em 1.6em;
+  transition:.15s ease-in-out;
+  width:275px;
+}
+.button-request:hover{
+  background-color:#cc5200;
+  box-shadow:.12em .25em .3em rgba(0,0,0,.8);
+  transform:translateY(-.18em);
+}
+.button-request:active{
+  background-color:#8a3700;
+  box-shadow:.06em .125em .125em rgba(0,0,0,.8);
+  transform:translateY(0);
+}
+
+.bg-darker{
+  background-color:#f1f1f1;
+}
+
+.foxy-on-hover{
+  transition:background-color .15s ease;
+}
+.foxy-on-hover:hover{
+  background-color:#ff8502 !important;
+}
+
+.section__content-layer{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  width:100%;
+}
+
+.section__heading-block{
+  text-transform:uppercase;
+}
+.section__heading-block .accent{
+  font-size:1.611em;
+  line-height:1;
+}
+.section__heading-block .accent,.section__heading-block .rest-of-heading{
+  display:inline-block;
+  opacity:0;
+}
+.section__heading-block .sub-p{
+  font-size:.4em;
+  margin-top:1.5em;
+  text-transform:none;
+}
+.section__heading-block h1,.section__heading-block h2{
+  font-size:inherit;
+}
+.section__heading-block hr{
+  background:linear-gradient(90deg, #ff8502 0, rgba(65,57,48,0) 90%);
+  height:7px;
+  width:100%;
+}
+
+.section__content-block{
+  display:flex;
+  width:100%;
+}
+
+.section__content-block--row-center{
+  align-items:flex-start;
+  flex-direction:row;
+  justify-content:center;
+}
+
+.section__content-block--row-left{
+  align-items:flex-start;
+  flex-direction:row;
+  justify-content:flex-start;
+}
+
+.section__content-block--row-right{
+  align-items:flex-start;
+  flex-direction:row;
+  justify-content:flex-end;
+}
+
+.section__content-block--row-between{
+  align-items:flex-start;
+  flex-direction:row;
+  justify-content:space-between;
+}
+
+.flex-container{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  justify-content:center;
+}
+
+.flex-gap-02-01{
+  gap:2em 1em;
+}
+
+.flex-gap-02-02{
+  gap:2em;
+}
+
+.section__text-block p+p{
+  margin-top:.5em;
+  overflow-wrap:break-word;
+}
+
+.section__text-separ{
+  font-weight:600;
+  margin-top:.5em;
+}
+.section__text-separ:first-of-type{
+  margin-bottom:.89em;
+  margin-top:0;
+}
+.section__text-separ.section__text-separ--subheading{
+  margin-top:.89em;
+}
+.section__text-separ.section__text-separ--subheading:first-of-type{
+  margin-top:0;
+}
+
+.section__text-list{
+  list-style:inside;
+  margin-bottom:.5em;
+}
+
+.section__bidding-block{
+  align-items:flex-start;
+  display:flex;
+  flex-flow:column wrap;
+  justify-content:center;
+}
+
+.section__heading-block--separation{
+  font-size:48px;
+  margin-bottom:.77em;
+  max-width:15em;
+}
+.section__heading-block--separation h2{
+  margin-bottom:.33em;
+}
+
+.content-block-item{
+  align-items:center;
+  display:flex;
+  flex-flow:column wrap;
+  font-size:1em;
+  justify-content:flex-start;
+  padding:1em 1.25em 0;
+  width:100%;
+}
+
+.content-block-item__img-wrapper{
+  margin-bottom:3em;
+  width:100%;
+}
+
+.content-block-item__heading{
+  font-size:1em;
+  margin-bottom:2em;
+  text-align:center;
+  word-wrap:break-word;
+}
+
+.content-block-item__text-block{
+  font-size:16px;
+}
+
+[data-anime=fade-in-left],[data-anime=fade-in-right],[data-anime=fade-in-up]{
+  opacity:0;
+}
+
+[data-anime=scale-in]{
+  opacity:0;
+  transform-origin:50% 100%;
+}
+
+.section--hero{
+  background-size:cover;
+  font-size:1.8em;
+}
+.section--hero[aria-labelledby=index]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.7) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/hero_professional_1440.webp") 1x, url("/assets/img/heroSection/hero_professional_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.7) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/hero_professional_1440.webp") 1x, url("/assets/img/heroSection/hero_professional_1440.jpg") 1x);
+}
+.section--hero[aria-labelledby=gates]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/gates-automatic_1440.webp") 1x, url("/assets/img/heroSection/gates-automatic_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/gates-automatic_1440.webp") 1x, url("/assets/img/heroSection/gates-automatic_1440.jpg") 1x);
+}
+.section--hero[aria-labelledby=rollers]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/security_shutters_roll-up_1440.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/security_shutters_roll-up_1440.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1440.jpg") 1x);
+}
+.section--hero[aria-labelledby=automation]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/garage_gate_automation_1440.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/garage_gate_automation_1440.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1440.jpg") 1x);
+}
+.section--hero[aria-labelledby=barriers]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/barrier_automatic_1440.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/barrier_automatic_1440.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1440.jpg") 1x);
+}
+.section--hero[aria-labelledby=awnings]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/awnings_automatic_1440.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/awnings_automatic_1440.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1440.jpg") 1x);
+}
+.section--hero[aria-labelledby=windows]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/window_settings_1440.webp") 1x, url("/assets/img/heroSection/window_settings_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/window_settings_1440.webp") 1x, url("/assets/img/heroSection/window_settings_1440.jpg") 1x);
+}
+.section--hero[aria-labelledby=security]{
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/surveillance_1440.webp") 1x, url("/assets/img/heroSection/surveillance_1440.jpg") 1x);
+  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/surveillance_1440.webp") 1x, url("/assets/img/heroSection/surveillance_1440.jpg") 1x);
+}
+
+.section__content-layer--hero{
+  color:#fff;
+}
+
+.section__heading-block--hero{
+  margin-bottom:1em;
+  max-width:18.6em;
+  text-shadow:.05em .1em .1em rgba(0,0,0,.8);
+}
+
+.section__text-block--hero{
+  font-size:24px;
+  max-width:20em;
+  opacity:0;
+}
+
+.section__img-wrapper--hero{
+  transform:scale(0);
+  width:6.5em;
+}
+
+.section__bidding-block--hero{
+  font-size:24px;
+  opacity:0;
+}
+.section__bidding-block--hero p{
+  max-width:14em;
+}
+
+.section__content-block--pair{
+  position:relative;
+  z-index:5;
+}
+.section__content-block--pair.margin-top{
+  margin-top:4.44em;
+}
+
+.section__img-wrapper--pair{
+  width:22.23em;
+}
+
+.section__text-block--pair{
+  max-width:30em;
+  position:relative;
+  width:100%;
+  z-index:10;
+}
+
+.section__benefits{
+  align-items:center;
+  display:flex;
+  flex-flow:column wrap;
+  gap:2em;
+  justify-content:center;
+  padding-top:5.5vw;
+}
+
+.section__img-wrapper--benefits{
+  margin-top:2em;
+  position:relative;
+  width:100%;
+}
+
+.content-block-item--benefits{
+  flex-basis:17.4em;
+  flex-grow:1;
+  flex-shrink:1;
+  max-width:20em;
+}
+
+.content-block-item__img-wrapper--benefits{
+  margin-bottom:1.125em;
+  width:4.72em;
+}
+
+.content-block-item__heading--benefits{
+  margin-bottom:.889em;
+  max-width:13em;
+}
+
+.section--services{
+  background-attachment:fixed;
+  background-position:70%;
+  background-size:cover;
+  color:#fff;
+  font-size:1em;
+}
+
+.section__text-block--services{
+  max-width:20em;
+}
+
+.section__bidding-block--services{
+  align-items:center;
+  margin-top:-10em;
+}
+.section__bidding-block--services p{
+  display:none;
+  font-size:1.4em;
+  font-weight:600;
+}
+
+.hexagon-comb-block{
+  font-size:.95em;
+  --cell-width:12.22em;
+  --cell-padding:0.2em;
+  --p:calc(var(--cell-width) + var(--cell-padding));
+  display:grid;
+  padding:var(--p);
+}
+
+.hexagon-comb-block__cell-title{
+  display:block;
+  font-family:Jost,sans-serif;
+  font-size:1em;
+  font-weight:700;
+  left:50%;
+  position:absolute;
+  top:50%;
+  transform:translate(-50%, -50%);
+  width:9em;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  color:#282017;
+  line-height:1.35;
+  text-align:center;
+  transition:opacity .2s ease-in-out;
+}
+
+.hexagon-comb-block__cell-link{
+  aspect-ratio:.87;
+  clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  grid-area:1/1;
+  position:relative;
+  transform:translate(var(--_x, 0), var(--_y, 0)) scale(var(--_s, 1));
+  transition:.15s ease-in-out;
+  width:var(--cell-width);
+}
+.hexagon-comb-block__cell-link:before{
+  background:hsla(0,0%,86%,.8);
+  content:"";
+  display:block;
+  height:100%;
+  left:0;
+  position:absolute;
+  top:0;
+  transition:top .2s ease-in-out;
+  width:100%;
+}
+.hexagon-comb-block__cell-link.active{
+  --_s:1.1;
+  cursor:default;
+  z-index:1;
+}
+.hexagon-comb-block__cell-link.active:before{
+  background-color:rgba(101,92,82,.7);
+}
+.hexagon-comb-block__cell-link.active .hexagon-comb-block__cell-title{
+  color:#fff;
+  font-weight:400;
+  opacity:1;
+}
+
+.hexagon-comb-block__cell-link:not(.active):hover{
+  --_s:1.1;
+  z-index:1;
+}
+.hexagon-comb-block__cell-link:not(.active):hover:before{
+  top:-100%;
+}
+.hexagon-comb-block__cell-link:not(.active):hover .hexagon-comb-block__cell-title{
+  opacity:0;
+}
+
+.hexagon-comb-block__cell-link:first-child{
+  --_x:calc(-50% - var(--cell-padding)*0.5);
+  --_y:-76.5%;
+}
+
+.hexagon-comb-block__cell-link:nth-child(2){
+  --_x:calc(50% + var(--cell-padding)*0.5);
+  --_y:-76.5%;
+}
+
+.hexagon-comb-block__cell-link:nth-child(3){
+  --_x:calc(-100% - var(--cell-padding));
+}
+
+.hexagon-comb-block__cell-link:nth-child(5){
+  --_x:calc(100% + var(--cell-padding));
+}
+
+.hexagon-comb-block__cell-link:nth-child(6){
+  --_x:calc(-50% - var(--cell-padding)*0.5);
+  --_y:76.5%;
+}
+
+.hexagon-comb-block__cell-link:nth-child(7){
+  --_x:calc(50% + var(--cell-padding)*0.5);
+  --_y:76.5%;
+}
+
+.section__text-block--single{
+  max-width:30em;
+  width:100%;
+}
+
+.section--roller-automation{
+  background-attachment:fixed;
+  background-position:0;
+  background-size:cover;
+  color:#fff;
+  font-size:1em;
+}
+
+.logo-wrapper{
+  align-items:center;
+  display:flex;
+  flex-flow:row wrap;
+  gap:1em;
+  justify-content:center;
+  width:100%;
+}
+.logo-wrapper__item{
+  width:clamp(5em, 12vw, 9em);
+}
+
+#gallery-work{
+  height:45em;
+  overflow-x:hidden;
+  overflow-y:auto;
+  scroll-behavior:smooth;
+  width:100%;
+}
+#gallery-work::-webkit-scrollbar{
+  width:.45em;
+}
+#gallery-work:hover::-webkit-scrollbar-thumb{
+  background-color:#ff8502;
+}
+#gallery-work:hover::-webkit-scrollbar-track{
+  background-color:rgba(255,133,2,.5);
+}
+
+.gallery__item{
+  border-radius:.5em;
+  box-shadow:.2em .2em .4em rgba(0,0,0,.8);
+  min-width:12.22em;
+  opacity:0;
+  overflow:hidden;
+  width:30%;
+  will-change:transform, opacity;
+}
+.gallery__item:hover{
+  cursor:pointer;
+}
+.gallery__item:hover img,.gallery__item:hover object,.gallery__item:hover picture,.gallery__item:hover svg,.gallery__item:hover video{
+  transform:scale(1.05);
+}
+.gallery__item img,.gallery__item object,.gallery__item picture,.gallery__item svg,.gallery__item video{
+  border-radius:.5em;
+  transition:transform .15s ease-in-out;
+}
+@media (min-width:1025px){
+  .section--footer{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), -webkit-image-set(url("/assets/img/footerSection/professional_1440.webp") 1x, url("/assets/img/footerSection/professional_1440.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), image-set(url("/assets/img/footerSection/professional_1440.webp") 1x, url("/assets/img/footerSection/professional_1440.jpg") 1x);
+  }}
+@media (min-width:1281px){
+  .section--services{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_1440.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1440.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_1440.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1440.jpg") 1x);
+  }
+  .section--roller-automation{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.jpg") 1x);
+  }}
+@media (max-width:1280px){
+  .section{
+    padding-bottom:var(--range_120-64_max-1280px);
+    padding-top:var(--range_80-64_max-1280px);
+  }
+  .header,.section__content-layer{
+    padding-left:var(--range_80-32_max-1280px);
+    padding-right:var(--range_80-32_max-1280px);
+  }
+  .section__heading-block--separation{
+    font-size:var(--range_48-32_max-1280px);
+  }
+  .section--hero{
+    font-size:calc(var(--range_24-18_max-1280px)*1.4);
+  }
+  .section__bidding-block--hero,.section__text-block--hero{
+    font-size:var(--range_24-18_max-1280px);
+  }
+  .section__img-wrapper--pair{
+    width:31.25vw;
+  }
+  .section--services{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_1280.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1280.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_1280.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1280.jpg") 1x);
+  }
+  .section--roller-automation{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.jpg") 1x);
+  }}
+@media (max-width:1024px){
+  .modal{
+    font-size:1rem;
+  }
+  .header-layer{
+    background:linear-gradient(90deg, #282017 35%, rgba(65,57,48,0) 75%);
+  }
+  .header,.header__nav.abs .header__nav-list{
+    font-size:.78em;
+  }
+  .section--footer{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), -webkit-image-set(url("/assets/img/footerSection/professional_1024.webp") 1x, url("/assets/img/footerSection/professional_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), image-set(url("/assets/img/footerSection/professional_1024.webp") 1x, url("/assets/img/footerSection/professional_1024.jpg") 1x);
+  }
+  .button-request{
+    font-size:1.185rem;
+    width:270px;
+  }
+  .section--hero[aria-labelledby=index]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/hero_professional_1024.webp") 1x, url("/assets/img/heroSection/hero_professional_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/hero_professional_1024.webp") 1x, url("/assets/img/heroSection/hero_professional_1024.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=gates]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/gates-automatic_1024.webp") 1x, url("/assets/img/heroSection/gates-automatic_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/gates-automatic_1024.webp") 1x, url("/assets/img/heroSection/gates-automatic_1024.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=rollers]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/security_shutters_roll-up_1024.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/security_shutters_roll-up_1024.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1024.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=automation]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/garage_gate_automation_1024.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/garage_gate_automation_1024.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1024.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=barriers]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/barrier_automatic_1024.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/barrier_automatic_1024.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1024.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=awnings]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/awnings_automatic_1024.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/awnings_automatic_1024.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1024.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=windows]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/window_settings_1024.webp") 1x, url("/assets/img/heroSection/window_settings_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/window_settings_1024.webp") 1x, url("/assets/img/heroSection/window_settings_1024.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=security]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/surveillance_1024.webp") 1x, url("/assets/img/heroSection/surveillance_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/surveillance_1024.webp") 1x, url("/assets/img/heroSection/surveillance_1024.jpg") 1x);
+  }
+  .section__content-block--pair{
+    justify-content:flex-end;
+  }
+  .section__content-block--pair.img-right{
+    justify-content:flex-start;
+  }
+  .section__img-wrapper--pair{
+    left:0;
+    position:absolute;
+    top:0;
+    width:18em;
+    z-index:0;
+  }
+  .section__img-wrapper--pair:not(:first-of-type){
+    left:auto;
+    right:0;
+  }
+  .section__text-block--pair{
+    max-width:28em;
+  }
+  .section__text-block--pair:before{
+    background-color:#fff;
+    content:"";
+    display:block;
+    height:100%;
+    opacity:.7;
+    position:absolute;
+    transform:scaleX(1.1) scaleY(1.05);
+    width:100%;
+    z-index:-1;
+  }
+  .section--services{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_1024.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_1024.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1024.jpg") 1x);
+  }
+  .section__bidding-block--services{
+    margin-top:0;
+  }
+  .section__text-block--single{
+    max-width:28em;
+  }
+  .section--roller-automation{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.jpg") 1x);
+  }}
+@media (max-width:768px){
+  .modal__bar.modal__bar--arrow{
+    justify-content:center;
+    top:5%;
+    transform:none;
+  }
+  .icon-link__text.icon-link__text--phone{
+    font-size:1.2em;
+  }
+  .icon-link__text.icon-link__text--social-icon{
+    font-size:.8em;
+  }
+  .header__nav{
+    display:none;
+  }
+  .header__nav.abs{
+    display:block;
+  }
+  .header__nav.abs .header__nav-list{
+    align-items:flex-end;
+    -moz-column-gap:.5em;
+         column-gap:.5em;
+    display:flex;
+    flex-flow:column wrap;
+    justify-content:center;
+    max-width:20em;
+    padding-bottom:1em;
+    padding-top:1em;
+  }
+  .burger_nav.hidden{
+    display:inline-block;
+  }
+  .content-block-item__heading{
+    font-size:16px;
+  }
+  .content-block-item__text-block{
+    font-size:15px;
+  }
+  .section__text-block--pair{
+    max-width:27em;
+  }
+  .section__bidding-block--services{
+    margin-top:2em;
+  }
+  .section__text-block--single{
+    max-width:27em;
+  }}
+@media (max-width:640px){
+  .modal{
+    font-size:.8rem;
+  }
+  .header-layer{
+    background:linear-gradient(90deg, #282017 60%, rgba(101,92,82,.7));
+  }
+  .header{
+    flex-direction:column;
+    font-size:1em;
+  }
+  .header__nav.abs .header__nav-list-wrapper{
+    font-size:1.1em;
+    justify-content:center;
+  }
+  .header__nav.abs .header__nav-list{
+    align-items:center;
+    padding-top:0;
+  }
+  .section{
+    padding-bottom:64px;
+    padding-top:64px;
+  }
+  .header,.section__content-layer{
+    padding-left:var(--range_32-23_max-640px);
+    padding-right:var(--range_32-23_max-640px);
+  }
+  .section--footer{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), -webkit-image-set(url("/assets/img/footerSection/professional_640.webp") 1x, url("/assets/img/footerSection/professional_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), image-set(url("/assets/img/footerSection/professional_640.webp") 1x, url("/assets/img/footerSection/professional_640.jpg") 1x);
+  }
+  .section__content-block--footer{
+    align-items:flex-start !important;
+  }
+  .total-wrapper{
+    font-size:.938rem;
+  }
+  .button-request{
+    font-size:1rem;
+    width:250px;
+  }
+  .section__content-layer{
+    align-items:center;
+  }
+  .section__heading-block .sub-p{
+    font-size:14px;
+  }
+  .section__content-block{
+    align-items:center;
+    flex-direction:column;
+    justify-content:flex-start;
+  }
+  .section__heading-block--separation{
+    font-size:var(--range_32-23_max-640px);
+  }
+  .section--hero{
+    font-size:1.6em;
+  }
+  .section--hero[aria-labelledby=index]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.6), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/hero_professional_640.webp") 1x, url("/assets/img/heroSection/hero_professional_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.6), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/hero_professional_640.webp") 1x, url("/assets/img/heroSection/hero_professional_640.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=gates]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/gates-automatic_640.webp") 1x, url("/assets/img/heroSection/gates-automatic_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/gates-automatic_640.webp") 1x, url("/assets/img/heroSection/gates-automatic_640.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=rollers]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/security_shutters_roll-up_640.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/security_shutters_roll-up_640.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_640.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=automation]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/garage_gate_automation_640.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/garage_gate_automation_640.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_640.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=barriers]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/barrier_automatic_640.webp") 1x, url("/assets/img/heroSection/barrier_automatic_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/barrier_automatic_640.webp") 1x, url("/assets/img/heroSection/barrier_automatic_640.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=awnings]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/awnings_automatic_640.webp") 1x, url("/assets/img/heroSection/awnings_automatic_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/awnings_automatic_640.webp") 1x, url("/assets/img/heroSection/awnings_automatic_640.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=windows]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/window_settings_640.webp") 1x, url("/assets/img/heroSection/window_settings_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/window_settings_640.webp") 1x, url("/assets/img/heroSection/window_settings_640.jpg") 1x);
+  }
+  .section--hero[aria-labelledby=security]{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/surveillance_640.webp") 1x, url("/assets/img/heroSection/surveillance_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/surveillance_640.webp") 1x, url("/assets/img/heroSection/surveillance_640.jpg") 1x);
+  }
+  .section__heading-block--hero{
+    text-align:center;
+  }
+  .section__text-block--hero{
+    font-size:18px;
+  }
+  .section__bidding-block--hero{
+    align-items:center;
+    font-size:18px;
+    margin-top:1.4em;
+    text-align:center;
+  }
+  .section__content-block--pair{
+    gap:3em;
+  }
+  .section__img-wrapper--pair{
+    position:static;
+    width:15.5em;
+  }
+  .section__img-wrapper--pair.order-02{
+    order:2;
+  }
+  .section__text-block--pair:before{
+    display:none;
+  }
+  .section__img-wrapper--benefits{
+    margin-top:1em;
+  }
+  .section--services{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_640.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_640.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_640.jpg") 1x);
+  }
+  .section__bidding-block--services p{
+    display:inline;
+  }
+  .section__bidding-block--services p:last-of-type{
+    margin-bottom:.5em;
+  }
+  .hexagon-comb-block{
+    font-size:.8em;
+  }
+  .hexagon-comb-block__cell-title{
+    font-size:1.15em;
+  }
+  .section--roller-automation{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.jpg") 1x);
+  }}
+@media (max-width:480px){
+  .scrolledNav__contacts-block{
+    gap:.4em .7em;
+  }
+  .section__heading-block .accent{
+    margin-bottom:.25em;
+  }
+  .section--services{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_480.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_480.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_480.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_480.jpg") 1x);
+  }
+  .hexagon-comb-block{
+    padding-bottom:calc(var(--p)*2.8);
+    padding-left:calc(var(--p)*.6);
+    padding-right:calc(var(--p)*.6);
+  }
+  .hexagon-comb-block__cell-link:first-child{
+    --_x:0;
+  }
+  .hexagon-comb-block__cell-link:nth-child(2){
+    --_x:calc(-50% - var(--cell-padding)*0.5);
+    --_y:0;
+  }
+  .hexagon-comb-block__cell-link:nth-child(3){
+    --_x:calc(50% + var(--cell-padding)*0.5);
+  }
+  .hexagon-comb-block__cell-link:nth-child(4){
+    --_y:76.5%;
+  }
+  .hexagon-comb-block__cell-link:nth-child(5){
+    --_x:calc(-50% - var(--cell-padding)*0.5);
+    --_y:153%;
+  }
+  .hexagon-comb-block__cell-link:nth-child(6){
+    --_x:calc(50% + var(--cell-padding)*0.5);
+    --_y:153%;
+  }
+  .hexagon-comb-block__cell-link:nth-child(7){
+    --_x:0;
+    --_y:229.5%;
+  }
+  .section--roller-automation{
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.jpg") 1x);
+    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.jpg") 1x);
+  }}
+@media (max-width:375px){
+  .header__nav.abs .header__nav-list{
+    padding-top:1.5em;
+  }
+  .scrolledNav__contacts-block{
+    align-items:center;
+    display:flex;
+    flex-flow:row wrap;
+    justify-content:center;
+  }
+  .section--hero{
+    font-size:1.4em;
+  }}
+@media (max-width:375px) and (min-width:320px){
+  .modal{
+    font-size:.6rem;
+  }}

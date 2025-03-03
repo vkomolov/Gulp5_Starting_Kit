@@ -1,0 +1,17 @@
+RewriteEngine On
+
+# Правило для страниц вида /ru/somePage → /ru/somePage.html
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-z]{2})/(.*)$ /$1/$2.html [L]
+
+# Правило для главной страницы языка: /ua/ → /ua/index.html
+RewriteRule ^([a-z]{2})/?$ /$1/index.html [L]
+
+# Редирект с корня на язык по умолчанию (например, русский)
+RewriteRule ^$ /ua/ [R=302,L]
+
+# Кеширование статических ресурсов (оптимизация скорости)
+<FilesMatch "\.(css|js|jpg|png|webp)$">
+  Header set Cache-Control "public, max-age=86400, must-revalidate"
+</FilesMatch>

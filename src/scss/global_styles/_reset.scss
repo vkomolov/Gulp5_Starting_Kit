@@ -9,6 +9,7 @@ html {
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
   line-height: 1;
+  scroll-behavior: smooth;
 }
 
 /* Universal reset */
@@ -78,8 +79,8 @@ textarea {
   margin: 0;
   padding: 0;
   box-shadow: none;
-  outline: none;
   border: none;
+  outline: none;
   resize: none;
   line-height: normal;
   vertical-align: baseline;

@@ -1,0 +1,120 @@
+
+.modal {
+  font-size: 1.2rem;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(100vw, 1440px);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 200;
+  padding: 2.5em 5vw;
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @media (max-width: 1024px) {
+    font-size: 1rem;
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @media (max-width: 640px) {
+    font-size: .8rem;
+  }
+
+  @media (max-width: 375px) and (min-width: 320px) {
+    font-size: .6rem;
+  }
+}
+
+.modal__bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0.8em;
+  z-index: 210;
+
+  &.modal__bar--arrow {
+    top: 50%;
+    transform: translateY(-50%);
+    justify-content: space-between;
+    gap: 2em;
+
+    /* mobile (landscape): (max-width: 768px)*/
+    @media (max-width: 768px) {
+      justify-content: center;
+      top: 5%;
+      transform: none;
+    }
+  }
+
+  .modal-score {
+    font-size: 1em;
+    line-height: 1;
+    color: rgba(255, 255, 255, .8);
+  }
+}
+
+.media-container {
+  box-sizing: border-box;
+  max-width: 100%;
+  height: 100%;
+
+  .picture-item {
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
+  img, picture {
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.thumb-arrow {
+  font-size: 1em;
+  display: flex;
+  width: max(1.5em, 28px);
+  height: max(1.5em, 28px);
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  line-height: 1;
+  background-color: rgba(255, 133, 2, .5);
+  color: rgba(255, 255, 255, 1);
+  cursor: pointer;
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.2s ease-in-out;
+
+  &:hover {
+    background-color: rgba(255, 133, 2, 1);
+    color: rgba(40, 32, 23, 1);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(1.2);
+  }
+
+  &.close {
+    position: absolute;
+    top: 20%;
+    right: 1%;
+    width: max(1.5em, 28px);
+    height: max(1.5em, 28px);
+  }
+
+  &.prev {
+
+  }
+
+  &.next {
+
+  }
+}

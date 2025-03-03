@@ -1,14 +1,144 @@
 @import "../global_styles/reset";
 @import "../global_styles/variables";
 @import "../global_styles/mixins";
+@import "../global_styles/extends";
 @import "../global_styles/fonts";
 @import "../global_styles/animations";
+@import "../global_styles/media";
 
 
 /////// STYLES ///////
 
-.footer-wrapper {
-  width: 100%;
+.section--footer {
+  padding-top: 10em;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 80%;
+  background-attachment: fixed;
 
-  @include flex-box($flex-box-row-center-wrap...);
+  /* tablet (portrait): (min-width: 1025px) */
+  @include minTabletPortrait {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .5), rgba(40, 32, 23, .8) 60%),
+      image-set(
+          url("/assets/img/footerSection/professional_1440.webp") 1x,
+          url("/assets/img/footerSection/professional_1440.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+            image-set(
+                url("/assets/img/footerSection/professional_1440@2x.webp") 2x,
+                url("/assets/img/footerSection/professional_1440@2x.jpg") 2x
+            );
+        }*/
+  }
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .5), rgba(40, 32, 23, .8) 60%),
+      image-set(
+          url("/assets/img/footerSection/professional_1024.webp") 1x,
+          url("/assets/img/footerSection/professional_1024.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+            image-set(
+              url("/assets/img/footerSection/professional_1024@2x.webp") 2x,
+              url("/assets/img/footerSection/professional_1024@2x.jpg") 2x
+          );
+        }*/
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .5), rgba(40, 32, 23, .8) 60%),
+      image-set(
+          url("/assets/img/footerSection/professional_640.webp") 1x,
+          url("/assets/img/footerSection/professional_640.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+            image-set(
+              url("/assets/img/footerSection/professional_640@2x.webp") 2x,
+              url("/assets/img/footerSection/professional_640@2x.jpg") 2x
+          );
+        }*/
+  }
+}
+
+.section__content-block--footer {
+  color: $white;
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    align-items: flex-start !important;
+  }
+}
+
+.footer__logo-heading {
+  color: rgba(220, 220, 220, .8);
+  font-size: 1.8em;
+}
+
+.footer__contacts-block {
+  max-width: 17em;
+
+  @include flex-box($flex-box-col-left-wrap...);
+  gap: 1em;
+}
+
+.footer__content-block {
+  flex-grow: 1;
+
+  @include flex-box($flex-box-row-right-wrap...);
+  gap: 0.5em;
+}
+
+.footer__content-block-item {
+  @include flex-box($flex-box-col-left-wrap...);
+  gap: 0.5em;
+}
+
+.footer__nav-heading {
+  font-size: 1.1em;
+  letter-spacing: 0.05em;
+  padding-top: .55em;
+  padding-bottom: .4em;
+}
+
+.footer__logo-text {
+  @include init-font(0.8em, 600);
+}
+
+.footer__nav {
+}
+
+.footer__nav-list {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 0.75em;
+  font-weight: 600;
+
+  li + li {
+    margin-top: 0.3em;
+  }
+}
+
+.nav-link--footer {
+  text-transform: uppercase;
+}
+
+.icon-link--footer {
+  font-size: 0.8em;
 }

@@ -14,51 +14,51 @@ Some useful and popular plugins were omitted because of their vulnerabilities an
 <br>Presently this package is equipped with the basic frontend needs: HTML, SCSS, ES6, image optimizations with the conversion to webp and automation of the alternative versions in html, etc...
 
 ### Features:
-| Features                       | Details                                                                                          |
-|--------------------------------|--------------------------------------------------------------------------------------------------|
-| Gulp version: "^5.0.0"         |                                                                                                  |
-| Node version (LTS): "v22.12.0" |                                                                                                  |
-| Plugins:                       |                                                                                                  |
-|                                | [@babel/core](https://www.npmjs.com/package/@babel/core)                                         |
-|                                | [@babel/plugin-transform-classes](https://www.npmjs.com/package/@babel/plugin-transform-classes) |
-|                                | [@babel/plugin-transform-runtime](https://www.npmjs.com/package/@babel/plugin-transform-runtime) |
-|                                | [@babel/preset-env](https://www.npmjs.com/package/@babel/preset-env)                             |
-|                                | [@babel/runtime](https://www.npmjs.com/package/@babel/runtime)                                   |
-|                                | [autoprefixer](https://www.npmjs.com/package/autoprefixer)                                       |
-|                                | [babel-loader](https://www.npmjs.com/package/babel-loader)                                       |
-|                                | [browser-sync](https://www.npmjs.com/package/browser-sync)                                       |
-|                                | [css-loader](https://www.npmjs.com/package/css-loader)                                           |
-|                                | [cssnano](https://www.npmjs.com/package/cssnano)                                                 |
-|                                | [gulp](https://www.npmjs.com/package/gulp)                                                       |
-|                                | [gulp-beautify](https://www.npmjs.com/package/gulp-beautify)                                     |
-| can be removed...              | [gulp-cached](https://www.npmjs.com/package/gulp-cached)                                         |
-|                                | [gulp-changed](https://www.npmjs.com/package/gulp-changed)                                       |
-|                                | [gulp-cli](https://www.npmjs.com/package/gulp-cli)                                               |
-|                                | [gulp-debug](https://www.npmjs.com/package/gulp-debug)                                           |
-|                                | [gulp-file-include](https://www.npmjs.com/package/gulp-file-include)                             |
-|                                | [gulp-htmlclean](https://www.npmjs.com/package/gulp-htmlclean)                                   |
-|                                | [gulp-plumber](https://www.npmjs.com/package/gulp-plumber)                                       |
-|                                | [gulp-postcss](https://www.npmjs.com/package/gulp-postcss)                                       |
-|                                | [gulp-replace](https://www.npmjs.com/package/gulp-replace)                                       |
-|                                | [gulp-sass](https://www.npmjs.com/package/gulp-sass)                                             |
-|                                | [gulp-size](https://www.npmjs.com/package/gulp-size)                                             |
-|                                | [gulp-zip](https://www.npmjs.com/package/gulp-zip)                                               |
-|                                | [lru-cache](https://www.npmjs.com/package/lru-cache)                                             |
-|                                | [plugin-error](https://www.npmjs.com/package/plugin-error)                                       |
-|                                | [postcss](https://www.npmjs.com/package/postcss)                                                 |
-|                                | [postcss-discard-unused](https://www.npmjs.com/package/postcss-discard-unused)                   |
-|                                | [postcss-normalize-whitespace](https://www.npmjs.com/package/postcss-normalize-whitespace)       |
-|                                | [postcss-sort-media-queries](https://www.npmjs.com/package/postcss-sort-media-queries)           |
-|                                | [purgecss](https://www.npmjs.com/package/purgecss)                                               |
-|                                | [rimraf](https://www.npmjs.com/package/rimraf)                                                   |
-|                                | [sass](https://www.npmjs.com/package/sass)                                                       |
-|                                | [sharp](https://www.npmjs.com/package/sharp)                                                     |
-|                                | [style-loader](https://www.npmjs.com/package/style-loader)                                       |
-|                                | [svgo](https://www.npmjs.com/package/svgo)                                                       |
-|                                | [terser-webpack-plugin](https://www.npmjs.com/package/terser-webpack-plugin)                     |
-|                                | [webpack](https://www.npmjs.com/package/webpack)                                                 |
-|                                | [webpack-stream](https://www.npmjs.com/package/webpack-stream)                                   |
-| can be removed...              | [air-datepicker](https://www.npmjs.com/package/air-datepicker)                                   |
+| Features                | Details                                                                                          |
+|-------------------------|--------------------------------------------------------------------------------------------------|
+| Gulp version: "^5.0.0"  |                                                                                                  |
+| Node version: "v22.2.0" |                                                                                                  |
+| Plugins:                |                                                                                                  |
+|                         | [@babel/core](https://www.npmjs.com/package/@babel/core)                                         |
+|                         | [@babel/plugin-transform-classes](https://www.npmjs.com/package/@babel/plugin-transform-classes) |
+|                         | [@babel/plugin-transform-runtime](https://www.npmjs.com/package/@babel/plugin-transform-runtime) |
+|                         | [@babel/preset-env](https://www.npmjs.com/package/@babel/preset-env)                             |
+|                         | [@babel/runtime](https://www.npmjs.com/package/@babel/runtime)                                   |
+|                         | [autoprefixer](https://www.npmjs.com/package/autoprefixer)                                       |
+|                         | [babel-loader](https://www.npmjs.com/package/babel-loader)                                       |
+|                         | [browser-sync](https://www.npmjs.com/package/browser-sync)                                       |
+|                         | [css-loader](https://www.npmjs.com/package/css-loader)                                           |
+|                         | [cssnano](https://www.npmjs.com/package/cssnano)                                                 |
+|                         | [gulp](https://www.npmjs.com/package/gulp)                                                       |
+|                         | [gulp-beautify](https://www.npmjs.com/package/gulp-beautify)                                     |
+| can be removed...       | [gulp-cached](https://www.npmjs.com/package/gulp-cached)                                         |
+|                         | [gulp-changed](https://www.npmjs.com/package/gulp-changed)                                       |
+|                         | [gulp-cli](https://www.npmjs.com/package/gulp-cli)                                               |
+|                         | [gulp-debug](https://www.npmjs.com/package/gulp-debug)                                           |
+|                         | [gulp-file-include](https://www.npmjs.com/package/gulp-file-include)                             |
+|                         | [gulp-htmlclean](https://www.npmjs.com/package/gulp-htmlclean)                                   |
+|                         | [gulp-plumber](https://www.npmjs.com/package/gulp-plumber)                                       |
+|                         | [gulp-postcss](https://www.npmjs.com/package/gulp-postcss)                                       |
+|                         | [gulp-replace](https://www.npmjs.com/package/gulp-replace)                                       |
+|                         | [gulp-sass](https://www.npmjs.com/package/gulp-sass)                                             |
+|                         | [gulp-size](https://www.npmjs.com/package/gulp-size)                                             |
+|                         | [gulp-zip](https://www.npmjs.com/package/gulp-zip)                                               |
+|                         | [lru-cache](https://www.npmjs.com/package/lru-cache)                                             |
+|                         | [plugin-error](https://www.npmjs.com/package/plugin-error)                                       |
+|                         | [postcss](https://www.npmjs.com/package/postcss)                                                 |
+|                         | [postcss-discard-unused](https://www.npmjs.com/package/postcss-discard-unused)                   |
+|                         | [postcss-normalize-whitespace](https://www.npmjs.com/package/postcss-normalize-whitespace)       |
+|                         | [postcss-sort-media-queries](https://www.npmjs.com/package/postcss-sort-media-queries)           |
+|                         | [purgecss](https://www.npmjs.com/package/purgecss)                                               |
+|                         | [rimraf](https://www.npmjs.com/package/rimraf)                                                   |
+|                         | [sass](https://www.npmjs.com/package/sass)                                                       |
+|                         | [sharp](https://www.npmjs.com/package/sharp)                                                     |
+|                         | [style-loader](https://www.npmjs.com/package/style-loader)                                       |
+|                         | [svgo](https://www.npmjs.com/package/svgo)                                                       |
+|                         | [terser-webpack-plugin](https://www.npmjs.com/package/terser-webpack-plugin)                     |
+|                         | [webpack](https://www.npmjs.com/package/webpack)                                                 |
+|                         | [webpack-stream](https://www.npmjs.com/package/webpack-stream)                                   |
+| can be removed...       | [air-datepicker](https://www.npmjs.com/package/air-datepicker)                                   |
 
 
 #### `gulp/settings.js` all the settings are stored here for convenience:
@@ -164,7 +164,7 @@ of `purgeCss` to remove the unused style selectors which are not found in the at
     |-- js
         |-- partials //partial js files
 
-        index.js //*.js will be bundled from here
+        gallery-thumbs-index.js //*.js will be bundled from here
 
     |-- scss
         |-- global_styles

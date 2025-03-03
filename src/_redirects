@@ -1,0 +1,3 @@
+/        /ru/          302
+/ru/*    /ru/:splat    200
+/ua/*    /ua/:splat    200

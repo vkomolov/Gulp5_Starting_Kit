@@ -1,22 +1,31 @@
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @@if (page && headParams && headParams[page]) {
-        <meta name="description" content="@@headParams.@@page.description">
-        <meta name="keywords" content="@@headParams.@@page.keywords">
-        <meta name="page-topic" content="@@headParams.@@page.pageTopic">
-        <meta name="robots" content="@@headParams.@@page.robots">
-        <title>@@headParams.@@page.title</title>
-        <link rel="stylesheet" href="@@headParams.@@page.linkStyles">
-        @@if (headParams[page].linkScripts && headParams[page].linkScripts.length > 0) {
-            @@for (let i = 0; i < headParams[page].linkScripts.length; i++) {
-                <script type="module" src="`+headParams[page].linkScripts[i].link+`" `+headParams[page].linkScripts[i].loadMode+`></script>\n
-            }
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  @@if (page && data && data[page] && data[page].head) {
+    <meta name="description" content="@@data.@@page.head.description">
+    <meta name="robots" content="@@data.@@page.head.robots">
+
+    @@if (data[page].head.canonical) {
+      @@data.@@page.head.canonical
     }
 
-    <link rel="icon" sizes="24x24" href="assets/img/24_7_24x24.ico" type="image/x-icon">
-    <link rel="icon" sizes="32x32" href="assets/img/24_7_32x32.ico" type="image/x-icon">
-    <link rel="icon" sizes="48x48" href="assets/img/24_7_48x48.ico" type="image/x-icon">
+    @@if (data[page].head.alternate) {
+      @@data.@@page.head.alternate
+    }
+
+    <title>@@data.@@page.head.title</title>
+
+    @@if (data[page].head.linkStyles) {
+    @@data.@@page.head.linkStyles
+    }
+
+    @@if (data[page].head.linkScripts) {
+      @@data.@@page.head.linkScripts
+    }
+  }
+  <link rel="shortcut icon" sizes="24x24" href="/assets/img/24_7_24x24.ico" type="image/x-icon">
+  <link rel="shortcut icon" sizes="32x32" href="/assets/img/24_7_32x32.ico" type="image/x-icon">
+  <link rel="shortcut icon" sizes="48x48" href="/assets/img/24_7_48x48.ico" type="image/x-icon">
 </head>

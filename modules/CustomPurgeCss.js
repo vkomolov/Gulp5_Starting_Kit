@@ -29,10 +29,11 @@ export default class CustomPurgeCss extends Transform {
         try {
             // Process the file
             const file = processFile(_file);
-            if (file === null) {
+            //lower null file is checked at processFile...
+/*            if (file === null) {
                 console.error("file is null...", _file.baseName);
                 return callback(null, _file);
-            }
+            }*/
 
             const ext = path.extname(file.path);
 
@@ -42,6 +43,7 @@ export default class CustomPurgeCss extends Transform {
 
             const fullName = path.basename(file.path, ext); //file name without extension
             const baseName = fullName.split(".")[0]; //splitting suffixes (.min...)
+            //TODO: решить вопрос с именами стилей и разметки
             const targetHtml = `${baseName}.html`;
 
             // Checking for targetHtml to exist in the nested folders of the path

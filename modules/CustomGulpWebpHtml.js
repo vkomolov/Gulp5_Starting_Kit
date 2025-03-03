@@ -11,14 +11,16 @@ export default class CustomGulpWebpHtml extends Transform {
     /**
      * It checks for alternative *.webp format and retina sizes, then it replaces the original <img src> with
      * <picture><source srcset> version of the image, adding alternative webp format and retina sizes if they exist...
-     * @param {string} [rootImgSource="dist"] - root folder from which to search for the alternative images
+     * @param {string} [distRoot="dist"] - The root directory where the distribution files (including images) are located
+     *                                     The relative paths of the images will be resolved with the dist root directory
+     *                                     in order to search for the alternative images (webp, retina...)
      * @param {string} [retinaSize="2x"] - it will search the following retina sizes
      */
-    constructor(rootImgSource = "dist", retinaSize = "2x") {
+    constructor(distRoot = "dist", retinaSize = "2x") {
         super({ objectMode: true });
         this.extensions = ['.jpg', '.jpeg', '.png', '.gif'];
         this.imgRegex = /<img([^>]*)src="(\S+)"([^>]*)>/gi;
-        this.rootImgSource = rootImgSource;
+        this.distRoot = distRoot;
         this.retinaSize = retinaSize;
         this.retinaSuffix = `@${this.retinaSize}`;
     }
@@ -46,10 +48,11 @@ export default class CustomGulpWebpHtml extends Transform {
     async _transform(_file, encoding, callback) {
         try {
             const file = processFile(_file);
-            if (file === null) {
+            //already repeats at processFile
+/*            if (file === null) {
                 console.error("file is null...", _file.baseName);
                 return callback(null, _file);
-            }
+            }*/
 
             let inPicture = false;
             const data = await Promise.all(file.contents
@@ -70,7 +73,7 @@ export default class CustomGulpWebpHtml extends Transform {
 
                             const newUrl = this.replaceExtensions(url);
                             const relativePath = path.normalize(newUrl.replace(/^(\.{1,2}\/)+/, ""));
-                            const distImgUrl = path.resolve(this.rootImgSource, relativePath);
+                            const distImgUrl = path.resolve(this.distRoot, relativePath);
                             const webpExists = await checkAccess(distImgUrl);
 
                             if (webpExists) {

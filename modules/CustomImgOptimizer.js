@@ -111,7 +111,7 @@ export default class CustomImgOptimizer extends Transform {
          * - threshold: Sets the threshold for GIF dithering (0-1).
          *
          **** SVG ****
-         * - js2svg: { indent: 2, pretty: true } option in SVGO's settings affects how SVG data is formatted
+         * - js2svg: { indent: 2, pretty: true } option in SVGO's settings affects how SVG pagesVersions is formatted
          * after it is processed. Here are the effects it has:
          * indent: 2 - it specifies the number of spaces (or tabs) used for indentation when formatting an SVG document.
          * A value of 2 specifies that each level of nesting (each new block or element) will be indented by two spaces.

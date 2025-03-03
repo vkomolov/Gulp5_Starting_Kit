@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 
 //import { gsap } from "gsap";
-//import imagesLoaded from 'imagesloaded';
+import imagesLoaded from "imagesloaded";
 
 /**
  * It checks whether the given style rule is supported for the given HTML Element
@@ -10,8 +10,8 @@
  * @param {string} value - the value of the css rule
  * @return {boolean}
  */
-export function isStyleSupported (element, param, value) {
-    return param in element.style && CSS.supports(param, value);
+export function isStyleSupported(element, param, value) {
+  return param in element.style && CSS.supports(param, value);
 }
 
 /**
@@ -21,219 +21,12 @@ export function isStyleSupported (element, param, value) {
  * @param {HTMLElement} parentTo - the target HTML parent to migrate to
  */
 export function migrateElement({ target, parentFrom, parentTo }) {
-    if (target.parentNode) {
-        (target.parentNode === parentFrom ? parentTo : parentFrom).appendChild(target);
-    }
-    else {
-        console.warn(`transitBox: target in not in DOM: ${target}`);
-    }
-}
-
-/**
- * Fountains a certain number of balls with GSAP (!!! must be installed with npm i gsap)
- * @param {HTMLElement} targetElem - the target Element for animation
- * @param {Object} [params={}] - additional params
- * @param {number} [params.ballsCount = 1] - The quantity of the balls to be fountained. Defaults to 1 if not provided.
- * @param {Object} [params.cssStyles={}] additional css styles of the balls
- * @param {boolean} [params.animateSeparate=false] the flag for separate animation of the balls
- * @param {string[]} [params.ballColors=[]] If not provided, a default inner array (ballColorsArr) is used:
- *
- * @return {gsap.core.Timeline | null}
- */
-export function fountainBalls(targetElem, params = {}) {
-    if (typeof gsap === "undefined") {
-        console.error("GSAP is not installed... use npm i gsap...");
-        return null;
-    }
-
-    if (!document.body.contains(targetElem)) {
-        console.error(`the given targetElem ${targetElem} is not in DOM...`);
-        return null;
-    }
-
-    ///////////// INITIAL SETTINGS /////////////////
-
-    const ballStylesObj = {
-        position: "absolute",
-        width: "30px",
-        height: "30px",
-        top: "50%",
-        left: "50%",
-        borderRadius: "50%",
-        zIndex: "-1",
-        visibility: "hidden",
-        scale: "0"
-    };
-    const ballColorsArr = [
-        "#0adb38",
-        "#db0ac6",
-        "#db0a11",
-        "#150adb",
-        "#0adbca",
-        "#cddb0a"
-    ];
-
-    const {
-        ballsCount = 1,
-        cssStyles = {},
-        animateSeparate = false,
-        ballColors = [],
-    } = params;
-
-    const ballStyles = {
-        ...ballStylesObj,
-        ...cssStyles
-    }
-    const colors = ballColors.length ? ballColors : ballColorsArr;
-
-    /**
-     * Function for "fountain" movement of balls with the common animations
-     * @param {gsap.core.Timeline} tl - the timeline for the animation
-     * @param {HTMLElement[]} ballsArray - the real array (not collection) of DOM elements
-     * @return {void}
-     */
-    const fountainAll = (tl, ballsArray=[]) => {
-        // Clear and reset the timeline
-        tl.clear().progress(0);
-
-        // Setting initial values directly in the timeline
-        tl.set(ballsArray, {
-            //if to remove the initial positions of the balls, they will appear in different places of the area
-            //x: 0,
-            y: 0,
-            immediateRender: false // prevents immediate render of the settings
-        });
-
-        // Animation of appearing balls with the random size and random color
-        tl.to(ballsArray, {
-            autoAlpha: 1,
-            scale: function() {
-                return gsap.utils.random(0.3, 1);
-            },
-            backgroundColor: function() {
-                return gsap.utils.random(colors);
-            },
-            duration: 0.1,
-            //stagger: 0.1, // delay between animations for each ball
-        })
-
-        // Animation of balls moving up the Y axis
-        tl.to(ballsArray, {
-            y: function() {
-                return gsap.utils.random(-70, -100);
-            },
-            stagger: {
-                //each: 0.1, // delay between animations for each ball
-                repeat: 1, // repeat once (for the "back" effect)
-                yoyo: true, // animation "forward-backward"
-                //from: "random",  // "start", "random", "center", "end" to determine the order
-            },
-            ease: "circ", // smooth deceleration at the end
-        }, 0)
-
-        // Animation of balls on the X axis
-        tl.to(ballsArray, {
-              x: () => gsap.utils.random(-200, 200),
-              ease: "none", // linear animation
-              duration: 1, // animation duration on X axis
-              //stagger: 0.1, // delay between balls
-          }, 0) // starting the animation on the X axis at the same time as on the Y axis
-
-        // Hiding the balls after animation
-        tl.to(ballsArray, {
-            autoAlpha: 0,
-            duration: 0.1
-        }, "-=0.1");
-
-        // Starting the timeline
-        tl.play();
-    };
-
-    /**
-     * Function for "fountain" movement of balls with the separate animations
-     * @param {gsap.core.Timeline} tl - the timeline for the animation
-     * @param {HTMLElement[]} ballsArray - the real array (not collection) of DOM elements
-     * @return {void}
-     */
-    const fountainSeparate = (tl, ballsArray = []) => {
-        // Clear and reset the timeline
-        tl.clear().progress(0);
-
-        // Checking for the nested timelines in the main timeline if the animation has already been run
-        const childTimeLines = tl.getChildren(false, false, true);
-
-        /**
-         * Creating the inner timelines of each ball or using the already created inner timelines of the previous run
-         * Adding the animations to the separate inner timeline of each ball
-         */
-        ballsArray.forEach((ball, index) => {
-            let ballTl = childTimeLines[index];
-            if (!ballTl) {
-                ballTl = gsap.timeline();
-                tl.add(ballTl, index * 0.2);
-            }
-
-            //to avoid the IDE alerts on checking the method "to" in childTimeLines[index]
-            if ("to" in ballTl && typeof ballTl.to === "function") {
-                // Animation of appearing of each ball with the random size and random color
-                ballTl.to(ball, {
-                    autoAlpha: 1,
-                    scale: gsap.utils.random(0.3, 1),
-                    backgroundColor: gsap.utils.random(colors),
-                    duration: 0.1
-                });
-
-                // Animation of each ball moving up the Y axis
-                ballTl.to(ball, {
-                    y: gsap.utils.random(-70, -100),
-                    //duration: 1,
-                    ease: "circ",   // smooth deceleration at the end
-                    yoyo: true, // animation "forward-backward"
-                    repeat: 1,   // repeat once (for the "back" effect)
-                }, 0);
-
-                // Animation of balls on the X axis
-                ballTl.to(ball, {
-                    x: gsap.utils.random(-200, 200),
-                    duration: 1,    // animation duration on X axis
-                    ease: "none",   // linear animation
-                }, 0);  // starting the animation on the X axis at the same time as on the Y axis
-
-                // Hiding the balls after animation
-                ballTl.to(ball, {
-                    autoAlpha: 0,
-                    duration: 0.1
-                }, "-=0.1");
-            }
-        });
-
-        // Starting the timeline
-        tl.play();
-    }
-
-    ///////////// END OF INITIAL SETTINGS /////////////////
-
-    // Adding styles to the target element: position: relative; and display: inline-block;
-    targetElem.style.position = "relative";
-    targetElem.style.display = "inline-block";
-
-    //creating balls with account to the given balls count in params
-    const ballsArr = [];
-
-    for (let i = 1; i <= ballsCount; i++) {
-        let ball = document.createElement("div");
-        Object.assign(ball.style, ballStyles);
-        targetElem.appendChild(ball);
-        ballsArr.push(ball);
-    }
-
-    const tl = gsap.timeline({ paused: true });
-
-    targetElem.addEventListener("mouseenter", () => {
-        animateSeparate ? fountainSeparate(tl, ballsArr) : fountainAll(tl, ballsArr);
-    });
-
-    return tl;
+  if (target.parentNode) {
+    (target.parentNode === parentFrom ? parentTo : parentFrom).appendChild(target);
+  }
+  else {
+    console.warn(`transitBox: target in not in DOM: ${target}`);
+  }
 }
 
 /**
@@ -259,29 +52,29 @@ export function fountainBalls(targetElem, params = {}) {
  * removeClickListener();
  */
 export function lockedEventListener(event, listenerOwner, delay = 300) {
-    if (window !== listenerOwner && document !== listenerOwner && !(document.contains(listenerOwner))) {
-        throw new Error("Provided listenerOwner at lockedEventListener() is not a valid DOM element...");
-    }
+  if (window !== listenerOwner && document !== listenerOwner && !(document.body.contains(listenerOwner))) {
+    throw new Error("Provided listenerOwner at lockedEventListener() is not a valid DOM element...");
+  }
 
-    let isLocked = false;
+  let isLocked = false;
 
-    return (cb, params = []) => {
-        const handler = () => {
-            if (!isLocked) {
-                isLocked = true;
-                setTimeout(() => {
-                    cb(...params);
-                    isLocked = false;
-                }, delay);
-            }
-        };
-
-        listenerOwner.addEventListener(event, handler);
-
-        return () => {
-            listenerOwner.removeEventListener(event, handler);
-        };
+  return (cb, params = []) => {
+    const handler = () => {
+      if (!isLocked) {
+        isLocked = true;
+        setTimeout(() => {
+          cb(...params);
+          isLocked = false;
+        }, delay);
+      }
     };
+
+    listenerOwner.addEventListener(event, handler);
+
+    return () => {
+      listenerOwner.removeEventListener(event, handler);
+    };
+  };
 }
 
 /**
@@ -308,60 +101,76 @@ export function lockedEventListener(event, listenerOwner, delay = 300) {
  * );
  */
 export function customTargetStyleOnScroll(target, trigger, classActivation, scrollOwner = window, scrollTimeLimit = 300) {
-    if (!document.contains(target) || !document.contains(trigger)) {
-        throw new Error("at initTopAppearanceOnScroll(): the given target or trigger are not found in DOM...");
+  if (!document.body.contains(target) || !document.body.contains(trigger)) {
+    throw new Error("at initTopAppearanceOnScroll(): the given target or trigger are not found in DOM...");
+  }
+
+  /**
+   * is scrolledNav is already active to avoid extra animations
+   * @type {boolean}
+   */
+  let isScrolledActive = false;
+
+  const initScrollLimiter = lockedEventListener("scroll", scrollOwner, scrollTimeLimit);
+  initScrollLimiter(() => {
+    const triggerTop = trigger.getBoundingClientRect().top;
+
+    if (triggerTop <= 0) {
+      if (!isScrolledActive) {
+        requestAnimationFrame(() => {
+          target.classList.add(classActivation);
+          isScrolledActive = true;
+        });
+      }
     }
-
-    /**
-     * is scrolledNav is already active to avoid extra animations
-     * @type {boolean}
-     */
-    let isScrolledActive = false;
-
-    const initScrollLimiter = lockedEventListener("scroll", scrollOwner, scrollTimeLimit);
-    initScrollLimiter(() => {
-        const triggerTop = trigger.getBoundingClientRect().top;
-
-        if (triggerTop <= 0) {
-            if (!isScrolledActive) {
-                requestAnimationFrame(() => {
-                    target.classList.add(classActivation);
-                    isScrolledActive = true;
-                });
-            }
-        }
-        else {
-            if (isScrolledActive && target.classList.contains(classActivation)) {
-                requestAnimationFrame(() => {
-                    target.classList.remove(classActivation);
-                    isScrolledActive = false;
-                });
-            }
-        }
-    });
+    else {
+      if (isScrolledActive && target.classList.contains(classActivation)) {
+        requestAnimationFrame(() => {
+          target.classList.remove(classActivation);
+          isScrolledActive = false;
+        });
+      }
+    }
+  });
 }
 
 /**
  *  It sets attributes to HTMLElement instances
- * @param {[HTMLElement]} [elements=[]] the list of HTMLElements to be set with the attributes
+ * @param {[Element]} [elements=[]] the list of HTMLElements to be set with the attributes
  * @param {Object} [targetAttr={}] consists of the keys as the attributes and the values
  * @returns {void}
  */
 export function setAttributes(elements = [], targetAttr = {}) {
 
-    elements.forEach((element, i) => {
-        if (!(element instanceof HTMLElement)) {
-            throw new Error(`one of the elements at index ${i} is not the instance of HTMLElement...`);
-        }
+  elements.forEach((element, i) => {
+    if (!(element instanceof HTMLElement)) {
+      throw new Error(`one of the elements at index ${i} is not the instance of HTMLElement...`);
+    }
 
-        Object.entries(targetAttr).forEach(([attr, value]) => {
-            element.setAttribute(attr, (value !== null && value !== undefined) ? value.toString() : "");
-        });
+    Object.entries(targetAttr).forEach(([attr, value]) => {
+      element.setAttribute(attr, (value !== null && value !== undefined) ? value.toString() : "");
     });
+  });
+}
+
+export function lockScroll(isScrolled = true) {
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  if (isScrolled) {
+    requestAnimationFrame(() => {
+      document.body.style.paddingRight = `0`;
+      document.body.style.overflow = "auto";
+    });
+  }
+  else {
+    requestAnimationFrame(() => {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      document.body.style.overflow = "hidden";
+    });
+  }
 }
 
 /**
- * @function getImagesLoaded    (!!! must be installed with npm install imagesloaded)
+ * @function getImagesLoaded
  * @description Processes all images within a given container, ensuring they are fully loaded and retrieves their dimensions.
  * Removes broken images along with their parent elements from the DOM.
  *
@@ -376,70 +185,72 @@ export function setAttributes(elements = [], targetAttr = {}) {
  *   - `{ background: '.item' }` - Will detect background images for elements matching the `.item` selector.
  */
 export function getImagesLoaded(container, options = {}) {
-    return new Promise((resolve, reject) => {
-        try {
-            // Check if imagesLoaded library is available
-            if (typeof imagesLoaded === "undefined") {
-                reject(new Error("imagesLoaded library is not loaded. Please ensure it is included before using getImagesLoaded."));
-                return;
-            }
-            if (!container || !document.contains(container)) {
-                reject(new Error("The given container is not found in the DOM."));
-                return;
-            }
+  return new Promise((resolve, reject) => {
+    try {
+      // Check if imagesLoaded library is available
+      if (typeof imagesLoaded === "undefined") {
+        reject(new Error("imagesLoaded library is not loaded. Please ensure it is included before using getImagesLoaded."));
+        return;
+      }
+      if (!container || !document.body.contains(container)) {
+        reject(new Error("The given container is not found in the DOM."));
+        return;
+      }
 
-            imagesLoaded(container, options, instance => {
-                const brokenImages = [];
-                const loadedImagesPromises = [];
+      imagesLoaded(container, options, instance => {
+        const brokenImages = [];
+        const loadedImagesPromises = [];
 
-                //making the static array with references to DOM elements
-                const imgArr = Array.from(container.children);
+        //making the static array with references to DOM elements
+        const imgArr = Array.from(container.children);
 
-                const getSize = img => ({
-                    naturalWidth: img.naturalWidth,
-                    naturalHeight: img.naturalHeight,
-                    offsetWidth: img.offsetWidth,
-                    offsetHeight: img.offsetHeight,
-                });
+        const getSize = img => ({
+          naturalWidth: img.naturalWidth,
+          naturalHeight: img.naturalHeight,
+          offsetWidth: img.offsetWidth,
+          offsetHeight: img.offsetHeight,
+        });
 
-                const ensureSize = img => new Promise(res => {
-                    if (img.naturalWidth > 0 && img.naturalHeight > 0) {
-                        res(getSize(img));
-                    } else {
-                        img.onload = () => res(getSize(img));
-                    }
-                });
+        const ensureSize = img => new Promise(res => {
+          if (img.naturalWidth > 0 && img.naturalHeight > 0) {
+            res(getSize(img));
+          }
+          else {
+            img.onload = () => res(getSize(img));
+          }
+        });
 
-                instance.images.forEach((item, index) => {
-                    if (!item.isLoaded) {
-                        brokenImages.push({
-                            src: item.img.src,
-                            elem: imgArr[index],  //adding the block with the broken image
-                        });
-                    }
-                    else {
-                        const sizePromise = ensureSize(item.img).then(size => ({
-                            elem: imgArr[index],
-                            size,
-                        }));
-                        loadedImagesPromises.push(sizePromise);
-                    }
-                });
-
-                // Displaying a warning and removing the elements with the broken images...
-                if (brokenImages.length > 0) {
-                    brokenImages.forEach(({ src, elem }) => {
-                        console.warn("The following URL of the image is not found at getImagesLoaded: ", src);
-                        if (elem) elem.remove();
-                    });
-                }
-
-                resolve(Promise.all(loadedImagesPromises));
+        instance.images.forEach((item, index) => {
+          if (!item.isLoaded) {
+            brokenImages.push({
+              src: item.img.src,
+              elem: imgArr[index],  //adding the block with the broken image
             });
-        } catch (e) {
-            reject(new Error("Error in getImagesLoaded: " + e.message));
+          }
+          else {
+            const sizePromise = ensureSize(item.img).then(size => ({
+              elem: imgArr[index],
+              size,
+            }));
+            loadedImagesPromises.push(sizePromise);
+          }
+        });
+
+        // Displaying a warning and removing the elements with the broken images...
+        if (brokenImages.length > 0) {
+          brokenImages.forEach(({ src, elem }) => {
+            console.warn("The following URL of the image is not found at getImagesLoaded: ", src);
+            if (elem) elem.remove();
+          });
         }
-    });
+
+        resolve(Promise.all(loadedImagesPromises));
+      });
+    }
+    catch (e) {
+      reject(new Error("Error in getImagesLoaded: " + e.message));
+    }
+  });
 }
 
 /**
@@ -465,94 +276,210 @@ export function getImagesLoaded(container, options = {}) {
  * });
  */
 export async function createMasonry(containerSelector, params = {}) {
-    const options = {
-        gap: 0,
-    };
-    const auxOptions = {
-        ...options,
-        ...params,
-    };
+  const options = {
+    gap: 0,
+  };
+  const auxOptions = {
+    ...options,
+    ...params,
+  };
 
-    try {
-        const container = document.querySelector(containerSelector);
-        if (!container) {
-            throw new Error(`at initMasonry: no such selector ${containerSelector} found in DOM`);
-        }
-
-        const imagesArr = await getImagesLoaded(container);
-        const imageItems = [];
-
-        const imgItem = imagesArr[0].elem;
-        const itemWidth = imgItem.offsetWidth;
-        const containerWidth = container.clientWidth;
-
-        const { gap } = auxOptions;
-        const { columns, freeWidth } = getColumnsNumber(containerWidth, itemWidth, gap);
-        const leftOffset = freeWidth / 2;
-
-        container.style.position = "relative";
-        container.style.overflowX = "hidden";
-
-        // Initializing arrays for calculating positions
-        const posLeftArr = Array.from({ length: columns }, (_, i) => leftOffset + i * (itemWidth + gap));
-        const posTopArr = new Array(columns).fill(0);
-
-        // Arranging the elements
-        for (let i = 0; i < imagesArr.length; i++) {
-            const item = imagesArr[i].elem;
-            imageItems.push(item);
-            const itemHeight = imagesArr[i].size.offsetHeight;
-
-            // Finding the index of the column with the minimum height
-            const minColumnIndex = posTopArr.indexOf(Math.min(...posTopArr));
-            // Making sure that minColumnIndex is always a number
-            if (minColumnIndex === -1) {
-                throw new Error("Invalid column index: no minimum found in posTopArr");
-            }
-
-            // Setting the position of the element
-            item.style.position = "absolute";
-            item.style.top = `${Math.round(posTopArr[minColumnIndex])}px`;
-            item.style.left = `${Math.round(posLeftArr[minColumnIndex])}px`;
-
-            // Updating the column height
-            posTopArr[minColumnIndex] += itemHeight + gap;
-        }
-
-        function getColumnsNumber(containerWidth, itemWidth, gap) {
-            const itemGapWidth = itemWidth + gap;
-            const maxColumns = Math.floor(containerWidth / itemGapWidth);
-            const usedWidth = maxColumns * itemGapWidth;
-            const remainingSpace = containerWidth - usedWidth;
-
-            const columns = remainingSpace >= itemWidth ? maxColumns + 1 : maxColumns;
-            const freeWidth = containerWidth - (columns * itemWidth + (columns - 1) * gap);
-
-            return { columns, freeWidth };
-        }
-
-        return imageItems;
-    } catch (error) {
-        console.error("at initMasonry: ", error.message);
+  try {
+    const container = document.querySelector(containerSelector);
+    if (!container) {
+      throw new Error(`at initMasonry: no such selector ${containerSelector} found in DOM`);
     }
+
+    const imagesArr = await getImagesLoaded(container);
+    const imageItems = [];
+
+    const imgItem = imagesArr[0].elem;
+    const itemWidth = imgItem.offsetWidth;
+    const containerWidth = container.clientWidth;
+
+    const { gap } = auxOptions;
+    const { columns, freeWidth } = getColumnsNumber(containerWidth, itemWidth, gap);
+    const leftOffset = freeWidth / 2;
+
+    container.style.position = "relative";
+    container.style.overflowX = "hidden";
+
+    // Initializing arrays for calculating positions
+    const posLeftArr = Array.from({ length: columns }, (_, i) => leftOffset + i * (itemWidth + gap));
+    const posTopArr = new Array(columns).fill(0);
+
+    // Arranging the elements
+    for (let i = 0; i < imagesArr.length; i++) {
+      const item = imagesArr[i].elem;
+      imageItems.push(item);
+      const itemHeight = imagesArr[i].size.offsetHeight;
+
+      // Finding the index of the column with the minimum height
+      const minColumnIndex = posTopArr.indexOf(Math.min(...posTopArr));
+      // Making sure that minColumnIndex is always a number
+      if (minColumnIndex === -1) {
+        throw new Error("Invalid column index: no minimum found in posTopArr");
+      }
+
+      // Setting the position of the element
+      item.style.position = "absolute";
+      item.style.top = `${Math.round(posTopArr[minColumnIndex])}px`;
+      item.style.left = `${Math.round(posLeftArr[minColumnIndex])}px`;
+
+      // Updating the column height
+      posTopArr[minColumnIndex] += itemHeight + gap;
+    }
+
+    function getColumnsNumber(containerWidth, itemWidth, gap) {
+      const itemGapWidth = itemWidth + gap;
+      const maxColumns = Math.floor(containerWidth / itemGapWidth);
+      const usedWidth = maxColumns * itemGapWidth;
+      const remainingSpace = containerWidth - usedWidth;
+
+      const columns = remainingSpace >= itemWidth ? maxColumns + 1 : maxColumns;
+      const freeWidth = containerWidth - (columns * itemWidth + (columns - 1) * gap);
+
+      return { columns, freeWidth };
+    }
+
+    return imageItems;
+  } catch (error) {
+    console.error("at initMasonry: ", error.message);
+  }
 }
 
 /**
- * Replaces the file path of the given URL with a new base path.
+ * Activates the navigation link based on the specified conditions.
+ * Adds an `activeClass` to the matching navigation items and sets the `href` attribute to the provided `anchorLink`.
  *
- * @param {string} url - The original URL (either `src` or `srcset`) with the file.
- * @param {string} newBase - The new base URL to prepend.
- * @returns {string} The updated URL with the new base path to the given file.
+ * @param {string} navLinkSelector - The CSS selector to find the navigation link items.
+ * @param {string} pageType - The type of the page to match with the pagesVersions attribute of the navigation items.
+ * @param {string} activeClass - The class name to add to the matched navigation link items.
+ * @param {string} anchorLink - The URL to set as the `href` attribute for the matched navigation items.
+ *
+ * @returns {void} This function does not return any value.
+ *
+ * @example
+ * // Example usage:
+ * activateNavLink('.nav-link', 'home', 'active', '#homeAnchor');
  */
-export function replaceFilePath(url, newBase) {
-    const match = url.match(/([^/]+\.\w+(\s\d+x)?)$/); // Find the file name with extension and parameters (if any)
+export function activateNavLink(navLinkSelector, pageType, activeClass, anchorLink) {
+  // Check if all necessary arguments are provided, otherwise, log a warning.
+  if (!navLinkSelector || !pageType || !activeClass || !anchorLink) {
+    console.warn("at activateNavLink: no given all arguments");
+    return;
+  }
 
-    if (match) {
-        const fileNameWithExt = match[0]; // File name with extension (and possible parameters)
-        const cleanBase = newBase.replace(/^\/+|\/+$/g, ''); // Removing leading and trailing slashes
+  // Get all navigation link items using the provided selector.
+  const navLinkItems = Array.from(document.querySelectorAll(navLinkSelector));
 
-        return `${cleanBase}/${fileNameWithExt}`;
+  // If no matching navigation items are found, log a warning and exit.
+  if (!navLinkItems.length) {
+    console.warn(`at activateNavLink: the nav link items with selector: ${navLinkSelector} are not found in the page...`);
+    return;
+  }
+
+  // Iterate over each navigation item to check if its pagesVersions-type matches the provided pageType.
+  for (const navItem of navLinkItems) {
+
+    // If the page type matches, add the active class and update the href attribute.
+    if (navItem?.dataset?.type === pageType) {
+      navItem.classList.add(activeClass);
+      navItem.setAttribute("href", anchorLink);
     }
+  }
+}
 
-    return url; // If no match is found, return the original URL
+/**
+ * Initializes a language switcher component.
+ * @param {Object} params - Configuration object.
+ * @param {string} [params.langSwitcherSelector="#lang-switcher"] - Selector for the root container.
+ * @param {string} [params.iconLangSelector=".lang-switcher__lang-icon"] - Selector for language icons.
+ * @param {string} [params.langActiveSelector=".active"] - Selector for active language element.
+ * @param {string} [params.langListSelector="#listbox"] - Selector for options container.
+ * @param {string[]} [params.langOptionArr=["ua","ru"]] - Supported language codes.
+ * @param {string} [params.dataSetParam="lang"] - Dataset parameter name.
+ * @returns {void} Returns early if any critical elements are missing.
+ */
+export function initLangSwitcher(params = {}) {
+  const {
+    langSwitcherSelector = "#lang-switcher",
+    iconLangSelector = ".lang-switcher__lang-icon",
+    langActiveSelector = ".active",
+    langListSelector = "#listbox",
+    langOptionArr = ["ua", "ru"],
+    dataSetParam = "lang"
+  } = params;
+
+  const notFoundError = (selector, addition="") => {
+    console.error(
+      `at initLangSwitcher: the given selector: ${selector} is not found in DOM`,
+      addition
+    );
+  }
+
+  const url = window.location.href;
+  const langSwitcher = document.querySelector(langSwitcherSelector);
+
+  if (!langSwitcher) {
+    notFoundError(langSwitcherSelector);
+    return;
+  }
+
+  const langActiveElement = langSwitcher.querySelector(`${iconLangSelector}${langActiveSelector}`);
+  const langActive = langActiveElement?.dataset[dataSetParam];
+
+  if (!langActive) {
+    notFoundError(`${iconLangSelector}${langActiveSelector}`, `or data-${dataSetParam} has no value...`);
+    return;
+  }
+
+  if (!Array.isArray(langOptionArr) || !langOptionArr.length) {
+    console.error(`at initLangSwitcher: the given array of language versions is not Array or empty: ${langOptionArr}`);
+    return;
+  }
+
+  const langVerArr = langOptionArr.filter(lang => lang !== langActive);
+
+  const langList = langSwitcher.querySelector(langListSelector);
+
+  if (!langList) {
+    notFoundError(langListSelector);
+    return;
+  }
+
+  const optionListElems = langVerArr.map((langVer) => {
+    const listElem = document.createElement("li");
+    listElem.classList.add(getSelectorName(iconLangSelector));
+    listElem.setAttribute("role", "option");
+    listElem.setAttribute(`data-${dataSetParam}`, langVer);
+
+    const spanElem = document.createElement("span");
+    spanElem.textContent = langVer;
+    listElem.appendChild(spanElem);
+
+    return listElem;
+  });
+
+  langList.append(...optionListElems);
+
+  const handleClick = ({ target }) => {
+    const clickedLang = target.closest(iconLangSelector).dataset[dataSetParam];
+    window.location.replace(url.replace(`/${langActive}/`, `/${clickedLang}/`));
+  };
+
+  langList.addEventListener("click", handleClick);
+
+}
+
+/**
+ * Removes the "." and "#" characters from the beginning of the selector and returns its name.
+ * @param {string} selector - Selector (example: ".class", "#id", "tag").
+ * @returns {string} Selector name without symbols "." и "#".
+ */
+export function getSelectorName(selector) {
+  // Regular expression for ".selector", "#selector", "selector"
+  const regex = /^[.#]?([\w-]+)$/;
+  const match = selector.match(regex);
+  return match ? match[1] : selector; // If not matched, return original selector
 }

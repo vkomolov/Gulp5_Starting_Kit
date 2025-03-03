@@ -11,7 +11,7 @@ import { processFile } from "../gulp/utilFuncs.js";
 
 const PLUGIN_NAME = 'custom-newer';
 
-//LRU Cache (Least Recently Used Cache) is used to store temporary data that quickly becomes outdated.
+//LRU Cache (Least Recently Used Cache) is used to store temporary pagesVersions that quickly becomes outdated.
 const cache = new LRUCache({
     max: 100, // Maximum number of items that can be stored in the cache
     ttl: 1000 * 60 * 60, // 1 hour of cache

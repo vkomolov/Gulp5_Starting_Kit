@@ -17,11 +17,11 @@
   --range_18-16_max-1280px: #{calculate-dimension(1280, 641, 18, 16)};
 }
 
-/////// STYLES ///////
-html {
-  scroll-behavior: smooth;
-}
+/*html, body {
+  scrollbar-gutter: stable; //keeping scrollbar space to eliminate content shifting on scrollbar remove...
+}*/
 
+/////// STYLES ///////
 body {
   font-family: "Open Sans", sans-serif;
   font-weight: 400;
@@ -30,9 +30,7 @@ body {
   line-height: 1.4;
   background-color: $color-07;
 
-  /**** user-select: none; *****/
-  @include transition();
-
+  //user-select: none;
 }
 
 /*************TOP BORDER BODY****************/
@@ -64,11 +62,11 @@ h2, h3, h4, h5 {
   line-height: 1.2;
 }
 
-img, svg, picture, video {
+img, svg, picture, video, object {
   width: 100%;
   max-width: 100%;
-  height: auto;
-  object-fit: cover;
-  object-position: center;
-  vertical-align: top;
+  //height: auto;
+  //object-fit: cover;
+  //object-position: center;
+  //vertical-align: top;
 }

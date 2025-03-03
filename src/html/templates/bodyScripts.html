@@ -1,8 +1,0 @@
-<!--- SCRIPTS --->
-@@if (page && bodyParams && bodyParams[page]) {
-  @@if (bodyParams[page].linkScripts && bodyParams[page].linkScripts.length > 0) {
-    @@for (let i = 0; i < bodyParams[page].linkScripts.length; i++) {
-      <script type="module" src="`+bodyParams[page].linkScripts[i].link+`" `+bodyParams[page].linkScripts[i].loadMode+`></script>\n
-    }
-  }
-}

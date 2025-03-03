@@ -1,60 +1,92 @@
 <div class="header-layer">
+    @@if (page && data && data[page] && data[page].header && data[page].main) {
     <header class="header" role="banner">
-        <div class="header__logo-wrapper">
-            <svg viewBox="0 0 190 33">
-                <title>logo of the company</title>
-                <use xlink:href="assets/img/svgIcons/sprite.multi.svg#logo"></use>
-            </svg>
-        </div>
-        <div class="header__contacts-wrapper">
+        <h2 class="header__logo-heading">@@data.@@page.header.header__logo-heading</h2>
+        <div class="header__contacts-wrapper" aria-label="Communication options">
             <div class="header__contacts-block">
                 <a href="tel:380991019368"
-                   aria-label="Mobile call to Master"
-                   class="phone-link"
+                   aria-label="Mobile connection with the master"
+                   class="icon-link"
+                   tabindex="0"
                 >
-                    <div class="phone-link__phone-icon">
+                    <div class="icon-link__phone-icon">
                         <svg viewBox="0 0 24 25">
                             <title>phone icon</title>
-                            <use xlink:href="assets/img/svgIcons/sprite.mono.svg#phone"></use>
+                            <use xlink:href="/assets/img/svgIcons/sprite.mono.svg#phone"></use>
                         </svg>
                     </div>
-                    <span>+38 (099) 101 93 68</span>
+                    <span class="icon-link__text icon-link__text--phone">+38 (099) 101 93 68</span>
                 </a>
                 <div class="social-icons-wrapper">
-                    <a href="viber://chat?number=+380995555555"
-                       aria-label="Viber Chat with Master"
+                    <a href="viber://chat?number=+380991019368"
+                       aria-label="Contact the master via Viber"
                        class="social-icons-wrapper__social-icon"
+                       tabindex="0"
                     >
                         <svg viewBox="0 0 48 48">
                             <title>viber icon</title>
-                            <use xlink:href="assets/img/svgIcons/sprite.multi.svg#viber"></use>
+                            <use xlink:href="/assets/img/svgIcons/sprite.multi.svg#viber"></use>
                         </svg>
                     </a>
                     <a href="https://t.me/username"
                        target="_blank"
-                       aria-label="Telegram Chat with Master"
+                       aria-label="Contact the master via Telegram"
                        rel="noopener noreferrer nofollow"
                        class="social-icons-wrapper__social-icon"
+                       tabindex="0"
                     >
                         <svg viewBox="0 0 240 240">
                             <title>telegram icon</title>
-                            <use xlink:href="assets/img/svgIcons/sprite.multi.svg#telegram"></use>
+                            <use xlink:href="/assets/img/svgIcons/sprite.multi.svg#telegram"></use>
                         </svg>
                     </a>
-                    <button id="burger_nav">X</button>
+                    <div id="lang-switcher" role="combobox" aria-haspopup="listbox">
+                        <div class="lang-switcher__lang-icon active"
+                             role="button"
+                             aria-expanded="false"
+                             aria-controls="lang-list"
+                             data-lang="@@data.@@page.main.lang">
+                            <span>@@data.@@page.main.lang</span>
+                        </div>
+                        <div class="lang-switcher__lang-dropdown">
+                            <ul id="lang-list" role="listbox"></ul>
+                        </div>
+                    </div>
+                    <button
+                        class="burger_nav hidden"
+                        aria-label="Navigation to services"
+                        aria-expanded="false"
+                        tabindex="0">
+                        <span></span>
+                    </button>
                 </div>
             </div>
         </div>
-        <nav class="header__nav" aria-label="navigation menu to services">
+        <nav class="header__nav" aria-label="Navigation to services">
             <ul class="header__nav-list">
-                <li><a href="#" class="header__nav-link">Link 1</a></li>
-                <li><a href="#" class="header__nav-link">Link 2</a></li>
-                <li><a href="#" class="header__nav-link">Link 3</a></li>
-                <li><a href="#" class="header__nav-link">Link 4</a></li>
-                <li><a href="#" class="header__nav-link">Link 5</a></li>
-                <li><a href="#" class="header__nav-link">Link 6</a></li>
-                <li><a href="#" class="header__nav-link">Link 7</a></li>
+                <li><a href="./index.html"
+                       class="nav-link"
+                       aria-label="Go to main page"
+                       tabindex="0"
+                       data-type="index">
+                    @@data.@@page.header.nav-link_main
+                </a></li>
+                <li><a href="./gates-installation-repair.html"
+                       class="nav-link"
+                       aria-label="Go to 'Gates' services"
+                       tabindex="0"
+                       data-type="gates">
+                    @@data.@@page.header.nav-link_gates
+                </a></li>
+                <li><a href="./rollers-installation-repair.html"
+                       class="nav-link"
+                       aria-label="Go to 'Rollers' services"
+                       tabindex="0"
+                       data-type="rollers">
+                    @@data.@@page.header.nav-link_rollers
+                </a></li>
             </ul>
         </nav>
     </header>
+    }
 </div>

@@ -1,3 +1,90 @@
-<footer class="footer-wrapper">
-  <h3>FOOTER HEADING</h3>
+<footer class="section section--footer" >
+  <div class="section__content-layer">
+    <div
+        class="section__content-block section__content-block--row-right section__content-block--footer flex-gap-02-01"
+        data-type="fade-in-up"
+    >
+      @@if (page && data && data[page] && data[page].footer) {
+      <div class="footer__contacts-block">
+        <div class="footer__content-block-item">
+          <h2 class="footer__logo-heading">@@data.@@page.footer.footer__logo-heading</h2>
+          <p class="footer__logo-text">@@data.@@page.footer.footer__logo-text</p>
+        </div>
+        <div class="footer__content-block-item" aria-label="Communication options">
+          <a href="tel:380991019368"
+             aria-label="Mobile connection with the master"
+             class="icon-link icon-link--footer"
+             tabindex="0"
+          >
+            <div class="icon-link__phone-icon">
+              <svg viewBox="0 0 24 25">
+                <title>phone icon</title>
+                <use xlink:href="/assets/img/svgIcons/sprite.mono.svg#phone"></use>
+              </svg>
+            </div>
+            <span class="icon-link__text icon-link__text--phone">+38 (099) 101 93 68</span>
+          </a>
+          <a href="viber://chat?number=+380991019368"
+             aria-label="Contact the master via Viber"
+             class="icon-link icon-link--footer"
+             tabindex="0"
+          >
+            <div class="icon-link__social-icon">
+              <svg viewBox="0 0 48 48">
+                <title>viber icon</title>
+                <use xlink:href="/assets/img/svgIcons/sprite.multi.svg#viber"></use>
+              </svg>
+            </div>
+            <span class="icon-link__text icon-link__text--social-icon">+38 (099) 101 93 68</span>
+          </a>
+          <a href="https://t.me/username"
+             target="_blank"
+             aria-label="Contact the master via Telegram"
+             rel="noopener noreferrer nofollow"
+             class="icon-link icon-link--footer"
+             tabindex="0"
+          >
+            <div class="icon-link__social-icon">
+              <svg viewBox="0 0 240 240">
+                <title>telegram icon</title>
+                <use xlink:href="/assets/img/svgIcons/sprite.multi.svg#telegram"></use>
+              </svg>
+            </div>
+            <span class="icon-link__text icon-link__text--social-icon">+38 (099) 101 93 68</span>
+          </a>
+        </div>
+      </div>
+      <div class="footer__content-block">
+        <div class="footer__content-block-item">
+          <h3 class="footer__nav-heading">@@data.@@page.footer.footer__nav-heading</h3>
+          <nav class="footer__nav" aria-label="Navigation to services">
+            <ul class="footer__nav-list">
+              <li><a href="./index.html"
+                     class="nav-link nav-link--footer"
+                     aria-label="Go to main page"
+                     tabindex="0"
+                     data-type="index">
+                @@data.@@page.footer.nav-link_main
+              </a></li>
+              <li><a href="./gates-installation-repair.html"
+                     class="nav-link nav-link--footer"
+                     aria-label="Go to 'Gates' services"
+                     tabindex="0"
+                     data-type="gates">
+                @@data.@@page.footer.nav-link_gates
+              </a></li>
+              <li><a href="./rollers-installation-repair.html"
+                     class="nav-link nav-link--footer"
+                     aria-label="Go to 'Rollers' services"
+                     tabindex="0"
+                     data-type="rollers">
+                @@data.@@page.footer.nav-link_rollers
+              </a></li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
 </footer>

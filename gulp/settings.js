@@ -1,73 +1,105 @@
 "use strict";
 
-import TerserPlugin from "terser-webpack-plugin";
-import sortMediaQueries from "postcss-sort-media-queries";
 import autoprefixer from "autoprefixer";
-import discardUnused from "postcss-discard-unused";
 import cssnano from "cssnano";
+import discardUnused from "postcss-discard-unused";
 import normalizeWhitespace from "postcss-normalize-whitespace";
-import { getFilesEntries } from "./utilFuncs.js";
-import { pathData } from "./paths.js";
-import path from "path";
+import sortMediaQueries from "postcss-sort-media-queries";
+import TerserPlugin from "terser-webpack-plugin";
+import { getMatchedFromArray } from "../src/js/helpers/funcs.js";
+import { entries } from "./paths.js";
+import { getFilesEntries, getPagesContentVersions } from "./utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
+
+////////////// INITIAL SETTINGS ///////////////////////
 export const modes = {
     dev: "dev",
     build: "build"
 }
-
-//it is used for writing data to the head of the page
-const headParams = {
-    index: {
-        description: "description of the Page index.html",
-        keywords: "keywords of the Page index.html",
-        pageTopic: "page-topic of the Page index.html",
-        robots: "noindex",
-        title: "Title of the Page 'index.html'",
-        linkStyles: "css/index.min.css",
-        root: ".", //some *.html can be nested in src/html/somePage/ which requires correct path to root: "..", "../.." etc...
-        //if the scripts are to be written in the end of the page body, the property linkScripts may not exist
-        /*linkScripts: [
-            {
-                link: "js/index.bundle.js",
-                loadMode: ""    //if no load mode is necessary, then to write ""
-            },
-            {
-                link: "js/someFile.bundle.js",
-                loadMode: "defer"   //"async", "defer"
-            }
-        ]*/
-    },
-    //anotherPage: {}
+const robotsParams = "noindex";
+const linkStyles = {
+    index: ["/css/index.min.css"],
+    gates: ["/css/index.min.css"],
+    rollers: ["/css/index.min.css"],
 }
 
-//it is used for loading scripts at the end of the body in the given page...
-const bodyParams = {
-    index: {
-        //if the scripts are to be written in the head of the page, the property linkScripts may not exist
-        linkScripts: [
-            {
-                link: "js/index.bundle.js",
-                loadMode: ""
-            },
-            {
-                link: "js/someFile.bundle.js",
-                loadMode: "defer"
-            }
-        ]
-    },
-    //anotherPage: {}
-};
+/**
+ * the scripts can be written at the end of the tag <body> omitting writing it in the tag <head>
+ * In this case the script links can be empty in the lower linkScripts...
+ * @type {{}}
+ */
+const linkScripts = {
+/*    index: [
+        {
+            link: "/js/index.bundle.js", //this property must exist in linkScripts
+            loadMode: "async"   //"differ" this property may not exist in linkScripts
+        },
+    ],*/
+/*    gates: [
+        {
+            link: "/js/index.bundle.js", //this property must exist in linkScripts
+            loadMode: "async"   //"differ" this property may not exist in linkScripts
+        },
+    ],*/
+/*    rollers: [
+        {
+            link: "/js/index.bundle.js", //this property must exist in linkScripts
+            loadMode: "async"   //"differ" this property may not exist in linkScripts
+        },
+    ],*/
+}
 
-//const maybeHeaderParams = {};
-export const fileIncludeSettings = {
-    prefix: "@@",
-    basepath: "@file",
-    context: {
-        headParams,
-        bodyParams,
+//base root url at the server... example: "https://example.com"
+const rootUrl = "https://example.com"
+
+/**
+ * getting the file entries for all *.json with the pages` content.
+ * Each json file contains the pages` data with particular language version.
+ * Gulp automatically compiles pages for each ${lang}.json and passes them to dist/html/${lang}
+ * Gulp automatically adds language version navigation at <header> of the pages...
+ */
+const pageJsonEntries = getFilesEntries("src/assets/data/pagesVersions", "json");
+
+export const languages = Object.keys(pageJsonEntries);
+
+//what languages are to be canonical... checking if they exist in the const languages...
+const metaCanonical = getMatchedFromArray(languages, ["ua", "ru"]);
+
+////////////// END OF INITIAL SETTINGS ///////////////////////
+
+//collecting data from 'assets/data/pagesVersions/*.json'
+const getPageData = (lang) => {
+    try {
+        const pagesContent = getPagesContentVersions(pageJsonEntries, {
+            robotsParams,
+            linkStyles,
+            //linkScripts,  //optional
+            rootUrl,
+            metaCanonical,
+            languages,
+            lang
+        });
+        //console.log(`pageContent by ${lang}: `, pagesContent[lang]);
+        return pagesContent[lang];
     }
-};
+    catch (error) {
+        console.error(`Failed to process data for lang ${lang}: ${error.message}`);
+        return {}
+    }
+
+}
+
+//it returns the page`s data context with the language version for the gulp-file-include settings
+export const setFileIncludeSettings = (lang) => {
+    return {
+        prefix: "@@",
+        basepath: "@file",
+        context: {
+            data: getPageData(lang),
+        }
+    }
+}
 export const beautifySettings = {
     html: {
         //indent_size: 2,
@@ -110,7 +142,7 @@ export const webpackConfigJs = {
         mode: "development",
         devtool: 'source-map',
         entry: {
-            ...getFilesEntries(path.resolve(pathData.srcPath, "js"), "js"),
+            ...entries.js,
         },
         output: {
             filename: "[name].bundle.js",
@@ -152,7 +184,7 @@ export const webpackConfigJs = {
     build: {
         mode: "production",
         entry: {
-            ...getFilesEntries(path.resolve(pathData.srcPath, "js"), "js"),
+            ...entries.js,
         },
         output: {
             filename: "[name].bundle.js",
@@ -212,7 +244,7 @@ export const svgoSpriteOptions = {
             {
                 name: "removeAttrs",
                 params: {
-                    attrs: ["class", "data-name", "fill", "stroke.*"], //"stroke.*" removing all stroke-related attributes
+                    attrs: ["class", "pagesVersions-name", "fill", "stroke.*"], //"stroke.*" removing all stroke-related attributes
                 },
             },
             {
@@ -225,7 +257,7 @@ export const svgoSpriteOptions = {
             {
                 name: "removeAttrs",
                 params: {
-                    attrs: ["class", "data-name"],
+                    attrs: ["class", "pagesVersions-name"],
                 },
             },
             {

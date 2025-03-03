@@ -1,4 +1,4 @@
-@use 'sass:math';
+@use "sass:math";
 
 $flex-box-row-center-wrap: row, center, center, wrap;
 $flex-box-row-center-nowrap: row, center, center, nowrap;
@@ -20,7 +20,7 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
 
 ///MIXIN
 
-@mixin flex-box ($flow, $justify, $align, $wrap:wrap) {
+@mixin flex-box($flow, $justify, $align, $wrap:wrap) {
   display: flex;
   flex-flow: $flow $wrap;
   justify-content: $justify;
@@ -30,60 +30,15 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
 @mixin transition($property: null, $time: 0.15s) {
   @if $property != null {
     transition: $property $time ease-in-out;
-  }
-  @else {
+  } @else {
     transition: $time ease-in-out;
   }
 }
 
-@mixin init-font ($font-size, $font-weight) {
+@mixin init-font($font-size, $font-weight) {
   font: {
     size: $font-size;
     weight: $font-weight;
-  }
-}
-
-//$font-size-actual - the actual font size in px. If measure unit is not in px, then to return the initial text-shadow
-@mixin init-text-shadow-3d($fontSizeActualPx, $shadowColor, $glowColor: null) {
-  $m-unit: unit($fontSizeActualPx); //measure unit
-  $font-num: strip-unit($fontSizeActualPx); //numeric value of the font-size
-  $ratio-px: 13;
-  $max-layers: 1;
-  $shadow: rgba(0, 0, 0, 0.15) -3px 7px 10px;
-  $shadow-offset-px: 1px;
-
-  @if $m-unit == "px" {
-    $max-layers: round($font-num / $ratio-px);
-    @if $max-layers > 1 {
-      @for $i from 1 through $max-layers {
-        $offset: -$i * $shadow-offset-px;
-        $shadow: #{$shadow}, #{$shadowColor} #{$offset} 1px 1px;
-      }
-    }
-  }
-
-  @if $glowColor != null {
-    $shadow: #{$shadow}, $glowColor -5px 2px 100px;
-  }
-
-  text-shadow: $shadow;
-}
-
-/**
-* it gives background to the text: gradient, image, etc...
-* $background - background-image, gradient etc...
-* [$text-color = null] - the color of the text with transparent opacity to view the background underneath
- */
-@mixin init-text-background($background, $text-color: null) {
-  background: $background no-repeat center/cover;
-  background-clip: text;
-  -webkit-background-clip: text;
-
-  @if $text-color == null {
-    color: transparent;
-  }
-  @else {
-    color: $text-color;
   }
 }
 
@@ -95,7 +50,7 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
   box-shadow: $dim $dim $shadow $color;
 }
 
-@mixin init-scroll($width, $thumbColor, $trackColor) {
+@mixin scroll-init($width, $thumbColor, $trackColor) {
   overflow-x: hidden;
   overflow-y: auto;
   scroll-behavior: smooth;
@@ -116,26 +71,37 @@ $element-shadow: 0.15em, 0.3em, rgba(0, 0, 0, .8);
   }
 }
 
-//!!! will overwrite the text-shadow styles to glowing shadow around the text
-@mixin glowing-text-shadow($glowColor) {
-  text-shadow: $glowColor -5px 2px 100px;
+@mixin fluid-font-size($max-media, $min-media, $max-value, $min-value) {
+  $default-browser-size: 16;
+  $max-size-ratio: math.div($max-value, $default-browser-size);
+  $min-size-ratio: math.div($min-value, $default-browser-size);
+  $max-width-ratio: math.div($max-media, $default-browser-size);
+  $min-width-ratio: math.div($min-media, $default-browser-size);
+
+  $ratio: math.div(($max-size-ratio - $min-size-ratio), ($max-width-ratio - $min-width-ratio));
+  $yAxisInterSection: -$min-width-ratio * $ratio + $min-size-ratio;
+
+  font-size: clamp(
+    #{$min-size-ratio * 1rem},
+    #{$ratio * 100vw + $yAxisInterSection * 1rem},
+    #{$max-size-ratio * 1rem}
+  );
 }
+
 
 ////////////// FUNCTIONS ////////////////
 //!!! the arguments must be integers, default measure unit is "px" (1280, 640, 80, 32, px)
+
 @function calculate-dimension($max-width, $min-width, $max-value, $min-value, $measure:px) {
   $width-range: $max-width - $min-width;
   $value-diff: $max-value - $min-value;
 
-  //ensure that the viewport width value always stays between $min-width and $max-width
-  //@return calc($value-diff * (min(max(100vw, #{$min-width}px), #{$max-width}px) - #{$min-width}px) / $width-range + #{$min-value}px);
-  @return calc($value-diff * (min(max(100vw, #{$min-width}#{$measure}), #{$max-width}#{$measure}) - #{$min-width}#{$measure}) / $width-range + #{$min-value}#{$measure});
+  // Normalize the viewport width
+  $normalized-width: min(max(100vw, #{$min-width}#{$measure}), #{$max-width}#{$measure});
+
+  // Расчет
+  @return calc(($value-diff * ($normalized-width - #{$min-width}#{$measure})) / $width-range + #{$min-value}#{$measure});
 }
 
-@function strip-unit($number) {
-  @if type-of($number) == 'number' and not unitless($number) {
-    @return math.div($number, ($number * 0 + 1));
-  }
 
-  @return $number;
-}
+

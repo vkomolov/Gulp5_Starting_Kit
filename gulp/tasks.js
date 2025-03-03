@@ -1,60 +1,64 @@
 "use strict";
 
 import gulp from "gulp";
-import {
-  modes,
-  fileIncludeSettings,
-  webpackConfigJs,
-  useGulpSizeConfig,
-  optimizeCss,
-  minifyCss,
-  beautifySettings
-} from "./settings.js";
-import { pathData } from "./paths.js";
+import beautify from "gulp-beautify";
+
+//fonts plugins
+//control plugins
+import changed, { compareContents } from "gulp-changed";
+import debug from "gulp-debug";
+
+//other plugins
+import fileInclude from "gulp-file-include";
+import filter from "gulp-filter";
+
+//html plugins
+import htmlClean from "gulp-htmlclean";
 
 //error handling plugins
 import plumber from "gulp-plumber";
 
-//html plugins
-import htmlClean from "gulp-htmlclean";
-import beautify from "gulp-beautify";
+//postcss environment
+import postcss from "gulp-postcss";
+import replace from "gulp-replace";
+import gulpSass from "gulp-sass";
+import size from "gulp-size";
+import path from "path";
 
 //styles plugins
 import * as dartSass from "sass";
-import gulpSass from "gulp-sass";
-
-//postcss environment
-import postcss from "gulp-postcss";
+import webpack from "webpack";
 
 //js plugins
 import webpackStream from "webpack-stream";
-import webpack from "webpack";
-
-//fonts plugins
-
-//control plugins
-import changed, { compareContents } from "gulp-changed";
-import debug from "gulp-debug";
-import size from "gulp-size";
-
-//other plugins
-import fileInclude from "gulp-file-include";
-import replace from "gulp-replace";
-import zip from "gulp-zip";
+import CustomGulpSVGSprite from "../modules/CustomGulpSVGSprite.js";
+import CustomGulpWebpHtml from "../modules/CustomGulpWebpHtml.js";
+import CustomImgConverter from "../modules/CustomImgConverter.js";
+import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
 
 //custom modules
 import CustomRenameFile from "../modules/CustomRenameFile.js";
-import CustomPurgeCss from "../modules/CustomPurgeCss.js";
-import CustomImgOptimizer from "../modules/CustomImgOptimizer.js";
-import CustomImgConverter from "../modules/CustomImgConverter.js";
-import CustomGulpWebpHtml from "../modules/CustomGulpWebpHtml.js";
-import { combinePaths, handleError } from "./utilFuncs.js";
-import CustomGulpSVGSprite from "../modules/CustomGulpSVGSprite.js";
+import { pathData } from "./paths.js";
+
+import {
+  beautifySettings,
+  languages,
+  minifyCss,
+  modes,
+  optimizeCss,
+  setFileIncludeSettings,
+  useGulpSizeConfig,
+  webpackConfigJs
+} from "./settings.js";
+import { handleError } from "./utilFuncs.js";
 
 /////////////// END OF IMPORTS /////////////////////////
 
 const { src, dest } = gulp;
 const sass = gulpSass(dartSass);
+const filterFiles = filter(file => !file.isDirectory());
+
+const imgRegex = /<img(?:.|\n|\r)*?>/g;
 
 /**
  * TASKS:
@@ -93,36 +97,34 @@ const sass = gulpSass(dartSass);
 const tasks = {
   [modes.dev]: {
     pipeHtml() {
-      return src(pathData.src.htmlNested)
-        .pipe(plumber({
-          errorHandler: handleError("Error at pipeHtml...")
-        }))
-        .pipe(fileInclude(fileIncludeSettings))
-        .pipe(changed(`${pathData.tempPath}/html/`, { hasChanged: compareContents }))
-        .pipe(debug({ title: "*.html is piped:" }))
-        .pipe(dest(`${pathData.tempPath}/html/`))
-        .pipe(
-          replace(/<img(?:.|\n|\r)*?>/g, function (match) {
-            return match.replace(/\r?\n|\r/g, "").replace(/\s{2,}/g, " ");
-          })
-        ) //removes extra spaces and line breaks inside a tag <img>
-        .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
-        .pipe(beautify.html(beautifySettings.html))
-        .pipe(dest(pathData.build.html));
+      return Promise.all(languages.map(lang => {
+        const tempHtmlPath = path.join(pathData.tempPath, lang);
+
+        return src(pathData.src.html)
+          .pipe(plumber({
+            errorHandler: handleError("Error at pipeHtml...")
+          }))
+          .pipe(fileInclude(setFileIncludeSettings(lang)))
+          .pipe(changed(tempHtmlPath, { hasChanged: compareContents }))
+          .pipe(debug({ title: "*.html has been changed or new:" }))
+          .pipe(dest(tempHtmlPath))
+          .pipe(
+            //removes extra spaces and line breaks inside a tag <img>
+            replace(imgRegex, function (match) {
+              return match.replace(/\r?\n|\r/g, "").replace(/\s{2,}/g, " ");
+            })
+          )
+          .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
+          .pipe(beautify.html(beautifySettings.html))
+          .pipe(dest(path.join(pathData.build.html, lang)));
+      }));
     },
     pipeStyles() {
       return src(pathData.src.styles, { sourcemaps: true })
         .pipe(plumber({
           errorHandler: handleError("Error at pipeStyles...")
         }))
-        /*                .pipe(size(useGulpSizeConfig({
-                            title: "Before sass: "
-                        })))*/
-        .pipe(sass.sync({}, () => {
-        }).on('error', sass.logError))
-        /*                .pipe(size(useGulpSizeConfig({
-                            title: "After sass: "
-                        })))*/
+        .pipe(sass.sync({}, () => {}).on('error', sass.logError))
         .pipe(changed(`${pathData.tempPath}/css/`, { hasChanged: compareContents }))
         .pipe(debug({ title: "*.scss is piped:" }))
         .pipe(dest(`${pathData.tempPath}/css/`))
@@ -140,6 +142,7 @@ const tasks = {
           errorHandler: handleError("Error at pipeJs...")
         }))
         .pipe(debug({ title: "*.js is piped..." }))
+        //.pipe(webpackStream(webpackConfigJs.dev)) //if no need in webpack version control...
         .pipe(webpackStream(webpackConfigJs.dev, webpack))
         .pipe(dest(pathData.build.js));
     },
@@ -152,12 +155,6 @@ const tasks = {
         .pipe(debug({ title: "image is piped:" }))
         .pipe(dest(pathData.build.img)) //storing initial images before conversion
         .pipe(new CustomImgConverter(["jpg", "jpeg", "png"], "webp", {
-          //resize: { width: 400 },   //optional size of the picture at conversion
-          /*
-                              params: {   //it is optional if toOptimize = true; it is redundant if toOptimize = false
-                                  quality: 75,
-                                },
-                              */
           toOptimize: false,   //by default: false
           toSkipOthers: false, //streaming other formats without touch; by default: false
         }))
@@ -180,7 +177,7 @@ const tasks = {
         .pipe(dest(pathData.build.svgIcons));
     },
     pipeFonts() {
-      return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
+      return src(pathData.src.fonts, { encoding: false }) //not convert pagesVersions to text encoding
         .pipe(plumber({
           errorHandler: handleError("Error at pipeFonts...")
         }))
@@ -197,22 +194,35 @@ const tasks = {
         .pipe(debug({ title: "file is piped:" }))
         .pipe(dest(pathData.build.data));
     },
+    pipeUtils() {
+      return src(pathData.src.utils, { encoding: false, dot: true })
+        .pipe(plumber({
+          errorHandler: handleError("Error at pipeUtils...")
+        }))
+        .pipe(filterFiles)
+        .pipe(changed(pathData.build.utils))
+        .pipe(debug({ title: "utils file is piped:" }))
+        .pipe(dest(pathData.build.utils));
+    }
   },
   [modes.build]: {
     pipeHtml() {
-      return src(pathData.src.htmlNested)
-        .pipe(plumber({
-          errorHandler: handleError("Error at pipeHtml...")
-        }))
-        .pipe(fileInclude(fileIncludeSettings))
-        .pipe(
-          replace(/<img(?:.|\n|\r)*?>/g, function (match) {
-            return match.replace(/\r?\n|\r/g, "").replace(/\s{2,}/g, " ");
-          })
-        ) //removes extra spaces and line breaks inside a tag <img>
-        .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
-        .pipe(htmlClean())
-        .pipe(dest(pathData.build.html));
+      return Promise.all(languages.map(lang => {
+        return src(pathData.src.html)
+          .pipe(plumber({
+            errorHandler: handleError("Error at pipeHtml...")
+          }))
+          .pipe(fileInclude(setFileIncludeSettings(lang)))
+          .pipe(
+            //removes extra spaces and line breaks inside a tag <img>
+            replace(imgRegex, function (match) {
+              return match.replace(/\r?\n|\r/g, "").replace(/\s{2,}/g, " ");
+            })
+          )
+          .pipe(new CustomGulpWebpHtml(pathData.distPath, "2x"))
+          .pipe(htmlClean())
+          .pipe(dest(path.join(pathData.build.html, lang)));
+      }));
     },
     pipeStyles() {
       return src(pathData.src.styles)
@@ -222,15 +232,15 @@ const tasks = {
         /*.pipe(size(useGulpSizeConfig({
           title: "Before sass: "
         })))*/
-        .pipe(sass.sync({}, () => {
-        }).on('error', sass.logError))
-        /*.pipe(size(useGulpSizeConfig({
-          title: "After sass: "
-        })))*/
-        .pipe(new CustomPurgeCss(pathData.build.html))  //to filter ${basename}.css selectors not used in ${basename}.html
-        .pipe(size(useGulpSizeConfig({
+        .pipe(sass.sync({}, () => {}).on('error', sass.logError))
+
+        //! CustomPurgeCss could be used in mono language version of the project with the one language version of the page...
+        //! scss file must have the same name as the corresponding HTML file!!!
+        //.pipe(new CustomPurgeCss(pathData.build.html))  //to filter ${basename}.css selectors not used in ${basename}.html
+/*        .pipe(size(useGulpSizeConfig({
           title: "After PurgeCss: "
-        })))
+        })))*/
+
         .pipe(postcss(optimizeCss)) //to optimize *.css
         .pipe(size(useGulpSizeConfig({
           title: "After optimizeCss: "
@@ -314,7 +324,7 @@ const tasks = {
         .pipe(dest(pathData.build.svgIcons));
     },
     pipeFonts() {
-      return src(pathData.src.fonts, { encoding: false }) //not convert data to text encoding
+      return src(pathData.src.fonts, { encoding: false }) //not convert pagesVersions to text encoding
         .pipe(plumber({
           errorHandler: handleError("Error at pipeFonts...")
         }))
@@ -327,22 +337,15 @@ const tasks = {
         }))
         .pipe(dest(pathData.build.data));
     },
-    pipeZipProject() {
-      return src(pathData.src.zipProject, {})
+    pipeUtils() {
+      return src(pathData.src.utils, { encoding: false, dot: true })
         .pipe(plumber({
-          errorHandler: handleError("Error at pipeZipProject...")
+          errorHandler: handleError("Error at pipeUtils...")
         }))
-        .pipe(zip(`${pathData.rootFolder}.project.zip`))
-        .pipe(dest(pathData.build.zipProject));
+        .pipe(filterFiles)
+        .pipe(debug({ title: "utils file is piped:" }))
+        .pipe(dest(pathData.build.utils));
     },
-    pipeZipDist() {
-      return src(pathData.src.zipDist, {})
-        .pipe(plumber({
-          errorHandler: handleError("Error at pipeZipDist...")
-        }))
-        .pipe(zip(`${pathData.rootFolder}.zip`))
-        .pipe(dest(pathData.build.zipDist));
-    }
   }
 };
 export default tasks;

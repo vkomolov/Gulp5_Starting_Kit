@@ -1,4 +1,3 @@
-//////// global styles /////////
 @import "./global_styles/reset";
 @import "./global_styles/variables";
 @import "./global_styles/mixins";
@@ -7,27 +6,1518 @@
 @import "./global_styles/animations";
 @import "./global_styles/media";
 
-////// partials styles ////////
+@import "../js/modulesPack/gallery-thumbs/scss/gallery-thumbs.scss";
 @import "./partials/root";
 @import "./partials/header";
 @import "./partials/footer";
 
 /////// STYLES ////////
+// it is used for avoiding the page shift on removing the scrollbar at overflow: hidden;
+/*.total-layer {
+  width: 100vw;
+  padding-right: 17px;
+  overflow: hidden;
+  box-sizing: content-box;
+}*/
+
 .total-wrapper {
+  box-sizing: border-box;
+
+  position: relative;
   font-size: 1.125rem;  //18px
+  //font-size: 1rem;  //16px
   max-width: $maxWidth; //1440px;
-  min-width: $minWidth; //320px;
+  //min-width: $minWidth; //320px;
   margin: 0 auto;
   background-color: $white;
   color: $color-04;
 
   /* tablet (landscape) max-width: 1280px */
-  @include maxTabletLandscape {
+/*  @include maxTabletLandscape {
     font-size: var(--range_18-16_max-1280px);  //in root.scss
-  }
+  }*/
 
   /* mobile (portrait wide): (max-width: 640px) */
   @include maxMobilePortraitWide {
     font-size: 0.938rem;  //15px
   }
 }
+
+.section {
+  //FOR GSAP:
+  overflow: hidden; //for transformed, not absolute elements
+  font-size: 1em; //font-size inherits from total-wrapper
+  width: 100%;
+
+  @extend %sectionWrapper;  //margin-top, margin-bottom calculations
+}
+
+.button-request {
+  font-family: "Open Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-size: 1.25rem;
+  font-weight: 600;
+  width: 275px;
+  padding: 1em 1.6em;
+  background-color: $color-01;
+  border: none;
+  color: $white;
+  border-radius: 0.5em;
+  margin-top: 40px; //constant margin
+  box-shadow: 0.1em 0.15em 0.2em rgba(0, 0, 0, 0.8);
+
+  @include transition();
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    font-size: 1.185rem;
+    width: 270px;
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    font-size: 1rem;
+    width: 250px;
+  }
+
+  &:hover {
+    transform: translateY(-0.18em);
+    background-color: $color-01-darken;
+    box-shadow: 0.12em 0.25em 0.3em rgba(0, 0, 0, 0.8);
+  }
+
+  &:active {
+    background-color: $color-01-darkest;
+    box-shadow: 0.06em 0.125em 0.125em rgba(0, 0, 0, 0.8);
+    transform: translateY(0);
+  }
+}
+
+.bg-darker {
+  background-color: $color-13;
+}
+
+.foxy-on-hover {
+  transition: background-color 0.15s ease;
+  &:hover {
+    background-color: $color-01 !important;
+  }
+}
+
+.section__content-layer {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  @extend %contentWrapper;  //padding calculations
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    align-items: center;
+  }
+}
+
+.section__heading-block {
+  text-transform: uppercase;
+
+  .accent {
+    display: inline-block;
+    font-size: 1.611em;
+    line-height: 1;
+
+    //////// GSAP:
+    opacity: 0;
+
+    /* mobile (portrait narrow): (max-width: 480px)*/
+    @include maxMobilePortraitNarrow {
+      margin-bottom: 0.25em;
+    }
+  }
+
+  .rest-of-heading {
+    display: inline-block;
+
+    //////// GSAP:
+    opacity: 0;
+  }
+
+  .sub-p {
+    text-transform: initial;
+    font-size: 0.4em;
+    margin-top: 1.5em;
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      font-size: 14px;
+    }
+  }
+
+  h1, h2, {
+    font-size: inherit;
+  }
+
+  hr {
+    width: 100%;
+    height: 7px;
+    background: linear-gradient(to right, $color_01 0%, $rgba_opacity-0 90%);
+  }
+}
+
+.section__content-block {
+  width: 100%;
+  display: flex;
+
+  //@include transition();  //transition all
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+  }
+}
+
+.section__content-block--row-center {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.section__content-block--row-left {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.section__content-block--row-right {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+.section__content-block--row-between {
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.flex-container {
+  @include flex-box($flex-box-row-center-wrap...);
+}
+
+.flex-gap-02-01 {
+  gap: 2em 1em;
+}
+
+.flex-gap-02-02 {
+  gap: 2em;
+}
+
+.section__text-block {
+
+  p + p {
+    margin-top: 0.5em;
+    overflow-wrap: break-word;
+  }
+}
+
+.section__text-separ {
+  font-weight: 600;
+  margin-top: 0.5em;
+
+  &:first-of-type {
+    margin-top: 0;
+    margin-bottom: 0.89em;
+  }
+
+  &.section__text-separ--subheading {
+    margin-top: 0.89em;
+
+    &:first-of-type {
+      margin-top: 0;
+    }
+  }
+}
+
+.section__text-list {
+  list-style: inside;
+  margin-bottom: 0.5em;
+}
+
+.section__img-wrapper {
+}
+
+.section__bidding-block {
+  @include flex-box($flex-box-col-left-wrap...);
+}
+
+.section__heading-block--separation {
+  font-size: 48px;
+  margin-bottom: 0.77em;
+  max-width: 15em;
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    font-size: var(--range_48-32_max-1280px);
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    font-size: var(--range_32-23_max-640px);
+  }
+
+  h2 {
+    margin-bottom: 0.33em;
+  }
+}
+
+.content-block-item {
+  font-size: 1em; //from the parent
+  width: 100%;
+  padding: 1em 1.25em 0;
+
+  @include flex-box(column, flex-start, center);
+}
+
+.content-block-item__img-wrapper {
+  width: 100%;
+  margin-bottom: 3em;
+}
+
+.content-block-item__heading {
+  font-size: 1em;
+  text-align: center;
+  margin-bottom: 2em;
+  word-wrap: break-word;
+
+  /* mobile (landscape): (max-width: 768px)*/
+  @include maxMobileLandscape {
+    font-size: 16px;
+  }
+}
+
+.content-block-item__text-block {
+  font-size: 16px;
+
+  /* mobile (landscape): (max-width: 768px)*/
+  @include maxMobileLandscape {
+    font-size: 15px;
+  }
+}
+
+//// GSAP:
+[data-anime=fade-in-left] {
+  opacity: 0;
+}
+
+[data-anime=fade-in-right] {
+  opacity: 0;
+}
+
+[data-anime=fade-in-up] {
+  opacity: 0;
+}
+
+[data-anime=scale-in] {
+  opacity: 0;
+  transform-origin: 50% 100%;
+}
+
+/////////// section "hero" //////////
+.section--hero {
+  font-size: 1.8em;
+  //background-origin: border-box;
+  //background-position: 85%;
+  //background-repeat: no-repeat;
+  background-size: cover;
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    font-size: calc(var(--range_24-18_max-1280px) * 1.4);
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    font-size: 1.6em;
+  }
+
+  /* mobile (medium): (max-width: 375px) */
+  @include maxMobileMedium {
+    font-size: 1.4em;
+  }
+
+  &[aria-labelledby="index"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/hero_professional_1440.webp") 1x,
+          url("/assets/img/heroSection/hero_professional_1440.jpg") 1x
+      );
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/hero_professional_1024.webp") 1x,
+            url("/assets/img/heroSection/hero_professional_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/hero_professional_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/hero_professional_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .6), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/hero_professional_640.webp") 1x,
+            url("/assets/img/heroSection/hero_professional_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/hero_professional_640@2x.webp") 2x,
+                url("/assets/img/heroSection/hero_professional_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+
+  &[aria-labelledby="gates"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/gates-automatic_1440.webp") 1x,
+          url("/assets/img/heroSection/gates-automatic_1440.jpg") 1x
+      );
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/gates-automatic_1024.webp") 1x,
+            url("/assets/img/heroSection/gates-automatic_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/gates-automatic_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/gates-automatic_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/gates-automatic_640.webp") 1x,
+            url("/assets/img/heroSection/gates-automatic_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/gates-automatic_640@2x.webp") 2x,
+                url("/assets/img/heroSection/gates-automatic_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+
+  &[aria-labelledby="rollers"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/security_shutters_roll-up_1440.webp") 1x,
+          url("/assets/img/heroSection/security_shutters_roll-up_1440.jpg") 1x
+      );
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/security_shutters_roll-up_1024.webp") 1x,
+            url("/assets/img/heroSection/security_shutters_roll-up_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/security_shutters_roll-up_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/security_shutters_roll-up_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/security_shutters_roll-up_640.webp") 1x,
+            url("/assets/img/heroSection/security_shutters_roll-up_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/security_shutters_roll-up_640@2x.webp") 2x,
+                url("/assets/img/heroSection/security_shutters_roll-up_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+
+  &[aria-labelledby="automation"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/garage_gate_automation_1440.webp") 1x,
+          url("/assets/img/heroSection/garage_gate_automation_1440.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+            image-set(
+              url("/assets/img/heroSection/garage_gate_automation_1440@2x.webp") 2x,
+              url("/assets/img/heroSection/garage_gate_automation_1440@2x.jpg") 2x
+          );
+        }*/
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/garage_gate_automation_1024.webp") 1x,
+            url("/assets/img/heroSection/garage_gate_automation_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/garage_gate_automation_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/garage_gate_automation_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/garage_gate_automation_640.webp") 1x,
+            url("/assets/img/heroSection/garage_gate_automation_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/garage_gate_automation_640@2x.webp") 2x,
+                url("/assets/img/heroSection/garage_gate_automation_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+
+  &[aria-labelledby="barriers"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/barrier_automatic_1440.webp") 1x,
+          url("/assets/img/heroSection/barrier_automatic_1440.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+            image-set(
+              url("/assets/img/heroSection/barrier_automatic_1440@2x.webp") 2x,
+              url("/assets/img/heroSection/barrier_automatic_1440@2x.jpg") 2x
+          );
+        }*/
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/barrier_automatic_1024.webp") 1x,
+            url("/assets/img/heroSection/barrier_automatic_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/barrier_automatic_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/barrier_automatic_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/barrier_automatic_640.webp") 1x,
+            url("/assets/img/heroSection/barrier_automatic_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/barrier_automatic_640@2x.webp") 2x,
+                url("/assets/img/heroSection/barrier_automatic_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+
+  &[aria-labelledby="awnings"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/awnings_automatic_1440.webp") 1x,
+          url("/assets/img/heroSection/awnings_automatic_1440.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+            image-set(
+              url("/assets/img/heroSection/awnings_automatic_1440@2x.webp") 2x,
+              url("/assets/img/heroSection/awnings_automatic_1440@2x.jpg") 2x
+          );
+        }*/
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/awnings_automatic_1024.webp") 1x,
+            url("/assets/img/heroSection/awnings_automatic_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/awnings_automatic_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/awnings_automatic_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/awnings_automatic_640.webp") 1x,
+            url("/assets/img/heroSection/awnings_automatic_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/awnings_automatic_640@2x.webp") 2x,
+                url("/assets/img/heroSection/awnings_automatic_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+
+  &[aria-labelledby="windows"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/window_settings_1440.webp") 1x,
+          url("/assets/img/heroSection/window_settings_1440.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+            image-set(
+              url("/assets/img/heroSection/window_settings_1440@2x.webp") 2x,
+              url("/assets/img/heroSection/window_settings_1440@2x.jpg") 2x
+          );
+        }*/
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/window_settings_1024.webp") 1x,
+            url("/assets/img/heroSection/window_settings_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/window_settings_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/window_settings_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/window_settings_640.webp") 1x,
+            url("/assets/img/heroSection/window_settings_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/window_settings_640@2x.webp") 2x,
+                url("/assets/img/heroSection/window_settings_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+
+  &[aria-labelledby="security"] {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+      image-set(
+          url("/assets/img/heroSection/surveillance_1440.webp") 1x,
+          url("/assets/img/heroSection/surveillance_1440.jpg") 1x
+      );
+
+    //retina can be included
+    /*    @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+            image-set(
+              url("/assets/img/heroSection/surveillance_1440@2x.webp") 2x,
+              url("/assets/img/heroSection/surveillance_1440@2x.jpg") 2x
+          );
+        }*/
+
+    /* tablet (portrait): (max-width: 1024px) */
+    @include maxTabletPortrait {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .8) 35%, rgba(40, 32, 23, 0) 85%),
+        image-set(
+            url("/assets/img/heroSection/surveillance_1024.webp") 1x,
+            url("/assets/img/heroSection/surveillance_1024.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7) 35%, rgba(40, 32, 23, 0) 85%),
+              image-set(
+                url("/assets/img/heroSection/surveillance_1024@2x.webp") 2x,
+                url("/assets/img/heroSection/surveillance_1024@2x.jpg") 2x
+            );
+          }*/
+    }
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      background-image:
+        linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .5)),
+        image-set(
+            url("/assets/img/heroSection/surveillance_640.webp") 1x,
+            url("/assets/img/heroSection/surveillance_640.jpg") 1x
+        );
+
+      //retina can be included
+      /*    @include mediaRetina2x {
+            background-image:
+              linear-gradient(to right, rgba(40, 32, 23, .7), rgba(40, 32, 23, .7)),
+              image-set(
+                url("/assets/img/heroSection/surveillance_640@2x.webp") 2x,
+                url("/assets/img/heroSection/surveillance_640@2x.jpg") 2x
+            );
+          }*/
+    }
+  }
+}
+
+.section__content-layer--hero {
+  color: $white;
+}
+
+.section__heading-block--hero {
+  //font-size: 1em;
+  max-width: 18.6em;
+  margin-bottom: 1em;
+  text-shadow: 0.05em 0.1em 0.1em rgba(0, 0, 0, 0.8);
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    text-align: center;
+  }
+}
+
+.section__text-block--hero {
+  font-size: 24px;
+  max-width: 20em;
+
+  ////////// GSAP:
+  opacity: 0;
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    font-size: var(--range_24-18_max-1280px);
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    font-size: 18px;
+  }
+}
+
+.section__img-wrapper--hero {
+  width: 6.5em;
+
+  ////////// GSAP:
+  transform: scale(0);
+}
+
+.section__bidding-block--hero {
+  font-size: 24px;
+  //max-width: 14.1em;
+
+  ///////// GSAP:
+  opacity: 0;
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    font-size: var(--range_24-18_max-1280px);
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    font-size: 18px;
+    margin-top: 1.4em;
+    align-items: center;
+    text-align: center;
+  }
+
+  p {
+    max-width: 14em;
+  }
+}
+
+//////////  pair  ///////////
+
+.section__content-block--pair {
+  position: relative;
+  z-index: 5;
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    justify-content: flex-end;
+
+    &.img-right {
+      justify-content: flex-start;
+    }
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    gap: 3em;
+  }
+
+  &.margin-top {
+    margin-top: 4.44em;
+  }
+}
+
+.section__img-wrapper--pair {
+  width: 22.23em;
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    width: 31.25vw;
+  }
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    position: absolute;
+    top: 0;
+    left: 0;  /* section image/text */
+    z-index: 0;
+    width: 18em;
+
+    &:not(:first-of-type) {
+      right: 0; /* section text/image */
+      left: auto;
+    }
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    position: static;
+    width: 15.5em;
+
+    &.order-02 {
+      order: 2;
+    }
+  }
+}
+
+.section__text-block--pair {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 30em;
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    max-width: 28em;
+
+    &:before {
+      display: block;
+      position: absolute;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      content: "";
+      transform: scaleX(1.1) scaleY(1.05);
+      background-color: $white;
+      opacity: 0.7;
+    }
+  }
+
+  /* mobile (landscape): (max-width: 768px)*/
+  @include maxMobileLandscape {
+    max-width: 27em;
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    &:before {
+      display: none;
+    }
+  }
+}
+
+//////// section benefits /////////
+
+.section__benefits {
+
+  padding-top: 5.5vw;
+
+  @include flex-box(column, center, center);
+  gap: 2em;
+}
+
+.section__img-wrapper--benefits {
+  position: relative;
+  width: 100%;
+  margin-top: 2em;
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    margin-top: 1em;
+  }
+
+    /*&:before {
+      display: block;
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 6.25vw;
+      backdrop-filter: blur(0.4em);
+  }*/
+    /*&:after {
+      display: block;
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 6.25vw;
+      background-color: rgba(255, 255, 255, 0.3);
+    }*/
+}
+
+.content-block-item--benefits {
+  max-width: 20em;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 17.4em;
+}
+
+.content-block-item__img-wrapper--benefits {
+  width: 4.72em;
+  margin-bottom: 1.125em;
+}
+
+.content-block-item__heading--benefits {
+  max-width: 13em;
+  margin-bottom: 0.889em;
+}
+
+//////// section services ///////////
+.section--services {
+  font-size: 1em; //parent font-size (18px at max 1280px)
+  background-position: 70%;
+  background-size: cover;
+  background-attachment: fixed;
+  color: $white;
+
+  /* tablet (landscape) min-width: 1281px */
+  @include minTabletLandscape {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/servicesSection/window_roller_shutters_1440.webp") 1x,
+          url("/assets/img/servicesSection/window_roller_shutters_1440.jpg") 1x
+      );
+
+    //retina can be included
+/*        @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+            //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+            image-set(
+                url("/assets/img/servicesSection/window_roller_shutters_1440@2x.webp") 2x,
+                url("/assets/img/servicesSection/window_roller_shutters_1440@2x.jpg") 2x
+            );
+        }*/
+  }
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/servicesSection/window_roller_shutters_1280.webp") 1x,
+          url("/assets/img/servicesSection/window_roller_shutters_1280.jpg") 1x
+      );
+
+    //retina can be included
+    /*        @include mediaRetina2x {
+              background-image:
+                linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+                //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+                image-set(
+                  url("/assets/img/servicesSection/window_roller_shutters_1280@2x.webp") 2x,
+                  url("/assets/img/servicesSection/window_roller_shutters_1280@2x.jpg") 2x
+              );
+            }*/
+  }
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/servicesSection/window_roller_shutters_1024.webp") 1x,
+          url("/assets/img/servicesSection/window_roller_shutters_1024.jpg") 1x
+      );
+
+    //retina can be included
+/*        @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+            //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+            image-set(
+              url("/assets/img/servicesSection/window_roller_shutters_1024@2x.webp") 2x,
+              url("/assets/img/servicesSection/window_roller_shutters_1024@2x.jpg") 2x
+          );
+        }*/
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      image-set(
+          url("/assets/img/servicesSection/window_roller_shutters_640.webp") 1x,
+          url("/assets/img/servicesSection/window_roller_shutters_640.jpg") 1x
+      );
+
+    //retina can be included
+/*        @include mediaRetina2x {
+          background-image:
+            linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+            //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+            image-set(
+              url("/assets/img/servicesSection/window_roller_shutters_640@2x.webp") 2x,
+              url("/assets/img/servicesSection/window_roller_shutters_640@2x.jpg") 2x
+          );
+        }*/
+  }
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    background-image:
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+        //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      image-set(
+          url("/assets/img/servicesSection/window_roller_shutters_480.webp") 1x,
+          url("/assets/img/servicesSection/window_roller_shutters_480.jpg") 1x
+      );
+
+    //retina can be included
+    /*        @include mediaRetina2x {
+              background-image:
+                linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+                //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+                image-set(
+                  url("/assets/img/servicesSection/window_roller_shutters_480@2x.webp") 2x,
+                  url("/assets/img/servicesSection/window_roller_shutters_480@2x.jpg") 2x
+              );
+            }*/
+  }
+}
+
+.section__text-block--services {
+  max-width: 20em;
+}
+
+.section__bidding-block--services {
+  align-items: center;
+  margin-top: -10em;
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    margin-top: 0;
+  }
+
+  /* mobile (landscape): (max-width: 768px)*/
+  @include maxMobileLandscape {
+    margin-top: 2em;
+  }
+
+  p {
+    font-size: 1.4em;
+    font-weight: 600;
+    display: none;
+
+    /* mobile (portrait wide): (max-width: 640px) */
+    @include maxMobilePortraitWide {
+      display: inline;
+
+      &:last-of-type {
+        margin-bottom: .5em;
+      }
+    }
+  }
+}
+
+///////////////////// honeycomb hexagon /////////////////////////
+.hexagon-comb-block {
+  font-size: .95em; //parent font-size
+  --cell-width: 12.22em;  /* cell width of the honeycomb 220px at font-size: 18px */
+  --cell-padding: 0.2em;
+  --p: calc(var(--cell-width) + var(--cell-padding));
+
+  display: grid;
+  padding: var(--p);
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    font-size: 0.8em;
+  }
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    padding-bottom: calc(var(--p) * 2.8); //for hexagon-comb-block__cell-link transformations
+    padding-left: calc(var(--p) * 0.6);
+    padding-right: calc(var(--p) * 0.6);
+  }
+}
+
+.hexagon-comb-block__cell-title {
+  position: absolute;
+  font-size: 1em;
+  display: block;
+  width: 9em;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Jost", sans-serif;
+  font-weight: 700;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.35;
+  text-align: center;
+  color: $color-02;
+
+  @include transition(opacity, 0.2s);
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    font-size: 1.15em;
+  }
+}
+
+.hexagon-comb-block__cell-link {
+  position: relative;
+  width: var(--cell-width);
+  grid-area: 1/1; //all cells in one row, in one column
+  aspect-ratio: 0.87;  //224px / 257px = 0.8716 original picture size
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  transform: translate(var(--_x, 0), var(--_y, 0)) scale(var(--_s, 1));
+
+  @include transition();
+
+  &:before {
+    position: absolute;
+    display: block;
+    content: "";
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    //background: linear-gradient(150deg, rgba(255, 133, 2, .8) 40%, rgba(255, 255, 255, .9) 90%);
+    //background: linear-gradient(150deg, rgba(255, 133, 2, .8) 40%, rgba(220, 220, 220, .8) 90%);
+    background: rgba(220, 220, 220, .8);
+    //background: rgba(241, 241, 241, .7);
+
+    //@include transition(transform, 0.2s);
+    @include transition(top, 0.2s);
+  }
+
+  &.active {
+    --_s: 1.1;
+    z-index: 1;
+    cursor: default;
+
+    &:before {
+      //top: -100%;
+      //background: linear-gradient(150deg, rgba(255, 133, 2, .8) 40%, rgba(255, 255, 255, .9) 90%);
+      background-color: rgba(101, 92, 82, .7);
+    }
+
+    .hexagon-comb-block__cell-title {
+      opacity: 1;
+      color: rgba(255, 255, 255, 1);
+      font-weight: 400;
+    }
+  }
+}
+
+.hexagon-comb-block__cell-link:not(.active):hover {
+  --_s: 1.1;
+  z-index: 1;
+
+  &:before {
+    top: -100%;
+  }
+
+  .hexagon-comb-block__cell-title {
+    opacity: 0;
+  }
+}
+
+.hexagon-comb-block__cell-link:nth-child(1) {
+  --_x: calc(-50% - var(--cell-padding)*.5);
+  --_y: -76.5%;
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    --_x: 0;
+  }
+}
+
+.hexagon-comb-block__cell-link:nth-child(2) {
+  --_x: calc(50% + var(--cell-padding)*.5);
+  --_y: -76.5%;
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    --_x: calc(-50% - var(--cell-padding)*.5);
+    --_y: 0;
+  }
+}
+
+.hexagon-comb-block__cell-link:nth-child(3) {
+  --_x: calc(-100% - var(--cell-padding));
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    --_x: calc(50% + var(--cell-padding)*.5);
+  }
+}
+
+.hexagon-comb-block__cell-link:nth-child(4) {
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    --_y: 76.5%;
+  }
+}
+
+.hexagon-comb-block__cell-link:nth-child(5) {
+  --_x: calc(100% + var(--cell-padding));
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    --_x: calc(-50% - var(--cell-padding)*.5);
+    --_y: 153%;
+  }
+}
+
+.hexagon-comb-block__cell-link:nth-child(6) {
+  --_x: calc(-50% - var(--cell-padding)*.5);
+  --_y: calc(76.5%);
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    --_x: calc(50% + var(--cell-padding)*.5);
+    --_y: 153%;
+  }
+}
+
+.hexagon-comb-block__cell-link:nth-child(7) {
+  --_x: calc(50% + var(--cell-padding)*.5);
+  --_y: calc(76.5%);
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    --_x: 0;
+    --_y: 229.5%
+  }
+}
+
+///////////////////// single text-block /////////////////////////
+.section__text-block--single {
+  width: 100%;
+  max-width: 30em;
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    max-width: 28em;
+  }
+
+  /* mobile (landscape): (max-width: 768px)*/
+  @include maxMobileLandscape {
+    max-width: 27em;
+  }
+}
+
+//////////////////// section--roller-automation //////////////////
+.section--roller-automation {
+  font-size: 1em; //parent font-size (18px at max 1280px)
+  background-position: 0;
+  background-size: cover;
+  background-attachment: fixed;
+  color: $white;
+
+  /* tablet (landscape) min-width: 1281px */
+  @include minTabletLandscape {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.webp") 1x,
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.jpg") 1x
+      );
+
+    //retina can be included
+    /*        @include mediaRetina2x {
+              background-image:
+                linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+                //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+                image-set(
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440@2x.webp") 2x,
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440@2x.jpg") 2x
+                );
+            }*/
+  }
+
+  /* tablet (landscape) max-width: 1280px */
+  @include maxTabletLandscape {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.webp") 1x,
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.jpg") 1x
+      );
+
+    //retina can be included
+    /*        @include mediaRetina2x {
+              background-image:
+                linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+                //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+                image-set(
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280@2x.webp") 2x,
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280@2x.jpg") 2x
+                );
+            }*/
+  }
+
+  /* tablet (portrait): (max-width: 1024px) */
+  @include maxTabletPortrait {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.webp") 1x,
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.jpg") 1x
+      );
+
+    //retina can be included
+    /*        @include mediaRetina2x {
+              background-image:
+                linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+                //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+                image-set(
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024@2x.webp") 2x,
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024@2x.jpg") 2x
+                );
+            }*/
+  }
+
+  /* mobile (portrait wide): (max-width: 640px) */
+  @include maxMobilePortraitWide {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.webp") 1x,
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.jpg") 1x
+      );
+
+    //retina can be included
+    /*        @include mediaRetina2x {
+              background-image:
+                linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+                //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+                image-set(
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640@2x.webp") 2x,
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640@2x.jpg") 2x
+                );
+            }*/
+  }
+
+  /* mobile (portrait narrow): (max-width: 480px)*/
+  @include maxMobilePortraitNarrow {
+    background-image:
+      //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+      linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+      image-set(
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.webp") 1x,
+          url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.jpg") 1x
+      );
+
+    //retina can be included
+    /*        @include mediaRetina2x {
+              background-image:
+                linear-gradient(to right, rgba(40, 32, 23, .4), rgba(40, 32, 23, .7)),
+                //linear-gradient(to right, rgba(40, 32, 23, .4) 35%, rgba(40, 32, 23, .7) 85%),
+                image-set(
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480@2x.webp") 2x,
+                    url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480@2x.jpg") 2x
+                );
+            }*/
+  }
+}
+
+///////// logo slider ///////////////
+.logo-wrapper {
+  width: 100%;
+
+  @include flex-box($flex-box-row-center-wrap...);
+  gap: 1em;
+
+  &__item {
+    width: clamp(5em, 12vw, 9em);
+  }
+}
+
+/////////////////// gallery ///////////////////
+#gallery-work {
+  width: 100%;
+  height: 45em;
+  @include scroll-init(0.45em, rgba(255, 133, 2, 1), rgba(255, 133, 2, .5));
+}
+
+.gallery__item {
+  width: 30%;
+  min-width: 12.22em;
+  will-change: transform, opacity;
+  border-radius: 0.5em;
+  overflow: hidden;
+  opacity: 0;
+
+  @include box-shadow(0.2em, 0.4em);
+
+  &:hover {
+    cursor: pointer;
+
+    img, svg, picture, video, object {
+      transform: scale(1.05);
+    }
+  }
+
+  img, svg, picture, video, object {
+    border-radius: 0.5em;
+
+    @include transition(transform, 0.15s);
+  }
+}
+
+
+
+

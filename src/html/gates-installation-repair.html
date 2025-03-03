@@ -1,0 +1,185 @@
+<!doctype html>
+
+@@if (data && data["gates"] && data["gates"].main) {
+<html lang="@@data.gates.main.lang">
+
+@@include("templates/head.html", {"page": "gates"})
+<body data-type="gates">
+<div class="total-wrapper">
+  @@include("templates/header.html", {"page": "gates"})
+
+  <div id="scrolledNav">
+    <div class="scrolledNav__contacts-block">
+      <a href="tel:380991019368"
+         aria-label="Mobile connection with a master"
+         class="icon-link"
+         tabindex="0"
+      >
+        <div class="icon-link__phone-icon">
+          <svg viewBox="0 0 24 25">
+            <title>phone icon</title>
+            <use xlink:href="/assets/img/svgIcons/sprite.mono.svg#phone"></use>
+          </svg>
+        </div>
+        <span class="icon-link__text icon-link__text--phone">+38 (099) 101 93 68</span>
+      </a>
+      <div class="social-icons-wrapper">
+        <a href="viber://chat?number=+380991019368"
+           aria-label="Contact the master via Viber"
+           class="social-icons-wrapper__social-icon"
+           tabindex="0">
+          <svg viewBox="0 0 48 48">
+            <title>viber icon</title>
+            <use xlink:href="/assets/img/svgIcons/sprite.multi.svg#viber"></use>
+          </svg>
+        </a>
+        <a href="https://t.me/username"
+           target="_blank"
+           aria-label="Contact the master via Telegram"
+           rel="noopener noreferrer nofollow"
+           class="social-icons-wrapper__social-icon"
+        >
+          <svg viewBox="0 0 240 240">
+            <title>telegram icon</title>
+            <use xlink:href="/assets/img/svgIcons/sprite.multi.svg#telegram"></use>
+          </svg>
+        </a>
+        <button
+            class="burger_nav"
+            aria-label="Navigation to services"
+            aria-expanded="false"
+            tabindex="0">
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <nav class="header__nav abs" aria-label="Navigation to services" aria-expanded="false">
+    <div class="header__nav-list-wrapper">
+      <ul class="header__nav-list">
+        <li><a href="./index.html"
+               class="nav-link"
+               aria-label="Go to main page"
+               tabindex="0"
+               data-type="index">
+          @@data.gates.main.nav-link_main
+        </a></li>
+        <li><a href="./gates-installation-repair.html"
+               class="nav-link"
+               aria-label="Go to 'Gates' services"
+               tabindex="0"
+               data-type="gates">
+          @@data.gates.main.nav-link_gates
+        </a></li>
+        <li><a href="./rollers-installation-repair.html"
+               class="nav-link"
+               aria-label="Go to 'Rollers' services"
+               tabindex="0"
+               data-type="rollers">
+          @@data.gates.main.nav-link_rollers
+        </a></li>
+      </ul>
+    </div>
+  </nav>
+  <section class="section section--hero" aria-labelledby="gates">
+    <div class="section__content-layer section__content-layer--hero">
+      <div class="section__heading-block section__heading-block--hero">
+        <h1 id="gates">
+          <span class="accent">@@data.gates.main.hero_accent</span>
+          <span class="rest-of-heading">@@data.gates.main.hero_rest-of-heading</span>
+        </h1>
+      </div>
+      <div class="section__content-block section__content-block--row-left flex-gap-02-02">
+        <div class="section__text-block section__text-block--hero">
+          <p>@@data.gates.main.hero_text-block-p</p>
+        </div>
+        <div class="section__img-wrapper section__img-wrapper--hero">
+          <img src="/assets/img/heroSection/24_7.png"
+               alt="working hours 24 / 7"
+               loading="lazy"
+          >
+        </div>
+      </div>
+      <div class="section__bidding-block section__bidding-block--hero">
+        <p>@@data.gates.main.hero_bidding-block-p</p>
+        <button
+            class="button-request"
+            data-type="general"
+            onclick="window.location.href='tel:380991019368'"
+            aria-label="Mobile communication with a specialist"
+            tabindex="0">
+          @@data.gates.main.hero_button-request
+        </button>
+      </div>
+    </div>
+  </section>
+  <section class="section" id="scrollTriggerPoint">
+    <div class="section__content-layer">
+      <div class="section__heading-block section__heading-block--separation" data-anime="fade-in-left">
+        <h2 id="gates-group">@@data.gates.main.about-us_heading</h2>
+        <hr>
+      </div>
+      <div class="section__content-block section__content-block--row-between section__content-block--pair">
+        <div class="section__img-wrapper section__img-wrapper--pair" data-anime="fade-in-left">
+          <img src="/assets/img/aboutSection/roller_shutter_maintenance.png"
+               loading="lazy"
+               alt="roller shutters maintenance"
+          >
+        </div>
+        <div class="section__text-block section__text-block--pair" data-anime="fade-in-right">
+          <p class="section__text-separ">@@data.gates.main.about-us_p_1</p>
+          <p>@@data.gates.main.about-us_p_2</p>
+          <p>@@data.gates.main.about-us_p_3</p>
+          <p>@@data.gates.main.about-us_p_4</p>
+          <p>@@data.gates.main.about-us_p_5</p>
+          <p>@@data.gates.main.about-us_p_6</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="section bg-darker" aria-labelledby="gallery-group">
+    <div class="section__content-layer">
+      <div class="section__heading-block section__heading-block--separation" data-anime="fade-in-left">
+        <h2 id="gallery-group">@@data.index.main.gallery_heading</h2>
+        <hr>
+      </div>
+      <div id="gallery-work">
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/blackout-blinds_1.jpg" alt="жалюзи блэкаут" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/collapsible-security-booth_1.jpg" alt="складывающийся бокс" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/collapsible-security-booth_2.jpg" alt="складывающийся бокс" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/collapsible-security-booth_3.jpg" alt="складывающийся бокс" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/collapsible-security-booth_4.jpg" alt="складывающийся бокс" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/electric-gate_1.jpg" alt="автоматические ворота" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/electric-gate_2.jpg" alt="автоматические ворота" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/electric-gate_3.jpg" alt="автоматические ворота" loading="lazy">
+        </div>
+        <div class="gallery__item">
+          <img src="/assets/img/gallery/thumbs/electric-gate_4.jpg" alt="автоматические ворота" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+}
+
+  @@include("templates/footer.html", {"page": "gates"})
+</div>
+
+<!-- SCRIPTS -->
+<script type="module" src="/js/index.bundle.js"></script>
+</body>
+</html>

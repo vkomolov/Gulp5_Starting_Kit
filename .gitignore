@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 .idea
+.vscode/
 
 # sourcemaps
 dist/css/*.map
@@ -13,7 +14,7 @@ dist/css/*.map
 /coverage
 
 # production
-/dist
+#/dist
 /build
 
 # misc
