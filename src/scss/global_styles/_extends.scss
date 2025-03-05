@@ -1,7 +1,6 @@
-@import "mixins";
-@import "variables";
-@import "media";
-@import "../partials/root";
+//@use "mixins" as mix;
+@use "./variables" as *;
+@use "./media" as media;
 
 ///////EXTENDS///////
 
@@ -11,13 +10,13 @@
   padding-bottom: 120px;
 
   /* tablet (landscape) max-width: 1280px */
-  @include maxTabletLandscape {
-    padding-top: var(--range_80-64_max-1280px);
-    padding-bottom: var(--range_120-64_max-1280px);
+  @include media.maxTabletLandscape {
+    padding-top: var(--range_80-64_max-1280px); //var CSS will be used in index.scss
+    padding-bottom: var(--range_120-64_max-1280px); //var CSS will be used in index.scss
   }
 
   /* mobile (portrait wide): (max-width: 640px) */
-  @include maxMobilePortraitWide {
+  @include media.maxMobilePortraitWide {
     padding-top: 64px;
     padding-bottom: 64px;
   }
@@ -31,14 +30,14 @@
   padding-left: 80px;
 
   /* tablet (landscape) max-width: 1280px */
-  @include maxTabletLandscape {
-    padding-right: var(--range_80-32_max-1280px);
-    padding-left: var(--range_80-32_max-1280px);
+  @include media.maxTabletLandscape {
+    padding-right: var(--range_80-32_max-1280px); //var CSS will be used in index.scss
+    padding-left: var(--range_80-32_max-1280px);  //var CSS will be used in index.scss
   }
 
   /* mobile (portrait wide): (max-width: 640px) */
-  @include maxMobilePortraitWide {
-    padding-right: var(--range_32-23_max-640px);
-    padding-left: var(--range_32-23_max-640px);
+  @include media.maxMobilePortraitWide {
+    padding-right: var(--range_32-23_max-640px);  //var CSS will be used in index.scss
+    padding-left: var(--range_32-23_max-640px); //var CSS will be used in index.scss
   }
 }

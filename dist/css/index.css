@@ -892,26 +892,6 @@ img,object,picture,svg,video{
   background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/security_shutters_roll-up_1440.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1440.jpg") 1x);
   background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/security_shutters_roll-up_1440.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1440.jpg") 1x);
 }
-.section--hero[aria-labelledby=automation]{
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/garage_gate_automation_1440.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1440.jpg") 1x);
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/garage_gate_automation_1440.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1440.jpg") 1x);
-}
-.section--hero[aria-labelledby=barriers]{
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/barrier_automatic_1440.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1440.jpg") 1x);
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/barrier_automatic_1440.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1440.jpg") 1x);
-}
-.section--hero[aria-labelledby=awnings]{
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/awnings_automatic_1440.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1440.jpg") 1x);
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/awnings_automatic_1440.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1440.jpg") 1x);
-}
-.section--hero[aria-labelledby=windows]{
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/window_settings_1440.webp") 1x, url("/assets/img/heroSection/window_settings_1440.jpg") 1x);
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/window_settings_1440.webp") 1x, url("/assets/img/heroSection/window_settings_1440.jpg") 1x);
-}
-.section--hero[aria-labelledby=security]{
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/surveillance_1440.webp") 1x, url("/assets/img/heroSection/surveillance_1440.jpg") 1x);
-  background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/surveillance_1440.webp") 1x, url("/assets/img/heroSection/surveillance_1440.jpg") 1x);
-}
 
 .section__content-layer--hero{
   color:#fff;
@@ -955,177 +935,13 @@ img,object,picture,svg,video{
 }
 
 .section__text-block--pair{
-  max-width:30em;
   position:relative;
-  width:100%;
   z-index:10;
 }
 
-.section__benefits{
-  align-items:center;
-  display:flex;
-  flex-flow:column wrap;
-  gap:2em;
-  justify-content:center;
-  padding-top:5.5vw;
-}
-
-.section__img-wrapper--benefits{
-  margin-top:2em;
-  position:relative;
-  width:100%;
-}
-
-.content-block-item--benefits{
-  flex-basis:17.4em;
-  flex-grow:1;
-  flex-shrink:1;
-  max-width:20em;
-}
-
-.content-block-item__img-wrapper--benefits{
-  margin-bottom:1.125em;
-  width:4.72em;
-}
-
-.content-block-item__heading--benefits{
-  margin-bottom:.889em;
-  max-width:13em;
-}
-
-.section--services{
-  background-attachment:fixed;
-  background-position:70%;
-  background-size:cover;
-  color:#fff;
-  font-size:1em;
-}
-
-.section__text-block--services{
-  max-width:20em;
-}
-
-.section__bidding-block--services{
-  align-items:center;
-  margin-top:-10em;
-}
-.section__bidding-block--services p{
-  display:none;
-  font-size:1.4em;
-  font-weight:600;
-}
-
-.hexagon-comb-block{
-  font-size:.95em;
-  --cell-width:12.22em;
-  --cell-padding:0.2em;
-  --p:calc(var(--cell-width) + var(--cell-padding));
-  display:grid;
-  padding:var(--p);
-}
-
-.hexagon-comb-block__cell-title{
-  display:block;
-  font-family:Jost,sans-serif;
-  font-size:1em;
-  font-weight:700;
-  left:50%;
-  position:absolute;
-  top:50%;
-  transform:translate(-50%, -50%);
-  width:9em;
-  -webkit-font-smoothing:antialiased;
-  -moz-osx-font-smoothing:grayscale;
-  color:#282017;
-  line-height:1.35;
-  text-align:center;
-  transition:opacity .2s ease-in-out;
-}
-
-.hexagon-comb-block__cell-link{
-  aspect-ratio:.87;
-  clip-path:polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
-  grid-area:1/1;
-  position:relative;
-  transform:translate(var(--_x, 0), var(--_y, 0)) scale(var(--_s, 1));
-  transition:.15s ease-in-out;
-  width:var(--cell-width);
-}
-.hexagon-comb-block__cell-link:before{
-  background:hsla(0,0%,86%,.8);
-  content:"";
-  display:block;
-  height:100%;
-  left:0;
-  position:absolute;
-  top:0;
-  transition:top .2s ease-in-out;
-  width:100%;
-}
-.hexagon-comb-block__cell-link.active{
-  --_s:1.1;
-  cursor:default;
-  z-index:1;
-}
-.hexagon-comb-block__cell-link.active:before{
-  background-color:rgba(101,92,82,.7);
-}
-.hexagon-comb-block__cell-link.active .hexagon-comb-block__cell-title{
-  color:#fff;
-  font-weight:400;
-  opacity:1;
-}
-
-.hexagon-comb-block__cell-link:not(.active):hover{
-  --_s:1.1;
-  z-index:1;
-}
-.hexagon-comb-block__cell-link:not(.active):hover:before{
-  top:-100%;
-}
-.hexagon-comb-block__cell-link:not(.active):hover .hexagon-comb-block__cell-title{
-  opacity:0;
-}
-
-.hexagon-comb-block__cell-link:first-child{
-  --_x:calc(-50% - var(--cell-padding)*0.5);
-  --_y:-76.5%;
-}
-
-.hexagon-comb-block__cell-link:nth-child(2){
-  --_x:calc(50% + var(--cell-padding)*0.5);
-  --_y:-76.5%;
-}
-
-.hexagon-comb-block__cell-link:nth-child(3){
-  --_x:calc(-100% - var(--cell-padding));
-}
-
-.hexagon-comb-block__cell-link:nth-child(5){
-  --_x:calc(100% + var(--cell-padding));
-}
-
-.hexagon-comb-block__cell-link:nth-child(6){
-  --_x:calc(-50% - var(--cell-padding)*0.5);
-  --_y:76.5%;
-}
-
-.hexagon-comb-block__cell-link:nth-child(7){
-  --_x:calc(50% + var(--cell-padding)*0.5);
-  --_y:76.5%;
-}
-
-.section__text-block--single{
+.section__text-block--pair,.section__text-block--single{
   max-width:30em;
   width:100%;
-}
-
-.section--roller-automation{
-  background-attachment:fixed;
-  background-position:0;
-  background-size:cover;
-  color:#fff;
-  font-size:1em;
 }
 
 .logo-wrapper{
@@ -1181,15 +997,6 @@ img,object,picture,svg,video{
     background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), -webkit-image-set(url("/assets/img/footerSection/professional_1440.webp") 1x, url("/assets/img/footerSection/professional_1440.jpg") 1x);
     background-image:linear-gradient(90deg, rgba(40,32,23,.5), rgba(40,32,23,.8) 60%), image-set(url("/assets/img/footerSection/professional_1440.webp") 1x, url("/assets/img/footerSection/professional_1440.jpg") 1x);
   }}
-@media (min-width:1281px){
-  .section--services{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_1440.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1440.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_1440.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1440.jpg") 1x);
-  }
-  .section--roller-automation{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1440.jpg") 1x);
-  }}
 @media (max-width:1280px){
   .section{
     padding-bottom:var(--range_120-64_max-1280px);
@@ -1210,14 +1017,6 @@ img,object,picture,svg,video{
   }
   .section__img-wrapper--pair{
     width:31.25vw;
-  }
-  .section--services{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_1280.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1280.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_1280.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1280.jpg") 1x);
-  }
-  .section--roller-automation{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1280.jpg") 1x);
   }}
 @media (max-width:1024px){
   .modal{
@@ -1248,26 +1047,6 @@ img,object,picture,svg,video{
   .section--hero[aria-labelledby=rollers]{
     background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/security_shutters_roll-up_1024.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1024.jpg") 1x);
     background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/security_shutters_roll-up_1024.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_1024.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=automation]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/garage_gate_automation_1024.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1024.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/garage_gate_automation_1024.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_1024.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=barriers]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/barrier_automatic_1024.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1024.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/barrier_automatic_1024.webp") 1x, url("/assets/img/heroSection/barrier_automatic_1024.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=awnings]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/awnings_automatic_1024.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1024.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/awnings_automatic_1024.webp") 1x, url("/assets/img/heroSection/awnings_automatic_1024.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=windows]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/window_settings_1024.webp") 1x, url("/assets/img/heroSection/window_settings_1024.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/window_settings_1024.webp") 1x, url("/assets/img/heroSection/window_settings_1024.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=security]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), -webkit-image-set(url("/assets/img/heroSection/surveillance_1024.webp") 1x, url("/assets/img/heroSection/surveillance_1024.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.8) 35%, rgba(40,32,23,0) 85%), image-set(url("/assets/img/heroSection/surveillance_1024.webp") 1x, url("/assets/img/heroSection/surveillance_1024.jpg") 1x);
   }
   .section__content-block--pair{
     justify-content:flex-end;
@@ -1300,19 +1079,8 @@ img,object,picture,svg,video{
     width:100%;
     z-index:-1;
   }
-  .section--services{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_1024.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1024.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_1024.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_1024.jpg") 1x);
-  }
-  .section__bidding-block--services{
-    margin-top:0;
-  }
   .section__text-block--single{
     max-width:28em;
-  }
-  .section--roller-automation{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_1024.jpg") 1x);
   }}
 @media (max-width:768px){
   .modal__bar.modal__bar--arrow{
@@ -1352,13 +1120,7 @@ img,object,picture,svg,video{
   .content-block-item__text-block{
     font-size:15px;
   }
-  .section__text-block--pair{
-    max-width:27em;
-  }
-  .section__bidding-block--services{
-    margin-top:2em;
-  }
-  .section__text-block--single{
+  .section__text-block--pair,.section__text-block--single{
     max-width:27em;
   }}
 @media (max-width:640px){
@@ -1431,26 +1193,6 @@ img,object,picture,svg,video{
     background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/security_shutters_roll-up_640.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_640.jpg") 1x);
     background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/security_shutters_roll-up_640.webp") 1x, url("/assets/img/heroSection/security_shutters_roll-up_640.jpg") 1x);
   }
-  .section--hero[aria-labelledby=automation]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/garage_gate_automation_640.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_640.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/garage_gate_automation_640.webp") 1x, url("/assets/img/heroSection/garage_gate_automation_640.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=barriers]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/barrier_automatic_640.webp") 1x, url("/assets/img/heroSection/barrier_automatic_640.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/barrier_automatic_640.webp") 1x, url("/assets/img/heroSection/barrier_automatic_640.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=awnings]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/awnings_automatic_640.webp") 1x, url("/assets/img/heroSection/awnings_automatic_640.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/awnings_automatic_640.webp") 1x, url("/assets/img/heroSection/awnings_automatic_640.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=windows]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/window_settings_640.webp") 1x, url("/assets/img/heroSection/window_settings_640.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/window_settings_640.webp") 1x, url("/assets/img/heroSection/window_settings_640.jpg") 1x);
-  }
-  .section--hero[aria-labelledby=security]{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), -webkit-image-set(url("/assets/img/heroSection/surveillance_640.webp") 1x, url("/assets/img/heroSection/surveillance_640.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.7), rgba(40,32,23,.5)), image-set(url("/assets/img/heroSection/surveillance_640.webp") 1x, url("/assets/img/heroSection/surveillance_640.jpg") 1x);
-  }
   .section__heading-block--hero{
     text-align:center;
   }
@@ -1475,29 +1217,6 @@ img,object,picture,svg,video{
   }
   .section__text-block--pair:before{
     display:none;
-  }
-  .section__img-wrapper--benefits{
-    margin-top:1em;
-  }
-  .section--services{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_640.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_640.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_640.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_640.jpg") 1x);
-  }
-  .section__bidding-block--services p{
-    display:inline;
-  }
-  .section__bidding-block--services p:last-of-type{
-    margin-bottom:.5em;
-  }
-  .hexagon-comb-block{
-    font-size:.8em;
-  }
-  .hexagon-comb-block__cell-title{
-    font-size:1.15em;
-  }
-  .section--roller-automation{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_640.jpg") 1x);
   }}
 @media (max-width:480px){
   .scrolledNav__contacts-block{
@@ -1505,44 +1224,6 @@ img,object,picture,svg,video{
   }
   .section__heading-block .accent{
     margin-bottom:.25em;
-  }
-  .section--services{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/servicesSection/window_roller_shutters_480.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_480.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/servicesSection/window_roller_shutters_480.webp") 1x, url("/assets/img/servicesSection/window_roller_shutters_480.jpg") 1x);
-  }
-  .hexagon-comb-block{
-    padding-bottom:calc(var(--p)*2.8);
-    padding-left:calc(var(--p)*.6);
-    padding-right:calc(var(--p)*.6);
-  }
-  .hexagon-comb-block__cell-link:first-child{
-    --_x:0;
-  }
-  .hexagon-comb-block__cell-link:nth-child(2){
-    --_x:calc(-50% - var(--cell-padding)*0.5);
-    --_y:0;
-  }
-  .hexagon-comb-block__cell-link:nth-child(3){
-    --_x:calc(50% + var(--cell-padding)*0.5);
-  }
-  .hexagon-comb-block__cell-link:nth-child(4){
-    --_y:76.5%;
-  }
-  .hexagon-comb-block__cell-link:nth-child(5){
-    --_x:calc(-50% - var(--cell-padding)*0.5);
-    --_y:153%;
-  }
-  .hexagon-comb-block__cell-link:nth-child(6){
-    --_x:calc(50% + var(--cell-padding)*0.5);
-    --_y:153%;
-  }
-  .hexagon-comb-block__cell-link:nth-child(7){
-    --_x:0;
-    --_y:229.5%;
-  }
-  .section--roller-automation{
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), -webkit-image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.jpg") 1x);
-    background-image:linear-gradient(90deg, rgba(40,32,23,.4), rgba(40,32,23,.7)), image-set(url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.webp") 1x, url("/assets/img/rollerShuttersAutomation/roller_shutters_automation_480.jpg") 1x);
   }}
 @media (max-width:375px){
   .header__nav.abs .header__nav-list{

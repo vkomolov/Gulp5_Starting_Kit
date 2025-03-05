@@ -1,5 +1,5 @@
-@import './_variables.scss';
-@import './_mixins.scss';
+//@use './_variables' as *;
+//@use './_mixins.scss' as mix;
 
 /* retina display (2x) */
 @mixin mediaRetina2x() {

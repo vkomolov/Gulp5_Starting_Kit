@@ -11571,11 +11571,9 @@ document.addEventListener("DOMContentLoaded", () => {
     rollers: "#securityShuttersSection"
   };
   const navLinkSelector = ".nav-link";
-  const navHexagonSelector = ".hexagon-comb-block__cell-link";
 
   //checking and lighten several duplicate navigations for the .active links:
   (0,_helpers_funcsDOM_js__WEBPACK_IMPORTED_MODULE_0__.activateNavLink)(navLinkSelector, pageType, "active", linkAnchors[pageType] || "#");
-  (0,_helpers_funcsDOM_js__WEBPACK_IMPORTED_MODULE_0__.activateNavLink)(navHexagonSelector, pageType, "active", linkAnchors[pageType] || "#");
 
   //GSAP animation tweens
   const totalTl = (0,_partials_animations_js__WEBPACK_IMPORTED_MODULE_2__.animatePage)();

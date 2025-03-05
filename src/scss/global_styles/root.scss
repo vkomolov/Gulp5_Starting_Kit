@@ -1,20 +1,25 @@
-@import "../global_styles/reset";
-@import "../global_styles/variables";
-@import "../global_styles/mixins";
-@import "../global_styles/fonts";
-@import "../global_styles/media";
-@import "../global_styles/animations";
+@forward "animations";
+@forward "extends";
+@forward "fonts";
+@forward "media";
+@forward "mixins";
+@forward "reset";
+@forward "variables";
+
+@use "variables" as vrb;
+@use "mixins" as mix;
+@use "fonts";
 
 /////// VARS //////
 
 :root {
-  --range_120-64_max-1280px: #{calculate-dimension(1280, 641, 120, 64)};
-  --range_80-64_max-1280px: #{calculate-dimension(1280, 641, 80, 64)};
-  --range_80-32_max-1280px: #{calculate-dimension(1280, 641, 80, 32)};
-  --range_48-32_max-1280px: #{calculate-dimension(1280, 641, 48, 32)};
-  --range_32-23_max-640px: #{calculate-dimension(640, 320, 32, 23)};
-  --range_24-18_max-1280px: #{calculate-dimension(1280, 641, 24, 18)};
-  --range_18-16_max-1280px: #{calculate-dimension(1280, 641, 18, 16)};
+  --range_120-64_max-1280px: #{mix.calculate-dimension(1280, 641, 120, 64)};
+  --range_80-64_max-1280px: #{mix.calculate-dimension(1280, 641, 80, 64)};
+  --range_80-32_max-1280px: #{mix.calculate-dimension(1280, 641, 80, 32)};
+  --range_48-32_max-1280px: #{mix.calculate-dimension(1280, 641, 48, 32)};
+  --range_32-23_max-640px: #{mix.calculate-dimension(640, 320, 32, 23)};
+  --range_24-18_max-1280px: #{mix.calculate-dimension(1280, 641, 24, 18)};
+  --range_18-16_max-1280px: #{mix.calculate-dimension(1280, 641, 18, 16)};
 }
 
 /*html, body {
@@ -28,7 +33,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.4;
-  background-color: $color-07;
+  background-color: vrb.$color-07;
 
   //user-select: none;
 }
@@ -42,7 +47,7 @@ body:before {
   width: 100%;
   height: 10px;
   z-index: 100;
-  @include box-shadow(0, 10px);
+  @include mix.box-shadow(0, 10px);
 }
 /*****************END TOP BORDER BODY************/
 

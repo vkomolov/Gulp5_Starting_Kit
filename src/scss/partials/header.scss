@@ -1,12 +1,7 @@
-@import "../global_styles/reset";
-@import "../global_styles/variables";
-@import "../global_styles/mixins";
-@import "../global_styles/extends";
-@import "../global_styles/fonts";
-@import "../global_styles/animations";
-@import "../global_styles/media";
-
-@import "./root";
+@use "../global_styles/variables" as *;
+@use "../global_styles/mixins" as mix;
+@use "../global_styles/extends";
+@use "../global_styles/media" as media;
 
 /////// STYLES ///////
 
@@ -15,12 +10,12 @@
   background: linear-gradient(to right, rgba(40, 32, 23, 1) 25%, $rgba_opacity-0 80%);
 
   /* tablet (portrait): (max-width: 1024px) */
-  @include maxTabletPortrait {
+  @include media.maxTabletPortrait {
     background: linear-gradient(to right, rgba(40, 32, 23, 1) 35%, $rgba_opacity-0 75%);
   }
 
   /* mobile (portrait wide): (max-width: 640px) */
-  @include maxMobilePortraitWide {
+  @include media.maxMobilePortraitWide {
     background: linear-gradient(to right, rgba(40, 32, 23, 1) 60%, rgba(101, 92, 82, .7) 100%);
     //background-color: rgba(40, 32, 23, .8);
   }
@@ -30,20 +25,20 @@
   font-size: 1em; //parent font-size
   position: relative;
 
-  @extend %contentWrapper;
-  @include flex-box($flex-box-row-center-wrap...);
+  @extend %contentWrapper;  //it works ok...
+  @include mix.flex-box(mix.$flex-box-row-center-wrap);
 
   gap: 0.5em 1em;
   padding-top: 0.625em;
   padding-bottom: 0.625em;
 
   /* tablet (portrait): (max-width: 1024px) */
-  @include maxTabletPortrait {
+  @include media.maxTabletPortrait {
     font-size: 0.78em;
   }
 
   /* mobile (portrait wide): (max-width: 640px) */
-  @include maxMobilePortraitWide {
+  @include media.maxMobilePortraitWide {
     flex-direction: column;
     font-size: 1em;
   }
@@ -59,12 +54,12 @@
   z-index: 55;
   flex-grow: 1;
 
-  @include flex-box($flex-box-row-right-wrap...);
+  @include mix.flex-box(mix.$flex-box-row-right-wrap);
   gap: 0.5em;
 }
 
 .header__contacts-block {
-  @include flex-box($flex-box-row-center-wrap...);
+  @include mix.flex-box(mix.$flex-box-row-center-wrap);
   gap: 0.5em 1em;
 }
 
@@ -73,13 +68,13 @@
   transform-origin: 100% 50%;
   transition: transform 0.15s ease-in-out, text-shadow 0.15s ease-in-out;
 
-  @include flex-box($flex-box-row-center-nowrap...);
+  @include mix.flex-box(mix.$flex-box-row-center-nowrap);
   gap: 0.3em;
 
   &:hover {
     transform: translateX(-0.3em);
 
-    @include text-shadow(0, 0.5em, rgba(255, 255, 255, 1));
+    @include mix.text-shadow(0, 0.5em, rgba(255, 255, 255, 1));
   }
 
   &__phone-icon {
@@ -100,20 +95,20 @@
     &.icon-link__text--phone {
       color: $color_01;
 
-      @include init-font(1.375em, 700);
+      @include mix.init-font(1.375em, 700);
 
       /* mobile (landscape): (max-width: 768px)*/
-      @include maxMobileLandscape {
+      @include media.maxMobileLandscape {
         font-size: 1.2em;
       }
     }
 
     &.icon-link__text--social-icon {
       color: $white;
-      @include init-font(1em, 700);
+      @include mix.init-font(1em, 700);
 
       /* mobile (landscape): (max-width: 768px)*/
-      @include maxMobileLandscape {
+      @include media.maxMobileLandscape {
         font-size: 0.8em;
       }
     }
@@ -121,14 +116,14 @@
 }
 
 .social-icons-wrapper {
-  @include flex-box($flex-box-row-center-nowrap...);
+  @include mix.flex-box(mix.$flex-box-row-center-nowrap);
   gap: 0.6em;
 }
 
 .social-icons-wrapper__social-icon {
   width: 1.8em;
 
-  @include transition(transform);
+  @include mix.transition(transform);
 
   &:hover {
     transform: scale(1.1);
@@ -166,7 +161,7 @@
 #lang-list {
   padding: 0.6em 0;
 
-  @include flex-box($flex-box-col-top-wrap...);
+  @include mix.flex-box(mix.$flex-box-col-top-wrap);
   gap: 0.6em;
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
@@ -186,7 +181,7 @@
     transform: translateY(-3px);
   }
 
-  @include flex-box($flex-box-row-center-nowrap...);
+  @include mix.flex-box(mix.$flex-box-row-center-nowrap);
 
   &.active {
     background-color: $color-01;
@@ -200,10 +195,10 @@
 .header__nav {
   width: 100%;
   padding-top: .56em;
-  @include flex-box($flex-box-row-right-wrap...);
+  @include mix.flex-box(mix.$flex-box-row-right-wrap);
 
   /* mobile (landscape): (max-width: 768px)*/
-  @include maxMobileLandscape {
+  @include media.maxMobileLandscape {
     display: none;
   }
 
@@ -219,7 +214,7 @@
     backdrop-filter: blur(.2em);
 
     /* mobile (landscape): (max-width: 768px)*/
-    @include maxMobileLandscape {
+    @include media.maxMobileLandscape {
       display: block;  //original header__nav with display: none;
     }
 
@@ -229,10 +224,10 @@
       margin: 0 auto;
       padding: 3em 2.2em .5em;
 
-      @include flex-box($flex-box-row-right-wrap...);
+      @include mix.flex-box(mix.$flex-box-row-right-wrap);
 
       /* mobile (portrait wide): (max-width: 640px) */
-      @include maxMobilePortraitWide {
+      @include media.maxMobilePortraitWide {
         font-size: 1.1em;
         justify-content: center;
       }
@@ -241,28 +236,28 @@
     .header__nav-list {
 
       /* tablet (portrait): (max-width: 1024px) */
-      @include maxTabletPortrait {
+      @include media.maxTabletPortrait {
         font-size: 0.78em;
       }
 
       /* mobile (landscape): (max-width: 768px)*/
-      @include maxMobileLandscape {
+      @include media.maxMobileLandscape {
         max-width: 20em;
         padding-bottom: 1em;
         padding-top: 1em;
 
-        @include flex-box($flex-box-col-right-wrap...);
+        @include mix.flex-box(mix.$flex-box-col-right-wrap);
         column-gap: 0.5em;
       }
 
       /* mobile (portrait wide): (max-width: 640px) */
-      @include maxMobilePortraitWide {
+      @include media.maxMobilePortraitWide {
         align-items: center;
         padding-top: 0;
       }
 
       /* mobile (medium): (max-width: 375px) */
-      @include maxMobileMedium {
+      @include media.maxMobileMedium {
         padding-top: 1.5em;
       }
     }
@@ -275,7 +270,7 @@
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
 
-  @include flex-box($flex-box-row-center-wrap...);
+  @include mix.flex-box(mix.$flex-box-row-center-wrap);
   gap: 0.5em .75em;
 }
 
@@ -284,12 +279,12 @@
   color: $color-01;
   cursor: default;
 
-  @include text-shadow(0.05em, 0.05em);
-  @include transition(transform);
+  @include mix.text-shadow(0.05em, 0.05em);
+  @include mix.transition(transform);
 
   &:not(.active):hover {
     color: $color-01-darken;
-    @include text-shadow(0.07em, 0.07em);
+    @include mix.text-shadow(0.07em, 0.07em);
     transform: translateY(-0.1em);
     cursor: pointer;
   }
@@ -329,7 +324,7 @@
     display: none;
 
     /* mobile (landscape): (max-width: 768px)*/
-    @include maxMobileLandscape {
+    @include media.maxMobileLandscape {
       display: inline-block;
     }
   }
@@ -402,23 +397,23 @@
   margin: 0 auto;
   padding: 0.4em 2em;
 
-  @include flex-box($flex-box-row-right-wrap...);
+  @include mix.flex-box(mix.$flex-box-row-right-wrap);
   gap: 0.4em 1em;
 
   /* mobile (portrait narrow): (max-width: 480px)*/
-  @include maxMobilePortraitNarrow {
+  @include media.maxMobilePortraitNarrow {
     gap: 0.4em 0.7em;
   }
 
   /* mobile (medium): (max-width: 375px) */
-  @include maxMobileMedium {
-    @include flex-box($flex-box-row-center-wrap...);
+  @include media.maxMobileMedium {
+    @include mix.flex-box(mix.$flex-box-row-center-wrap);
   }
 
   .icon-link {
     span {
       /* mobile (medium): (max-width: 375px) */
-      @include maxMobileMedium {
+      @include media.maxMobileMedium {
         //font-size: 1.12em;
       }
     }
@@ -426,21 +421,21 @@
 
   .icon-link__phone-icon {
     /* mobile (portrait narrow): (max-width: 480px)*/
-    @include maxMobilePortraitNarrow {
+    @include media.maxMobilePortraitNarrow {
       //width: 1.1em;
     }
   }
 
   .social-icons-wrapper__social-icon {
     /* mobile (portrait narrow): (max-width: 480px)*/
-    @include maxMobilePortraitNarrow {
+    @include media.maxMobilePortraitNarrow {
       //width: 1.5em;
     }
   }
 
   .burger_nav {
     /* mobile (medium): (max-width: 375px) */
-    @include maxMobileMedium {
+    @include media.maxMobileMedium {
       //width: 1.5em;
       //height: 1.5em;
     }
