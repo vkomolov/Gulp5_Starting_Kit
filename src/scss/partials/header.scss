@@ -26,7 +26,8 @@
   position: relative;
 
   @extend %contentWrapper;  //it works ok...
-  @include mix.flex-box(mix.$flex-box-row-center-wrap);
+
+  @include mix.flex-box(row, center, center, wrap);
 
   gap: 0.5em 1em;
   padding-top: 0.625em;
@@ -54,12 +55,12 @@
   z-index: 55;
   flex-grow: 1;
 
-  @include mix.flex-box(mix.$flex-box-row-right-wrap);
+  @include mix.flex-box(row, flex-end, center, wrap);
   gap: 0.5em;
 }
 
 .header__contacts-block {
-  @include mix.flex-box(mix.$flex-box-row-center-wrap);
+  @include mix.flex-box(row, center, center, wrap);
   gap: 0.5em 1em;
 }
 
@@ -68,7 +69,7 @@
   transform-origin: 100% 50%;
   transition: transform 0.15s ease-in-out, text-shadow 0.15s ease-in-out;
 
-  @include mix.flex-box(mix.$flex-box-row-center-nowrap);
+  @include mix.flex-box(row, center, center, nowrap);
   gap: 0.3em;
 
   &:hover {
@@ -116,7 +117,7 @@
 }
 
 .social-icons-wrapper {
-  @include mix.flex-box(mix.$flex-box-row-center-nowrap);
+  @include mix.flex-box(row, center, center, nowrap);
   gap: 0.6em;
 }
 
@@ -161,7 +162,7 @@
 #lang-list {
   padding: 0.6em 0;
 
-  @include mix.flex-box(mix.$flex-box-col-top-wrap);
+  @include mix.flex-box(column, flex-start, center, wrap);
   gap: 0.6em;
   transform: translateY(-100%);
   transition: transform 0.3s ease-in-out;
@@ -181,7 +182,7 @@
     transform: translateY(-3px);
   }
 
-  @include mix.flex-box(mix.$flex-box-row-center-nowrap);
+  @include mix.flex-box(row, center, center, nowrap);
 
   &.active {
     background-color: $color-01;
@@ -195,7 +196,7 @@
 .header__nav {
   width: 100%;
   padding-top: .56em;
-  @include mix.flex-box(mix.$flex-box-row-right-wrap);
+  @include mix.flex-box(row, flex-end, center, wrap);
 
   /* mobile (landscape): (max-width: 768px)*/
   @include media.maxMobileLandscape {
@@ -224,7 +225,7 @@
       margin: 0 auto;
       padding: 3em 2.2em .5em;
 
-      @include mix.flex-box(mix.$flex-box-row-right-wrap);
+      @include mix.flex-box(row, flex-end, center, wrap);
 
       /* mobile (portrait wide): (max-width: 640px) */
       @include media.maxMobilePortraitWide {
@@ -246,7 +247,7 @@
         padding-bottom: 1em;
         padding-top: 1em;
 
-        @include mix.flex-box(mix.$flex-box-col-right-wrap);
+        @include mix.flex-box(column, center, flex-end, wrap);
         column-gap: 0.5em;
       }
 
@@ -270,7 +271,7 @@
   -moz-osx-font-smoothing: grayscale;
   font-weight: 700;
 
-  @include mix.flex-box(mix.$flex-box-row-center-wrap);
+  @include mix.flex-box(row, center, center, wrap);
   gap: 0.5em .75em;
 }
 
@@ -397,7 +398,7 @@
   margin: 0 auto;
   padding: 0.4em 2em;
 
-  @include mix.flex-box(mix.$flex-box-row-right-wrap);
+  @include mix.flex-box(row, flex-end, center, wrap);
   gap: 0.4em 1em;
 
   /* mobile (portrait narrow): (max-width: 480px)*/
@@ -407,7 +408,7 @@
 
   /* mobile (medium): (max-width: 375px) */
   @include media.maxMobileMedium {
-    @include mix.flex-box(mix.$flex-box-row-center-wrap);
+    @include mix.flex-box(row, center, center, wrap);
   }
 
   .icon-link {

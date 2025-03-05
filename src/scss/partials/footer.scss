@@ -90,19 +90,19 @@
 .footer__contacts-block {
   max-width: 17em;
 
-  @include mix.flex-box(mix.$flex-box-col-left-wrap);
+  @include mix.flex-box(column, center, flex-start, wrap);
   gap: 1em;
 }
 
 .footer__content-block {
   flex-grow: 1;
 
-  @include mix.flex-box(mix.$flex-box-row-right-wrap);
+  @include mix.flex-box(row, flex-end, center, wrap);
   gap: 0.5em;
 }
 
 .footer__content-block-item {
-  @include mix.flex-box(mix.$flex-box-col-left-wrap);
+  @include mix.flex-box(column, center, flex-start, wrap);
   gap: 0.5em;
 }
 
